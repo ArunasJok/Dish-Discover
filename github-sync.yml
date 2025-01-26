@@ -1,0 +1,15 @@
+trigger:
+  branches:
+    include:
+      - '*'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- checkout: self
+
+- script: |
+    git remote add github https://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@github.com/ArunasJok/Dish-Discover.git
+    git push github --mirror
+  displayName: 'Push changes to GitHub'
