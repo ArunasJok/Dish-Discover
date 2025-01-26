@@ -41,26 +41,3 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 
 ---
 
-# .gitignore
-# Python
-*.pyc
-__pycache__/
-env/
-venv/
-
-# Node.js
-node_modules/
-dist/
-build/
-
-# Terraform
-*.tfstate
-*.tfstate.backup
-.terraform/
-
-# IDE and System Files
-.vscode/
-*.DS_Store
-*.log
-
----
