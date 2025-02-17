@@ -26,5 +26,5 @@ steps:
     git remote add github https://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@github.com/ArunasJok/Dish-Discover.git
 
     echo "Pushing changes to GitHub..."
-    git push --verbose --mirror github
+    git push github main
   displayName: 'Push changes to GitHub'
