@@ -8,8 +8,13 @@ pool:
 
 steps:
 - checkout: self
+  clean: true  # ensures a fresh checkout to avoid any cached data issues
 
+# Configure Git with a user name and email (GitHub requires this for pushes)
 - script: |
+    echo "Configuring Git..."    
+    git config user.email "jokubynas@gmail.com"
+    git config user.name "ArunasJok"
     git remote add github https://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@github.com/ArunasJok/Dish-Discover.git
     git push github --mirror
   displayName: 'Push changes to GitHub'
