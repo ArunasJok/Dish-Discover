@@ -1,0 +1,1 @@
+Tests that verify the interaction between the frontend and backend.
