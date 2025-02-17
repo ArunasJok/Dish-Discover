@@ -8,6 +8,7 @@ pool:
 
 steps:
 - checkout: self
+  ref: main    # Ensure this is the branch you intend to work with
   persistCredentials: true  # Allow the action to push changes back to the repository
   fetchDepth: 0  # Ensures full history is cloned
   clean: true  # ensures a fresh checkout to avoid any cached data issues
@@ -17,7 +18,7 @@ steps:
     echo "Listing local branches..."
     git branch -a
   displayName: 'List branches'
-  
+
 - script: |
     echo "Configuring Git..."    
     git config user.email "jokubynas@gmail.com"
@@ -28,6 +29,7 @@ steps:
     git gc
 
     echo "Adding GitHub remote..."
+    git checkout -b main
     git remote add github https://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@github.com/ArunasJok/Dish-Discover.git
 
     echo "Pushing changes to GitHub..."
