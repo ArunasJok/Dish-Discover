@@ -8,6 +8,8 @@ pool:
 
 steps:
 - checkout: self
+  persistCredentials: true  # Allow the action to push changes back to the repository
+  fetchDepth: 0  # Ensures full history is cloned
   clean: true  # ensures a fresh checkout to avoid any cached data issues
 
 # Configure Git with a user name and email (GitHub requires this for pushes)
@@ -15,6 +17,14 @@ steps:
     echo "Configuring Git..."    
     git config user.email "jokubynas@gmail.com"
     git config user.name "ArunasJok"
+
+    echo "Running repository maintenance..."
+    git repack -a -d
+    git gc
+
+    echo "Adding GitHub remote..."
     git remote add github https://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@github.com/ArunasJok/Dish-Discover.git
-    git push github --mirror
+
+    echo "Pushing changes to GitHub..."
+    git push --verbose --mirror github
   displayName: 'Push changes to GitHub'
