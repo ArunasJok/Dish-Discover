@@ -8,6 +8,7 @@ const connectDB = require('./config/db'); // Import database connection
 const authenticationRoutes = require('./routes/authenticationRoutes');
 const recipeRoutes = require('./routes/recipeRoutes');
 const externalRoutes = require('./routes/externalRoutes');
+const aiRoutes = require('./routes/aiRoutes');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -24,6 +25,7 @@ app.use(require('cors')());
 app.use('/api/auth', authenticationRoutes);
 app.use('/api/recipes', recipeRoutes);
 app.use('/api/external', externalRoutes);
+app.use('/api/ai', aiRoutes);
 
 //Defining route for the root URL
 app.get('/', (req, res) => {
