@@ -5,6 +5,9 @@ const morgan = require('morgan');
 const cors = require('cors');
 const connectDB = require('./config/db'); // Import database connection
 
+const authenticationRoutes = require('./routes/authenticationRoutes');
+const recipeRoutes = require('./routes/recipeRoutes');
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -16,7 +19,8 @@ app.use(express.json());
 app.use(require('morgan')('dev'));
 app.use(require('cors')());
 
-const recipeRoutes = require('./routes/recipeRoutes');
+//Route integration
+app.use('/api/auth', authenticationRoutes);
 app.use('/api/recipes', recipeRoutes);
 
 //Defining route for the root URL
