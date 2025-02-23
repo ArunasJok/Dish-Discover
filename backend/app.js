@@ -32,7 +32,7 @@ app.use('/api/ai', aiRoutes);
 
 //Defining route for the root URL
 app.get('/', (req, res) => {
-    res.send('Dish Discover Backend is running');
+    res.send('Dish Discover Backend is Running');
 });
 
 // Catch-all route errors
@@ -45,6 +45,10 @@ app.use((req, res, next) => {
 app.use(errorHandler);
 
 // Start the server and listen on the port
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
+if (require.main === module) {
+    app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
+    });
+}
+
+module.exports = app;
