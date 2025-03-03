@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 //import axios from 'axios';
 import { getSpoonacularRecipes } from '../services/apiService';
+import { Link } from 'react-router-dom';
 
 
 const Ingredients = () => {
@@ -40,7 +41,7 @@ const Ingredients = () => {
           type="text"
           placeholder="Enter ingredients (comma separated)"
           value={ingredients}
-          onChange={(e) => setIngredients(e.target.value)}
+          onChange={handleChange}
           style={{ padding: '10px', width: '300px', marginRight: '10px' }}
         />
         <button type="submit" style={{ padding: '10px' }}>Get Recipes</button>
@@ -52,7 +53,16 @@ const Ingredients = () => {
           <ul>
             {recipes.map((recipe) => (
               <li key={recipe.id} style={{ marginBottom: '15px' }}>
-                <strong>{recipe.title}</strong>
+                <Link to={`/recipe/${recipe.id}`}>
+                  <strong>{recipe.title}</strong>
+                </Link>
+                <div>
+                  <img 
+                    src={recipe.image} 
+                    alt={recipe.title} 
+                    style={{ width: '200px', height: 'auto', marginTop: '10px' }} 
+                  />
+                </div>
                 <p>Used Ingredients: {recipe.usedIngredients.map(ing => ing.name).join(', ')}</p>
                 <p>Missed Ingredients: {recipe.missedIngredients.map(ing => ing.name).join(', ')}</p>
                 <p>Likes: {recipe.likes}</p>

@@ -35,4 +35,13 @@ export const getSpoonacularRecipes = async (ingredients) => {
   }
 };
 
+export const getRecipeDetail = async (recipeId) => {
+  try {
+    const response = await axios.get(`${API_URL}/api/external/recipes/${recipeId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // Will add additional API calls (e.g., for recipe creation, user profile, etc.) as needed
