@@ -1,6 +1,7 @@
 // Dummy Register page component
 import React, { useState } from 'react';
-import axios from 'axios';
+//import axios from 'axios';
+import { registerUser } from '../services/apiService';
 
 const Register = () => {
    const [formData, setFormData] = useState({
@@ -18,18 +19,13 @@ const handleChange = (e) => {
 
 //Submit registration data from the form to the backend
 const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-        const response = await axios.post('http://localhost:5000/api/auth/register', formData);
-        setMessage(response.data.message);
-    } catch (error) {
-        //check if validation errors or server error message
-        if (error.response && error.response.data) {
-            setMessage(error.response.data.error || 'Registration failed. Please try again.');
-        } else {
-            setMessage('Registration failed.');
-        }
-    }
+  e.preventDefault();
+  try {
+    const data = await registerUser(formData);
+    setMessage(data.message);
+  } catch (err) {
+    setMessage(err.response?.data?.error || 'Registration failed');
+  }
 };
 
 return (

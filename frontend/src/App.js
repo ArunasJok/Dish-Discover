@@ -1,5 +1,5 @@
 // This is the main component of the frontend.
-//  It is the first component that is rendered when the frontend is loaded.
+// It is the first component that is rendered when the frontend is loaded.
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';

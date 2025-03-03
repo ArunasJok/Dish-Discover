@@ -1,6 +1,7 @@
 // Dummy login page
 import React, { useState, useContext } from 'react';
-import axios from 'axios';
+//import axios from 'axios';
+import { loginUser } from '../services/apiService';
 import { AuthContext } from '../context/AuthContext';
 
 
@@ -20,20 +21,15 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', credentials);
-      // Assuming the response returns a token
-      if (res.data.token) {
-        login(res.data.token); // Store token in context
+      const data = await loginUser(credentials);
+      if (data.token) {
+        login(data.token);
         setMessage('Login successful!');
       } else {
         setMessage('Login failed!');
       }
     } catch (err) {
-      if (err.response && err.response.data) {
-        setMessage(err.response.data.error || 'Login failed');
-      } else {
-        setMessage('Login failed');
-      }
+      setMessage(err.response?.data?.error || 'Login failed');
     }
   };
 
