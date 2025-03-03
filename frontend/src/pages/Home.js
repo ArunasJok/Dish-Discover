@@ -5,7 +5,7 @@ const Home = () => {
   return (
     <div className="App">
       <h1>Welcome to Dish Discover</h1>
-      <p>This is the home page.</p>
+      <p>Your one-stop solution for creative recipes based on what you have at home.</p>
     </div>
   );
 };
