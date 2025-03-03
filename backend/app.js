@@ -1,4 +1,6 @@
-// Description: Main entry point for the backend server. This file is responsible for setting up the server, connecting to the database, and defining the routes for the API.
+// Description: Main entry point for the backend server. 
+// This file is responsible for setting up the server, connecting to the database, 
+// and defining the routes for the API.
 require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
@@ -12,13 +14,12 @@ const externalRoutes = require('./routes/externalRoutes');
 const aiRoutes = require('./routes/aiRoutes');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000
 
 // Connect to MongoDB
 connectDB();
 
 // Middleware to parse the request body as JSON, log HTTP requests, and enable CORS. 
-// Error handler middleware is used to catch any errors that occur during the request processing.
 app.use(express.json());
 app.use(require('morgan')('dev'));
 app.use(require('cors')());
