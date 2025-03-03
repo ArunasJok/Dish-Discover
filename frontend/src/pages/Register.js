@@ -1,6 +1,7 @@
-// Dummy Register page component
+// Register page component
 import React, { useState } from 'react';
 //import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../services/apiService';
 
 const Register = () => {
@@ -11,6 +12,7 @@ const Register = () => {
 
 });
 const [message, setMessage] = useState('');
+const navigate = useNavigate();
 
 // Handle form changes
 const handleChange = (e) => {
@@ -23,6 +25,7 @@ const handleSubmit = async (e) => {
   try {
     const data = await registerUser(formData);
     setMessage(data.message);
+    navigate('/login');
   } catch (err) {
     setMessage(err.response?.data?.error || 'Registration failed');
   }

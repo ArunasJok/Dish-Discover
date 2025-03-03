@@ -1,4 +1,4 @@
-
+// About page component
 import React from 'react';
 
 const About = () => {

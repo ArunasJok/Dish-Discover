@@ -1,4 +1,4 @@
-// Dummy page for Ingredients
+// Ingredients page component to fetch recipes by ingredients
 import React, { useState } from 'react';
 //import axios from 'axios';
 import { getSpoonacularRecipes } from '../services/apiService';

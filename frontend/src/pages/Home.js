@@ -1,4 +1,4 @@
-//Dummy Home page component
+//Home page component
 import React from 'react';
 
 const Home = () => {

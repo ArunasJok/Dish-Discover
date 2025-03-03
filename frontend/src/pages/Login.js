@@ -1,6 +1,7 @@
-// Dummy login page
+// Login page
 import React, { useState, useContext } from 'react';
 //import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../services/apiService';
 import { AuthContext } from '../context/AuthContext';
 
@@ -12,7 +13,8 @@ const Login = () => {
     password: '',
   });
   const [message, setMessage] = useState('');
-  const { login } = useContext(AuthContext); //Access the login function from the AuthContext
+  const { login } = useContext(AuthContext); 
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -23,8 +25,9 @@ const Login = () => {
     try {
       const data = await loginUser(credentials);
       if (data.token) {
-        login(data.token); // Store the token in the context
+        login(data.token); 
         setMessage('Login successful!');
+        navigate('/dashboard');
       } else {
         setMessage('Login failed!');
       }
