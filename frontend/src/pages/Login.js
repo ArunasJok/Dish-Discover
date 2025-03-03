@@ -12,7 +12,7 @@ const Login = () => {
     password: '',
   });
   const [message, setMessage] = useState('');
-  const { login } = useContext(AuthContext);
+  const { login } = useContext(AuthContext); //Access the login function from the AuthContext
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -23,7 +23,7 @@ const Login = () => {
     try {
       const data = await loginUser(credentials);
       if (data.token) {
-        login(data.token);
+        login(data.token); // Store the token in the context
         setMessage('Login successful!');
       } else {
         setMessage('Login failed!');
@@ -34,7 +34,7 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className="App">
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <input 

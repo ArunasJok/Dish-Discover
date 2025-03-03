@@ -1,7 +1,7 @@
 // Dummy page for Ingredients
 import React, { useState } from 'react';
 //import axios from 'axios';
-import { getAIRecommendations } from '../services/apiService';
+import { getSpoonacularRecipes } from '../services/apiService';
 
 
 const Ingredients = () => {
@@ -23,7 +23,7 @@ const Ingredients = () => {
       return;
     }
     try {
-      const data = await getAIRecommendations(ingredients);
+      const data = await getSpoonacularRecipes(ingredients);
       setRecipes(data);
       setMessage('');
     } catch (error) {
@@ -33,14 +33,14 @@ const Ingredients = () => {
   };
 
   return (
-    <div>
+    <div className="App">
       <h2>Find Recipes by Ingredients</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Enter ingredients (comma separated)"
           value={ingredients}
-          onChange={handleChange}
+          onChange={(e) => setIngredients(e.target.value)}
           style={{ padding: '10px', width: '300px', marginRight: '10px' }}
         />
         <button type="submit" style={{ padding: '10px' }}>Get Recipes</button>
@@ -52,9 +52,10 @@ const Ingredients = () => {
           <ul>
             {recipes.map((recipe) => (
               <li key={recipe.id} style={{ marginBottom: '15px' }}>
-                <strong>{recipe.recipeName}</strong>
-                <p>Ingredients: {recipe.ingredients.join(', ')}</p>
-                <p>Score: {recipe.recommendationScore}</p>
+                <strong>{recipe.title}</strong>
+                <p>Used Ingredients: {recipe.usedIngredients.map(ing => ing.name).join(', ')}</p>
+                <p>Missed Ingredients: {recipe.missedIngredients.map(ing => ing.name).join(', ')}</p>
+                <p>Likes: {recipe.likes}</p>
               </li>
             ))}
           </ul>

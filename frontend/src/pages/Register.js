@@ -29,7 +29,7 @@ const handleSubmit = async (e) => {
 };
 
 return (
-    <div>
+    <div className="App">
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
         <input 
