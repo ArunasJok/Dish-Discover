@@ -25,10 +25,14 @@ export const loginUser = async (credentials) => {
 };
 
 // AI Recommendations API call
-export const getSpoonacularRecipes = async (ingredients) => {
+export const getSpoonacularRecipes = async (ingredients, token) => {
   try {
     // ingredients should be a comma-separated string
-    const response = await axios.get(`${API_URL}/api/external/recipes?ingredients=${ingredients}`);
+    const response = await axios.get(`${API_URL}/api/external/recipes?ingredients=${ingredients}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
     return response.data;
   } catch (error) {
     throw error;

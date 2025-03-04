@@ -1,8 +1,10 @@
 // Ingredients page component to fetch recipes by ingredients
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 //import axios from 'axios';
 import { getSpoonacularRecipes } from '../services/apiService';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
+
 
 
 const Ingredients = () => {
@@ -10,6 +12,8 @@ const Ingredients = () => {
   const [ingredients, setIngredients] = useState('');
   const [recipes, setRecipes] = useState([]);
   const [message, setMessage] = useState('');
+  const { authToken } = useContext(AuthContext);
+
 
   // Updating the ingredients state as the user types
   const handleChange = (e) => {
@@ -24,7 +28,8 @@ const Ingredients = () => {
       return;
     }
     try {
-      const data = await getSpoonacularRecipes(ingredients);
+      
+      const data = await getSpoonacularRecipes(ingredients, authToken);
       setRecipes(data);
       setMessage('');
     } catch (error) {

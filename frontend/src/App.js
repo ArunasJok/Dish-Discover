@@ -32,7 +32,6 @@ function App() {
           <Route path="/meal-planner" element={<MealPlanner />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/shopping-list" element={<ShoppingList />} />
-          {/* Other Functional Pages */}
           <Route path="/ingredients" element={<Ingredients />} />
           <Route path="/recipe/:id" element={<RecipeDetail />} />
         </Routes>
