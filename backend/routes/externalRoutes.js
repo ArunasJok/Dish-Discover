@@ -39,12 +39,24 @@ router.get('/recipes', verifyToken, async (req, res) => {
 });
 
 // Endpoint to fetch full recipe details using the recipe id
-router.get('/recipes/:id', async (req, res) => {
-    try {
-      const recipeId = req.params.id;
-      const recipeInfo = await getRecipeInformation(recipeId);
-      res.json(recipeInfo);
+router.get('/recipes/:id', verifyToken, async (req, res) => {
+  try {
+    const spoonacularId = req.params.id;
+    // Checking if this recipe is already saved locally for this user
+    let recipe = await Recipe.findOne({
+      spoonacularId: Number(spoonacularId),
+      user: req.user.userId
+    });
+    if (recipe) {
+      console.log("Returning locally saved recipe detail");
+      return res.json(recipe);
+    }
+    
+    // If not found locally, fetch recipe details from Spoonacular API
+    const recipeInfo = await getRecipeInformation(spoonacularId);
+    res.json(recipeInfo);
     } catch (error) {
+      console.error("Error fetching recipe details:", error);
       res.status(500).json({ error: 'Failed to fetch recipe details' });
     }
   });

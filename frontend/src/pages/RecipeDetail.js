@@ -1,7 +1,7 @@
 // RecipeDetail component to display the details of a recipe
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { getRecipeDetail } from '../services/apiService';
+//import { getRecipeDetail } from '../services/apiService';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 
@@ -15,15 +15,23 @@ const RecipeDetail = () => {
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const data = await getRecipeDetail(id);
-        setRecipe(data);
-      } catch (err) {
-        console.error('Error fetching recipe details:', err);
+        // Calling integrated recipe detail endpoint.
+        const res = await axios.get(`http://localhost:5000/api/external/recipes/${id}`, {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        setRecipe(res.data);
+      } catch (error) {
+        console.error('Error fetching recipe details:', error);
         setMessage('Failed to load recipe details.');
       }
     };
-    fetchRecipe();
-  }, [id]);
+
+    if (authToken) {
+      fetchRecipe();
+    } else {
+      setMessage('You must be logged in to view recipe details.');
+    }
+  }, [id, authToken]);
 
   const handleSave = async () => {
     try {
