@@ -3,6 +3,8 @@ const router = express.Router();
 const verifyToken = require('../middlewares/authenticationMiddleware');
 const { getRecipesByIngredients, getRecipeInformation } = require('../services/spoonacularService');
 const SearchHistory = require('../models/SearchHistory');
+const Recipe = require('../models/Recipe');
+const { downloadImage } = require('../services/imageService');
 
 //Define the route for fetching recipes by ingredients
 //Example URL: /api/recipes?ingredients=apples,flour,sugar
@@ -46,5 +48,29 @@ router.get('/recipes/:id', async (req, res) => {
       res.status(500).json({ error: 'Failed to fetch recipe details' });
     }
   });
+
+// Endpoint to save a recipe to the database
+router.post('/', async (req, res) => {
+  const { spoonacularId, title, summary, image, ingredients, instructions } = req.body;
+  try {
+    let recipe = await Recipe.findOne({ spoonacularId });
+    if (!recipe) {
+      //Download the image and update the image field
+      let imagePath = image;
+      try {
+        const fileName = `recipe-${spoonacularId}.jpg`;
+        imagePath = await downloadImage(image, fileName);
+      } catch (error) {
+        console.error('Error downloading image:', error);
+        // Fallback to original URL if download fails
+      }
+      recipe = new Recipe({ spoonacularId, title, summary, image: imagePath, ingredients, instructions });
+      await recipe.save();
+    }
+    res.status(200).json(recipe);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 module.exports = router;

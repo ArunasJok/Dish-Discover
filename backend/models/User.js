@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
-
+    favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Recipe' }]
 }, { timestamps: true });
 
 //Pre-save hook to hash the password before saving the user to the database

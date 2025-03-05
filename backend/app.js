@@ -1,4 +1,4 @@
-// Description: Main entry point for the backend server. 
+// Main entry point for the backend server. 
 // This file is responsible for setting up the server, connecting to the database, and defining the routes for the API.
 require('dotenv').config();
 const express = require('express');
@@ -14,6 +14,7 @@ const aiRoutes = require('./routes/aiRoutes');
 const profileRoutes = require('./routes/profileRoutes');
 const telemetryRoutes = require('./routes/telemetryRoutes');
 const searchHistoryRoutes = require('./routes/searchhistoryRoutes');
+const myRecipeRoutes = require('./routes/myRecipeRoutes');
 
 const app = express();
 const port = process.env.PORT || 5000
@@ -35,6 +36,7 @@ app.use('/api/ai', aiRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/searchhistory', searchHistoryRoutes);
 app.use('/api/telemetry', telemetryRoutes);
+app.use('/api/recipes', myRecipeRoutes);
 
 //Defining route for the root URL
 app.get('/', (req, res) => {
