@@ -13,6 +13,7 @@ const Login = () => {
     password: '',
   });
   const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { login } = useContext(AuthContext); 
   const navigate = useNavigate();
 
@@ -22,6 +23,8 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage('');
+    setIsLoading(true);
     try {
       const data = await loginUser(credentials);
       if (data.token) {
@@ -33,6 +36,8 @@ const Login = () => {
       }
     } catch (err) {
       setMessage(err.response?.data?.error || 'Login failed');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -58,7 +63,7 @@ const Login = () => {
           required 
         />
         <br />
-        <button type="submit">Login</button>
+        <button type="submit" disabled={isLoading}>{isLoading ? 'Logging in...' : 'Login'}</button>
       </form>
       {message && <p>{message}</p>}
     </div>
