@@ -1,0 +1,47 @@
+/* src/components/Header.css */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #4caf50;
+  padding: 10px 20px;
+  color: #fff;
+}
+
+.logo a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.5rem;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li a {
+  color: #080808;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.nav-links li a.active {
+  border-bottom: 2px solid #15e74a;
+}
+
+.logout-btn {
+  background: transparent;
+  border: none;
+  color: #0a0a0a;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.logout-btn:hover {
+  text-decoration: underline;
+  font-weight: bold;
+  color: #f82626;
+}

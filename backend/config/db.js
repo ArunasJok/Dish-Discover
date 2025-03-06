@@ -1,4 +1,5 @@
-// config/db.js
+// Database connection configuration
+// The connectDB function is responsible for connecting to the MongoDB database.
 const mongoose = require('mongoose');
 
 const dbURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/dishdiscover';
