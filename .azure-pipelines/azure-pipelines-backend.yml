@@ -1,0 +1,45 @@
+#BACKEND pipeline
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+# Install Node.js version (adjust versionSpec as needed)
+- task: NodeTool@0
+  inputs:
+    versionSpec: '16.x'
+  displayName: 'Install Node.js'
+
+# Install backend dependencies
+- script: |
+    cd backend
+    npm install
+  displayName: 'Install dependencies'
+
+# Optional: Build step if you have a build process (e.g., transpile, bundle)
+# Uncomment the next lines if your backend has a build step.
+# - script: |
+#     cd backend
+#     npm run build
+#   displayName: 'Build backend'
+
+# Archive the backend folder (zip the contents of the backend folder)
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)/backend'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/backend.zip'
+    replaceExistingArchive: true
+  displayName: 'Archive backend files'
+
+# Publish the artifact
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/backend.zip'
+    ArtifactName: 'backendArtifact'
+  displayName: 'Publish Artifact'

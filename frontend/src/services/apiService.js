@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Defining backend's base URL
-const API_URL = 'http://localhost:5000';
+const API_URL = 'https://dishdiscover-backend.azurewebsites.net';
 
 // Registration API call
 export const registerUser = async (userData) => {
