@@ -1,12 +1,10 @@
-const logger = require('../config/logger');
-
 const errorHandler = (err, req, res, next) => {
-    logger.error(err.message, { stack: err.stack });
-    //Customizing response
-    res.status(err.status || 500).json({ 
-        error: {
-            message: err.message || 'Internal Server Error',
-        },
+    const statusCode = err.status || 500;
+    res.status(statusCode);
+    res.json({
+        message: err.message,
+        // Include stack trace only in development mode
+        stack: process.env.NODE_ENV === 'production' ? null : err.stack,
     });
 };
 

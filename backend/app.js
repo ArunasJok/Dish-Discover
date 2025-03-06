@@ -19,13 +19,6 @@ const myRecipeRoutes = require('./routes/myRecipeRoutes');
 const app = express();
 const port = process.env.PORT || 5000
 
-app.listen(port, '0.0.0.0', () => {
-    console.log(`Server is running on port ${port}`);
-  });
-
-// Connect to MongoDB
-connectDB();
-
 // Middleware to parse the request body as JSON, log HTTP requests, and enable CORS. 
 app.use(express.json());
 app.use(require('morgan')('dev'));
@@ -56,11 +49,13 @@ app.use((req, res, next) => {
 
 app.use(errorHandler);
 
-// Start the server and listen on the port
-if (require.main === module) {
-    app.listen(port, () => {
-        console.log(`Server is running on port ${port}`);
-    });
-}
+// Connect to MongoDB
+connectDB();
+
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Server is running on port ${port}`);
+});
+
+
 
 module.exports = app;
