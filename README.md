@@ -23,8 +23,8 @@ Dish Discover helps users plan meals using ingredients they already have at home
 2. Set up the backend:
    ```bash
    cd backend
-   pip install -r requirements.txt
-   python app.py
+   npm install
+   npm start
    ```
 3. Set up the frontend:
    ```bash
