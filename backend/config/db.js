@@ -5,7 +5,9 @@ const mongoose = require('mongoose');
 const connectDB = async () => {
   try {
     // Using the connection string from Azure Cosmos DB
-    const conn = await mongoose.connect(process.env.MONGO_CONNECTION_STRING, {     
+    //const conn = await mongoose.connect(process.env.MONGO_CONNECTION_STRING, {     
+    //});
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
     });
     console.log(`MongoDB connected: ${conn.connection.host}`);
   } catch (error) {
