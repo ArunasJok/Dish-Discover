@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
-import config from '../config';
+import { API_URL } from '../config';
 
 const Profile = () => {
   const [profile, setProfile] = useState({ username: '', email: '', password: '' });
@@ -13,7 +13,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(`${config.API_URL}/api/profile`, {
+        const response = await axios.get(`${API_URL}/api/profile`, {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
         // Set profile without password (or leave password field empty for update)
@@ -45,7 +45,7 @@ const Profile = () => {
       if (profile.password.trim() !== '') {
         updateData.password = profile.password;
       }
-      const response = await axios.put(`${config.API_URL}/api/profile`, updateData, {
+      const response = await axios.put(`${API_URL}/api/profile`, updateData, {
         headers: { 'Authorization': `Bearer ${authToken}` }
       });
       setMessage(response.data.message);

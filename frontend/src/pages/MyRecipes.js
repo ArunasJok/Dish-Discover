@@ -4,7 +4,7 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import RateRecipe from '../components/RateRecipe';
-import config from '../config';
+import { API_URL } from '../config';
 
 const MyRecipes = () => {
   const { authToken } = useContext(AuthContext);
@@ -13,7 +13,7 @@ const MyRecipes = () => {
 
   const fetchMyRecipes = useCallback(async () => {
     try {
-      const res = await axios.get(`${config.API_URL}/api/recipes/my`, {
+      const res = await axios.get(`${API_URL}/api/recipes/my`, {
         headers: { 'Authorization': `Bearer ${authToken}` }
       });
       setRecipes(res.data);
