@@ -4,19 +4,20 @@ import { useParams } from 'react-router-dom';
 //import { getRecipeDetail } from '../services/apiService';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
+import config from '../config';
 
 
 const RecipeDetail = () => {
   const { id } = useParams();
   const { authToken } = useContext(AuthContext);
   const [recipe, setRecipe] = useState(null);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState('');  
 
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
         // Calling integrated recipe detail endpoint.
-        const res = await axios.get(`http://localhost:5000/api/external/recipes/${id}`, {
+        const res = await axios.get(`${config.API_URL}/api/external/recipes/${id}`, {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
         setRecipe(res.data);
@@ -44,7 +45,7 @@ const RecipeDetail = () => {
         likes: recipe.likes || 0,
         details: recipe
       };
-      const res = await axios.post('http://localhost:5000/api/recipes/save', payload, {
+      const res = await axios.post(`${config.API_URL}/api/recipes/save`, payload, {
         headers: { 'Authorization': `Bearer ${authToken}` }
       });
       setMessage(res.data.message);

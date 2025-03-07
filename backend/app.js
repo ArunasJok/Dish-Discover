@@ -17,7 +17,7 @@ const searchHistoryRoutes = require('./routes/searchhistoryRoutes');
 const myRecipeRoutes = require('./routes/myRecipeRoutes');
 
 const app = express();
-const port = process.env.PORT || 5000
+const port = process.env.PORT
 
 // Middleware to parse the request body as JSON, log HTTP requests, and enable CORS. 
 app.use(express.json());

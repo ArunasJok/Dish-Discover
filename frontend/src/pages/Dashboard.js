@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import { API_URL } from '../config';
 
 const Dashboard = () => {
   const { authToken } = useContext(AuthContext);
@@ -14,7 +15,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/profile', {
+        const res = await axios.get(`${API_URL}/api/profile`, {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
         setUser(res.data);
@@ -26,7 +27,7 @@ const Dashboard = () => {
 
     const fetchSearchHistory = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/searchhistory', {
+        const res = await axios.get(`${API_URL}/api/searchhistory`, {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
         setSearchHistory(res.data);
@@ -37,7 +38,7 @@ const Dashboard = () => {
 
     const fetchTelemetry = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/telemetry', {
+        const res = await axios.get(`${API_URL}/api/telemetry`, {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
         setTelemetry(res.data);

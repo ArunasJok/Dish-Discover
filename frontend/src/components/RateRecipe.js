@@ -2,6 +2,7 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import config from '../config';
 
 const RateRecipe = ({ recipeId, onRatingUpdated }) => {
   const [rating, setRating] = useState(0);
@@ -12,7 +13,7 @@ const RateRecipe = ({ recipeId, onRatingUpdated }) => {
     e.preventDefault();
     try {
       await axios.put(
-        `http://localhost:5000/api/recipes/rate/${recipeId}`,
+        `${config.API_URL}/api/recipes/rate/${recipeId}`, // Use the centralized API URL
         { rating },
         {
           headers: { 'Authorization': `Bearer ${authToken}` }
