@@ -52,4 +52,5 @@ stages:
               appType: 'webAppLinux'
               appName: 'dishdiscover-backend'
               package: '$(Pipeline.Workspace)/backendArtifact/backend.zip'
+              dockerfile: '**/Dockerfile'
             displayName: 'Deploy to Azure App Service'

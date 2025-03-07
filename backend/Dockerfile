@@ -16,5 +16,5 @@ COPY . .
 # Expose the port the app runs on
 EXPOSE 8080
 
-# Start the app with PM2
+# Start the app
 CMD ["npm", "start"]
