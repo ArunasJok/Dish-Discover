@@ -4,7 +4,7 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import RateRecipe from '../components/RateRecipe';
-import { API_URL } from '../config';
+import config from '../config';
 
 const MyRecipes = () => {
   const { authToken } = useContext(AuthContext);

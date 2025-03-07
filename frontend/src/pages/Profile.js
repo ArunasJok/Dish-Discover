@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
-import { API_URL } from '../config';
+import config from '../config';
 
 const Profile = () => {
   const [profile, setProfile] = useState({ username: '', email: '', password: '' });

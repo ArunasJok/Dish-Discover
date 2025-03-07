@@ -1,6 +1,6 @@
 // This file contains the API calls to the backend server.
 import axios from 'axios';
-import config from '../config';
+import { API_URL } from '../config';
 
 // Registration API call
 export const registerUser = async (userData) => {
