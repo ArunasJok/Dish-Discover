@@ -1,5 +1,4 @@
-// This is the main component of the frontend.
-
+// Desc: Main App component that contains all the routes for the application
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
