@@ -49,15 +49,22 @@ const Layout = ({ children }) => {
               {dashboardLinks.map(link => (
                 <Button
                   key={link.to}
-                  color="inherit"
                   component={NavLink}
                   to={link.to}
+                  color="inherit"
+                  style={({ isActive }) => ({
+                    backgroundColor: isActive ? '#555' : 'transparent'
+                  })}
                   sx={{ textTransform: 'none' }}
                 >
                   {link.label}
                 </Button>
               ))}
-              <Button color="inherit" onClick={handleLogout} sx={{ textTransform: 'none' }}>
+              <Button
+                onClick={handleLogout}
+                color="inherit"
+                sx={{ textTransform: 'none' }}
+              >
                 Logout
               </Button>
             </>
