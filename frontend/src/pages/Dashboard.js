@@ -1,6 +1,7 @@
 // src/pages/Dashboard.js
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box } from '@mui/material';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
 
@@ -11,7 +12,6 @@ const Dashboard = () => {
   const [telemetry, setTelemetry] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Fetch user profile, search history, and telemetry data
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -55,48 +55,64 @@ const Dashboard = () => {
   }, [authToken]);
 
   return (
-    <div className="App">
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-      <h1>Welcome back, {user ? user.username : 'User'}!</h1>
-      {user && user.lastVisited && (
-        <p>Last visited: {new Date(user.lastVisited).toLocaleString()}</p>
+    <Container sx={{ mt: 4 }}>
+      {errorMessage && (
+        <Typography variant="body1" color="error" gutterBottom>
+          {errorMessage}
+        </Typography>
       )}
-      
-      <h2>Your Recipe Search History (Last Week)</h2>
-      <table border="1" cellPadding="5" cellSpacing="0">
-        <thead>
-          <tr>
-            <th>Search Title</th>
-            <th>Date</th>
-            <th>Popular Ingredients</th>
-          </tr>
-        </thead>
-        <tbody>
-          {searchHistory.length > 0 ? (
-            searchHistory.map((entry) => (
-              <tr key={entry._id}>
-                <td>{entry.searchTitle}</td>
-                <td>{new Date(entry.searchDate).toLocaleString()}</td>
-                <td>{entry.popularIngredients.join(', ')}</td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="3">No search history available.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+      <Typography variant="h4" color="primary" gutterBottom>
+        Welcome back, {user && user.username ? user.username : 'User'}!
+      </Typography>
+      {user && user.lastVisited && (
+        <Typography variant="body1" gutterBottom>
+          Last visited: {new Date(user.lastVisited).toLocaleString()}
+        </Typography>
+      )}
 
-      <h2>Telemetry Data</h2>
-      <ul>
-        <li>
+      <Box sx={{ mt: 4 }}>
+        <Typography variant="h5" gutterBottom>
+          Your Recipe Search History (Last Week)
+        </Typography>
+        {searchHistory.length > 0 ? (
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Search Title</TableCell>
+                  <TableCell>Date</TableCell>
+                  <TableCell>Popular Ingredients</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {searchHistory.map((entry) => (
+                  <TableRow key={entry._id}>
+                    <TableCell>{entry.searchTitle}</TableCell>
+                    <TableCell>{new Date(entry.searchDate).toLocaleString()}</TableCell>
+                    <TableCell>{entry.popularIngredients.join(', ')}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        ) : (
+          <Typography variant="body1">No search history available.</Typography>
+        )}
+      </Box>
+
+      <Box sx={{ mt: 4 }}>
+        <Typography variant="h5" gutterBottom>
+          Telemetry Data
+        </Typography>
+        <Typography variant="body1">
           Most popular searched ingredients:{' '}
           {telemetry.popularIngredients ? telemetry.popularIngredients.join(', ') : 'N/A'}
-        </li>
-        <li>Recipes searched in the last week: {telemetry.recipesLastWeek || 0}</li>
-      </ul>
-    </div>
+        </Typography>
+        <Typography variant="body1">
+          Recipes searched in the last week: {telemetry.recipesLastWeek || 0}
+        </Typography>
+      </Box>
+    </Container>
   );
 };
 
