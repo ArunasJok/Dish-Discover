@@ -7,12 +7,13 @@ import {
 } from '@mui/material';
 import homeImage from '../images/homepage.png';
 import Login from './Login';
+import Footer from './Footer';
 
 const Home = () => {
   return (
-    <Grid2 container sx={{ minHeight: 'calc(100vh - 64px)' }}>
+    <Grid container sx={{ minHeight: 'calc(100vh - 64px)' }}>
       {/* Left side: illustration & text */}
-      <Grid2
+      <Grid
         item
         xs={12}
         md={6}
@@ -27,7 +28,7 @@ const Home = () => {
       >
         <Box
           component="img"
-          src={homeImage}
+          src={cookingImage}
           alt="Cooking pot"
           sx={{ width: '80%', maxWidth: 400, mb: 3 }}
         />
@@ -37,10 +38,10 @@ const Home = () => {
         <Typography variant="body1" color="textSecondary">
           Find recipes using your available ingredients.
         </Typography>
-      </Grid2>
+      </Grid>
 
-      {/* Right side: Login form */}
-      <Grid2
+      {/* Right side: re-using our Login form */}
+      <Grid
         item
         xs={12}
         md={6}
@@ -48,15 +49,16 @@ const Home = () => {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
+          alignItems: 'flex-start',
           p: 4,
         }}
       >
-        <Box sx={{ maxWidth: 400, width: '100%', mx: 'auto' }}>
+        <Box sx={{ maxWidth: 400, width: '100%' }}>
           {/* Login component */}
           <Login />
         </Box>
-      </Grid2>
-    </Grid2>
+      </Grid>
+    </Grid>
   );
 };
 

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 //import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../services/apiService';
+import { Box, TextField, Button, Typography } from '@mui/material';
 
 const Register = () => {
    const [formData, setFormData] = useState({
@@ -32,41 +33,70 @@ const handleSubmit = async (e) => {
 };
 
 return (
-    <div className="App">
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <input 
-          type="text" 
-          name="username" 
-          placeholder="Username" 
-          onChange={handleChange} 
-          value={formData.username}
-          required 
-        />
-        <br />
-        <input 
-          type="email" 
-          name="email" 
-          placeholder="Email" 
-          onChange={handleChange} 
-          value={formData.email}
-          required 
-        />
-        <br />
-        <input 
-          type="password" 
-          name="password" 
-          placeholder="Password" 
-          onChange={handleChange} 
-          value={formData.password}
-          required 
-        />
-        <br />
-        <button type="submit">Register</button>
-      </form>
-      {message && <p>{message}</p>}
-    </div>
-  );
+  <Box
+    sx={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: 'calc(100vh - 64px)', // Adjust if you have a header
+      px: 2,
+    }}
+  >
+    <Typography variant="h4" gutterBottom>
+      Register
+    </Typography>
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{ width: '100%', maxWidth: 400 }}
+    >
+      <TextField
+        fullWidth
+        margin="normal"
+        label="Username"
+        name="username"
+        value={formData.username}
+        onChange={handleChange}
+        required
+      />
+      <TextField
+        fullWidth
+        margin="normal"
+        label="Email"
+        type="email"
+        name="email"
+        value={formData.email}
+        onChange={handleChange}
+        required
+      />
+      <TextField
+        fullWidth
+        margin="normal"
+        label="Password"
+        type="password"
+        name="password"
+        value={formData.password}
+        onChange={handleChange}
+        required
+      />
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        fullWidth
+        sx={{ mt: 2 }}
+      >
+        Register
+      </Button>
+    </Box>
+    {message && (
+      <Typography variant="body2" color="error" sx={{ mt: 2 }}>
+        {message}
+      </Typography>
+    )}
+  </Box>
+);
 };
 
 export default Register;

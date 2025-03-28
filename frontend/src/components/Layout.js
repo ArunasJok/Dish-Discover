@@ -34,8 +34,7 @@ const Layout = ({ children }) => {
   // Navigation links for guest users
   const publicLinks = [
     { label: 'Home', to: '/' },
-    { label: 'About', to: '/about' },
-    { label: 'Login', to: '/login' },
+    { label: 'About', to: '/about' },    
     { label: 'Register', to: '/register' },
   ];
 
