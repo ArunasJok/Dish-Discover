@@ -50,7 +50,7 @@ const Home = () => {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          alignItems: 'flex-start',
+          alignItems: 'center',
           p: 4,
         }}        
       >
@@ -65,7 +65,7 @@ const Home = () => {
           Register
         </Button>
       </Box>
-        <Box sx={{ maxWidth: 400, width: '100%', ml: 40 }}>
+        <Box sx={{ maxWidth: 400, width: '100%' }}>
           {/* Login component */}
           <Login />
         </Box>

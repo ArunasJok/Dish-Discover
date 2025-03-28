@@ -5,6 +5,7 @@ import ingredientsImage from '../images/ingredientsImage.png';
 import healthyEatingImage from '../images/healthyEatingImage.png';
 import shoppingListImage from '../images/shoppingListImage.png';
 import LandingNavButtons from '../components/LandingNavButtons';
+import customDishesImage from '../images/customDishesImage.png';
 
 const About = () => {
   return (
@@ -31,7 +32,7 @@ const About = () => {
         </Typography>
 
         <Grid2 container spacing={4}>
-          <Grid2 item xs={12} md={4}>
+          <Grid2 item xs={12} sm={6} md={3}>
             <Card sx={{ height: '100%' }}>
               <CardMedia
                 component="img"
@@ -50,7 +51,7 @@ const About = () => {
             </Card>
           </Grid2>
           
-          <Grid2 item xs={12} md={4}>
+          <Grid2 item xs={12} sm={6} md={3}>
             <Card sx={{ height: '100%' }}>
               <CardMedia
                 component="img"
@@ -69,7 +70,7 @@ const About = () => {
             </Card>
           </Grid2>
           
-          <Grid2 item xs={12} md={4}>
+          <Grid2 item xs={12} sm={6} md={3}>
             <Card sx={{ height: '100%' }}>
               <CardMedia
                 component="img"
@@ -83,6 +84,25 @@ const About = () => {
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
                   Automatically generate shopping lists to ensure you have the right ingredients for your next meal.
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid2>
+
+          <Grid2 item xs={12} sm={6} md={3}>
+            <Card sx={{ height: '100%' }}>
+              <CardMedia
+                component="img"
+                image={customDishesImage}
+                alt="Personalized recipes"
+                height="200"
+              />
+              <CardContent>
+                <Typography variant="h5" gutterBottom>
+                  Personalized Recipes
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Get recipe suggestions tailored to your taste and available ingredients.
                 </Typography>
               </CardContent>
             </Card>
