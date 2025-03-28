@@ -4,6 +4,7 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../services/apiService';
 import { AuthContext } from '../context/AuthContext';
+import { Box, TextField, Button, Typography } from '@mui/material';
 
 
 
@@ -42,31 +43,51 @@ const Login = () => {
   };
 
   return (
-    <div className="App">
-      <h2>Please Login</h2>
-      <form onSubmit={handleSubmit}>
-        <input 
-          type="email" 
-          name="email" 
-          placeholder="Email" 
-          onChange={handleChange} 
-          value={credentials.email}
-          required 
-        />
-        <br />
-        <input 
-          type="password" 
-          name="password" 
-          placeholder="Password" 
-          onChange={handleChange} 
-          value={credentials.password}
-          required 
-        />
-        <br />
-        <button type="submit" disabled={isLoading}>{isLoading ? 'Logging in...' : 'Login'}</button>
-      </form>
-      {message && <p>{message}</p>}
-    </div>
+    <Box component="form" onSubmit={handleSubmit}>
+      <Typography variant="h5" gutterBottom>
+        Please Login
+      </Typography>
+
+      <TextField
+        label="Email"
+        type="email"
+        name="email"
+        placeholder="Email"
+        onChange={handleChange}
+        value={credentials.email}
+        fullWidth
+        required
+        sx={{ mb: 2 }}
+      />
+
+      <TextField
+        label="Password"
+        type="password"
+        name="password"
+        placeholder="Password"
+        onChange={handleChange}
+        value={credentials.password}
+        fullWidth
+        required
+        sx={{ mb: 2 }}
+      />
+
+      <Button
+        type="submit"
+        variant="contained"
+        disabled={isLoading}
+        fullWidth
+        sx={{ textTransform: 'none' }}
+      >
+        {isLoading ? 'Logging in...' : 'Login'}
+      </Button>
+
+      {message && (
+        <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+          {message}
+        </Typography>
+      )}
+    </Box>
   );
 };
 
