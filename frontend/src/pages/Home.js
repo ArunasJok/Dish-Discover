@@ -52,7 +52,7 @@ const Home = () => {
           p: 4,
         }}
       >
-        <Box sx={{ maxWidth: 400, width: '100%', ml: 4 }}>
+        <Box sx={{ maxWidth: 400, width: '100%', ml: 40 }}>
           {/* Login component */}
           <Login />
         </Box>
