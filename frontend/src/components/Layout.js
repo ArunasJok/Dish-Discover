@@ -14,9 +14,9 @@ import {
   ListItemText,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useLocation, NavLink, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import Header from './Header';
+//import Header from './Header';
 import Footer from './Footer';
 
 const Layout = ({ children }) => {

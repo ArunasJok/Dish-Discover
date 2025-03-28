@@ -37,6 +37,17 @@ const Home = () => {
         <Typography variant="body1" color="textSecondary">
           Find recipes using your available ingredients.
         </Typography>
+        <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <Button component={NavLink} to="/" variant="contained" color="primary">
+            Home
+          </Button>
+          <Button component={NavLink} to="/about" variant="contained" color="secondary">
+            About
+          </Button>
+          <Button component={NavLink} to="/register" variant="contained" color="success">
+            Register
+          </Button>
+        </Box>
       </Grid2>
 
       {/* Right side: re-using our Login form */}
