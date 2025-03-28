@@ -23,7 +23,8 @@ const Layout = ({ children }) => {
   const { authToken, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
-  const isHome = location.pathname === '/';
+  const landingRoutes = ['/', '/about', '/register'];
+  const isLanding = landingRoutes.includes(location.pathname);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
@@ -84,7 +85,7 @@ const Layout = ({ children }) => {
     // A flex container to ensure footer stays at the bottom.
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       {/* Render Header only if not on the Home route */}
-      {!isHome && (
+      {!isLanding && (
         <>
           <AppBar position="static">
             <Toolbar>
@@ -152,7 +153,7 @@ const Layout = ({ children }) => {
       )}
 
       {/* Main content */}
-      <Box component="main" sx={{ flex: 1, padding: 2 }}>
+      <Box component="main" sx={{ flex: 1, padding: 2, position: 'relative' }}>
         {children}
       </Box>
 

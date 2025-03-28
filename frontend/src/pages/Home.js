@@ -37,19 +37,8 @@ const Home = () => {
           Dish Discover - Cook with what you have
         </Typography>
         <Typography variant="body1" color="textSecondary">
-          Find recipes using your available ingredients.
-        </Typography>
-        <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Button component={NavLink} to="/" variant="contained" color="primary">
-            Home
-          </Button>
-          <Button component={NavLink} to="/about" variant="contained" color="secondary">
-            About
-          </Button>
-          <Button component={NavLink} to="/register" variant="contained" color="success">
-            Register
-          </Button>
-        </Box>
+          Helping you cook with the ingredients you have at home to prevent waste, promote healthy eating, and simplify meal planning.
+        </Typography>        
       </Grid2>
 
       {/* Right side: re-using our Login form */}
@@ -63,8 +52,19 @@ const Home = () => {
           justifyContent: 'center',
           alignItems: 'flex-start',
           p: 4,
-        }}
+        }}        
       >
+        <Box sx={{ position: 'absolute', top: 16, right: 16, display: 'flex', gap: 2 }}>
+        <Button component={NavLink} to="/" variant="outlined" color="primary">
+          Home
+        </Button>
+        <Button component={NavLink} to="/about" variant="outlined" color="primary">
+          About
+        </Button>
+        <Button component={NavLink} to="/register" variant="outlined" color="primary">
+          Register
+        </Button>
+      </Box>
         <Box sx={{ maxWidth: 400, width: '100%', ml: 40 }}>
           {/* Login component */}
           <Login />
