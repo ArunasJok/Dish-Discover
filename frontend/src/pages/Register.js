@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../services/apiService';
 import { Box, TextField, Button, Typography } from '@mui/material';
+import LandingNavButtons from '../components/LandingNavButtons';
 
 const Register = () => {
    const [formData, setFormData] = useState({
@@ -43,6 +44,7 @@ return (
       px: 2,
     }}
   >
+    <LandingNavButtons />
     <Typography variant="h4" gutterBottom>
       Register
     </Typography>

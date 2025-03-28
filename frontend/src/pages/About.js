@@ -4,11 +4,13 @@ import { Box, Typography, Grid2, Card, CardContent, CardMedia } from '@mui/mater
 import ingredientsImage from '../images/ingredientsImage.png';
 import healthyEatingImage from '../images/healthyEatingImage.png';
 import shoppingListImage from '../images/shoppingListImage.png';
+import LandingNavButtons from '../components/LandingNavButtons';
 
 const About = () => {
   return (
     // Outer container with grey background
-    <Box sx={{ backgroundColor: '#f0f0f0', minHeight: '100vh', py: 4 }}>
+    <Box sx={{ backgroundColor: '#f0f0f0', minHeight: '100vh', py: 4, position: 'relative' }}>
+      <LandingNavButtons />
       {/* Inner container */}
       <Box
         sx={{
