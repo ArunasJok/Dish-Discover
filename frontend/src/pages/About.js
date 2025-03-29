@@ -40,9 +40,9 @@ const About = () => {
           Our mission is to reduce food waste, promote healthy eating, and simplify meal planning by inspiring you with creative dishes and generating smart shopping lists.
         </Typography>
 
-        <Grid container spacing={4}>
+        <Grid2 container spacing={4}>
           {/* Tile 1 */}
-          <Grid item xs={12} sm={6}>
+          <Grid2 item xs={12} sm={6}>
             <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               <CardMedia
                 component="img"
@@ -59,10 +59,10 @@ const About = () => {
                 </Typography>
               </CardContent>
             </Card>
-          </Grid>
+          </Grid2>
 
           {/* Tile 2 */}
-          <Grid item xs={12} sm={6}>
+          <Grid2 item xs={12} sm={6}>
             <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               <CardMedia
                 component="img"
@@ -79,10 +79,10 @@ const About = () => {
                 </Typography>
               </CardContent>
             </Card>
-          </Grid>
+          </Grid2>
 
           {/* Tile 3 */}
-          <Grid item xs={12} sm={6}>
+          <Grid2 item xs={12} sm={6}>
             <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               <CardMedia
                 component="img"
@@ -99,10 +99,10 @@ const About = () => {
                 </Typography>
               </CardContent>
             </Card>
-          </Grid>
+          </Grid2>
 
           {/* Tile 4 */}
-          <Grid item xs={12} sm={6}>
+          <Grid2 item xs={12} sm={6}>
             <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               <CardMedia
                 component="img"
@@ -119,8 +119,8 @@ const About = () => {
                 </Typography>
               </CardContent>
             </Card>
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
 
         <Box sx={{ mt: 4, textAlign: 'center' }}>
           <Typography variant="body1">
