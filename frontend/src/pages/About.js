@@ -23,15 +23,20 @@ const About = () => {
       <div style={{ paddingTop: '64px' }}></div>
       
       {/* Inner container */}
-      <Box
-        sx={{
-          maxWidth: 1200,
-          mx: 'auto',
-          backgroundColor: 'white',
-          p: 4,
-          borderRadius: 2,
-          boxShadow: 3,
-        }}
+    <Box
+      sx={{
+        maxWidth: 1200,
+        mx: 'auto',
+        backgroundColor: 'white',
+        p: 2,
+        borderRadius: 2,
+        boxShadow: 3,
+        position: 'relative',
+        maxHeight: '80vh',          
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+       }}
       >
         <Typography variant="h3" align="center" gutterBottom>
           About Dish Discover
