@@ -1,6 +1,7 @@
 // About page component
 import React from 'react';
-import { Box, Typography, Grid2, Card, CardContent, CardMedia } from '@mui/material';
+import { Box, Typography, Card, CardContent, CardMedia } from '@mui/material';
+import Grid2 from '@mui/material/Unstable_Grid2';
 import ingredientsImage from '../images/ingredientsImage.png';
 import healthyEatingImage from '../images/healthyEatingImage.png';
 import shoppingListImage from '../images/shoppingListImage.png';

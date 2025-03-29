@@ -16,6 +16,7 @@ import {
   Box,
   TextField,
 } from '@mui/material';
+import emoji from 'node-emoji';
 
 const Dashboard = () => {
   const { authToken } = useContext(AuthContext);
@@ -75,20 +76,12 @@ const Dashboard = () => {
       entry.popularIngredients.join(' ').toLowerCase().includes(lowerFilter)
     );
   });
-
-  const ingredientEmojis = {
-    tomato: '🍅',
-    cheese: '🧀',
-    basil: '🌿',
-    chicken: '🍗',
-    garlic: '🧄',
-    onion: '🧅',
-    pepper: '🌶️',
-  };
+  
 
   const getIngredientEmoji = (ingredient) => {
-    const lower = ingredient.toLowerCase();
-    return ingredientEmojis[lower] || '🥦'; // default emoji if not found
+    const key = ingredient.toLowerCase();
+    const found = emoji.get(key);
+    return found !== `:${key}:` ? found : '🥦'; // if not found, return broccoli as default
   };
 
   return (

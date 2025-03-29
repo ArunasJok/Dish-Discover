@@ -2,10 +2,10 @@
 import React from 'react';
 import {
   Box,
-  Grid2,
   Typography,
   Button  
 } from '@mui/material';
+import Grid2 from '@mui/material/Unstable_Grid2';
 import { NavLink } from 'react-router-dom';
 import homeImage from '../images/homepage.png';
 import Login from './Login';
@@ -65,7 +65,7 @@ const Home = () => {
           Register
         </Button>
       </Box>
-        <Box sx={{ maxWidth: 400, width: '100%', mr: 40 }}>
+        <Box sx={{ maxWidth: 400, width: '100%', ml: 'auto' }}>
           {/* Login component */}
           <Login />
         </Box>
