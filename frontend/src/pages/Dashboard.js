@@ -21,6 +21,8 @@ import {
   Grid2
 } from '@mui/material';
 import * as emoji from 'node-emoji';
+import pluralize from 'pluralize';
+import missingImage from '../images/missingIngredient.png';
 
 const Dashboard = () => {
   const { authToken } = useContext(AuthContext);
@@ -89,7 +91,8 @@ const Dashboard = () => {
   };
 
   const ingredientImageUrl = (ingredient) => {
-    const formatted = ingredient.toLowerCase().replace(/\s+/g, '-');
+    const singular = pluralize.singular(ingredient);
+    const formatted = singular.toLowerCase().replace(/\s+/g, '-');
     return `https://spoonacular.com/cdn/ingredients_100x100/${formatted}.jpg`;
   };
 
@@ -108,6 +111,10 @@ const Dashboard = () => {
                 component="img"
                 image={ingredientImageUrl(ingredient)}
                 alt={ingredient}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = missingImage;
+                }}
                 sx={{ width: '100%', height: 100, objectFit: 'cover' }}
               />
               <CardContent sx={{ py: 1, px: 1 }}>
@@ -140,37 +147,11 @@ const Dashboard = () => {
         {/* Telemetry Section */}
         <Box sx={{ mt: 4 }}>
         <Typography variant="h5" gutterBottom>
-          Most Popular Ingredients
+          Most Popular Recent Ingredients
         </Typography>
         {renderIngredientTiles()}
         </Box>
-
-        <Box sx={{ mt: 4 }}>
-          <Typography variant="h5" gutterBottom>
-            Most Popular Ingredients
-          </Typography>
-          {telemetry.popularIngredients && telemetry.popularIngredients.length > 0 ? (
-            <Grid2 container spacing={2}>
-              {telemetry.popularIngredients.slice(0, 10).map((ingredient, idx) => (
-                <Grid2 key={idx} xs={6} sm={4} md={2.4}>
-                  <Card sx={{ textAlign: 'center' }}>
-                    <CardMedia
-                      component="img"
-                      image={ingredientImageUrl(ingredient)}
-                      alt={ingredient}
-                      sx={{ width: '100%', height: 100, objectFit: 'cover' }}
-                    />
-                    <CardContent sx={{ py: 1, px: 1 }}>
-                      <Typography variant="body2">{ingredient}</Typography>
-                    </CardContent>
-                  </Card>
-                </Grid2>
-              ))}
-            </Grid2>
-          ) : (
-            <Typography variant="body1">No ingredient data available.</Typography>
-          )}
-        </Box>
+        
 
         {/* Search History Section with Filtering */}
         <Box sx={{ mt: 4 }}>
