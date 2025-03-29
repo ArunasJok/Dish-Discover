@@ -16,7 +16,7 @@ import {
   Box,
   TextField,
 } from '@mui/material';
-import emoji from 'node-emoji';
+import * as emoji from 'node-emoji';
 
 const Dashboard = () => {
   const { authToken } = useContext(AuthContext);
