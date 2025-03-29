@@ -2,7 +2,7 @@
 import React from 'react';
 import { AppBar, Toolbar, Button, Box, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
-import Logo from './images/logo.png';
+import Logo from '../images/logo.png';
 
 const LandingNavButtons = () => {
   return (
