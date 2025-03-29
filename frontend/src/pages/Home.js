@@ -65,7 +65,7 @@ const Home = () => {
           Register
         </Button>
       </Box>
-        <Box sx={{ maxWidth: 400, width: '100%' }}>
+        <Box sx={{ maxWidth: 400, width: '100%', mr: 40 }}>
           {/* Login component */}
           <Login />
         </Box>

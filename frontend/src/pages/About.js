@@ -95,7 +95,7 @@ const About = () => {
                 component="img"
                 image={customDishesImage}
                 alt="Personalized recipes"
-                height="200"
+                height="300"
               />
               <CardContent>
                 <Typography variant="h5" gutterBottom>
