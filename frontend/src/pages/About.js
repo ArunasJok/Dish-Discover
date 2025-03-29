@@ -33,14 +33,13 @@ const About = () => {
 
         <Grid2 container spacing={4}>
           <Grid2 item xs={12} sm={6} md={3}>
-            <Card sx={{ height: '100%' }}>
+            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               <CardMedia
                 component="img"
                 image={ingredientsImage}
-                alt="Using ingredients at home"
-                height="300"
+                alt="Using ingredients at home"                
               />
-              <CardContent>
+              <CardContent sx={{ flexGrow: 1 }}>
                 <Typography variant="h5" gutterBottom>
                   Reduce Food Waste
                 </Typography>
@@ -52,14 +51,13 @@ const About = () => {
           </Grid2>
           
           <Grid2 item xs={12} sm={6} md={3}>
-            <Card sx={{ height: '100%' }}>
+            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               <CardMedia
                 component="img"
                 image={healthyEatingImage}
-                alt="Healthy eating"
-                height="300"
+                alt="Healthy eating"                
               />
-              <CardContent>
+              <CardContent sx={{ flexGrow: 1 }}>
                 <Typography variant="h5" gutterBottom>
                   Promote Healthy Eating
                 </Typography>
@@ -71,14 +69,13 @@ const About = () => {
           </Grid2>
           
           <Grid2 item xs={12} sm={6} md={3}>
-            <Card sx={{ height: '100%' }}>
+            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               <CardMedia
                 component="img"
                 image={shoppingListImage}
-                alt="Smart shopping list"
-                height="300"
+                alt="Smart shopping list"                
               />
-              <CardContent>
+              <CardContent sx={{ flexGrow: 1 }}>
                 <Typography variant="h5" gutterBottom>
                   Smart Shopping Lists
                 </Typography>
@@ -90,14 +87,13 @@ const About = () => {
           </Grid2>
 
           <Grid2 item xs={12} sm={6} md={3}>
-            <Card sx={{ height: '100%' }}>
+            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               <CardMedia
                 component="img"
                 image={customDishesImage}
-                alt="Personalized recipes"
-                height="300"
+                alt="Personalized recipes"                
               />
-              <CardContent>
+              <CardContent sx={{ flexGrow: 1 }}>
                 <Typography variant="h5" gutterBottom>
                   Personalized Recipes
                 </Typography>
