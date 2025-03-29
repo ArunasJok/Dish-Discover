@@ -45,6 +45,7 @@ const Home = () => {
               justifyContent: 'center',
               alignItems: 'center',
               p: 2,
+              position: 'relative',
             }}
           >
             <Box
