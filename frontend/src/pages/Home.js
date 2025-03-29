@@ -14,6 +14,10 @@ const Home = () => {
   return (
     // Grey background
     <Box sx={{ backgroundColor: '#f0f0f0', minHeight: '100vh', py: 4 }}>
+      
+      <NavBar />
+      <div style={{ paddingTop: '64px' }}></div>
+      
       {/* Centered white container */}
       <Box
         sx={{
@@ -65,9 +69,7 @@ const Home = () => {
               p: 4,
               position: 'relative',
             }}
-          >
-            {/* Navigation buttons */}
-            <LandingNavButtons />
+          >         
 
             <Box sx={{ maxWidth: 400, width: '100%' }}>
               <Login />

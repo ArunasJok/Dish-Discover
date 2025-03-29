@@ -1,29 +1,41 @@
 // Navigation for landing pages
 import React from 'react';
-import { Box, Button } from '@mui/material';
+import { AppBar, Toolbar, Button, Box, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
+import Logo from './Logo';
 
 const LandingNavButtons = () => {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        gap: 2,
-        justifyContent: 'flex-end',
-        mb: 4,
-        width: '100%',
-      }}
+    <AppBar
+      position="fixed"
+      sx={{ backgroundColor: 'white', boxShadow: 'none', color: 'black' }}
     >
-      <Button component={NavLink} to="/" variant="outlined" color="primary">
-        Home
-      </Button>
-      <Button component={NavLink} to="/about" variant="outlined" color="primary">
-        About
-      </Button>
-      <Button component={NavLink} to="/register" variant="outlined" color="primary">
-        Register
-      </Button>
-    </Box>
+      <Toolbar sx={{ justifyContent: 'space-between' }}>
+        {/* Logo and App Name on the left */}
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Logo />
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ ml: 1, fontWeight: 'bold', color: 'black' }}
+          >
+            Dish Discover
+          </Typography>
+        </Box>
+        {/* Navigation buttons on the right */}
+        <Box>
+          <Button component={NavLink} to="/" color="inherit">
+            Home
+          </Button>
+          <Button component={NavLink} to="/about" color="inherit">
+            About
+          </Button>
+          <Button component={NavLink} to="/register" color="inherit">
+            Register
+          </Button>
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 };
 

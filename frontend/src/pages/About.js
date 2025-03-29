@@ -16,11 +16,11 @@ const About = () => {
         minHeight: '100vh',
         py: 4,
         position: 'relative',
-      }}
+      }}      
     >
-      {/* Navigation buttons */}
-      <LandingNavButtons />
-
+      <NavBar />
+      <div style={{ paddingTop: '64px' }}></div>
+      
       {/* Inner container */}
       <Box
         sx={{
