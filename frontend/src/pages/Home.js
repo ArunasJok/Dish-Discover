@@ -3,12 +3,12 @@ import React from 'react';
 import {
   Box,
   Typography,
-  Button,
   Grid2  
 } from '@mui/material';
-import { NavLink } from 'react-router-dom';
+//import { NavLink } from 'react-router-dom';
 import homeImage from '../images/homepage.png';
 import Login from './Login';
+import LandingNavButtons from '../components/LandingNavButtons';
 
 const Home = () => {
   return (
@@ -29,9 +29,7 @@ const Home = () => {
         <Grid2 container sx={{ minHeight: 'calc(100vh - 64px)' }}>
           {/* Left side: illustration & text */}
           <Grid2
-            item
-            xs={12}
-            md={6}
+            size={{ xs: 12, md: 6 }}
             sx={{
               backgroundColor: '#f8f8f8',
               display: 'flex',
@@ -58,9 +56,7 @@ const Home = () => {
 
           {/* Right side: Login form & nav buttons */}
           <Grid2
-            item
-            xs={12}
-            md={6}
+            size={{ xs: 12, md: 6 }}
             sx={{
               display: 'flex',
               flexDirection: 'column',
@@ -71,25 +67,7 @@ const Home = () => {
             }}
           >
             {/* Navigation buttons */}
-            <Box
-              sx={{
-                position: 'absolute',
-                top: 16,
-                right: 16,
-                display: 'flex',
-                gap: 2,
-              }}
-            >
-              <Button component={NavLink} to="/" variant="outlined" color="primary">
-                Home
-              </Button>
-              <Button component={NavLink} to="/about" variant="outlined" color="primary">
-                About
-              </Button>
-              <Button component={NavLink} to="/register" variant="outlined" color="primary">
-                Register
-              </Button>
-            </Box>
+            <LandingNavButtons />
 
             <Box sx={{ maxWidth: 400, width: '100%' }}>
               <Login />

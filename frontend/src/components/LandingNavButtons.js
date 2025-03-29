@@ -7,12 +7,11 @@ const LandingNavButtons = () => {
   return (
     <Box
       sx={{
-        position: 'absolute',
-        top: 16,
-        right: 16,
         display: 'flex',
         gap: 2,
-        zIndex: 10,
+        justifyContent: 'flex-end',
+        mb: 4,
+        width: '100%',
       }}
     >
       <Button component={NavLink} to="/" variant="outlined" color="primary">
