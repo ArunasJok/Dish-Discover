@@ -1,64 +1,61 @@
 // About page component
+// About.jsx
 import React from 'react';
 import { Box, Typography, Card, CardContent, CardMedia, Grid2 } from '@mui/material';
+import LandingNavButtons from '../components/LandingNavButtons';
+
+// Images
 import ingredientsImage from '../images/ingredientsImage.png';
 import healthyEatingImage from '../images/healthyEatingImage.png';
 import shoppingListImage from '../images/shoppingListImage.png';
-import LandingNavButtons from '../components/LandingNavButtons';
 import customDishesImage from '../images/customDishesImage.png';
 
 const About = () => {
   return (
-    // Outer container with grey background
     <Box
       sx={{
         backgroundColor: '#f0f0f0',
-        minHeight: '80vh',
+        minHeight: '100vh',  // Fill the viewport vertically
         py: 4,
         position: 'relative',
-        overflowY: 'auto',
-      }}      
+      }}
     >
       <LandingNavButtons />
-      <div style={{ paddingTop: '64px' }}></div>
-      
-      {/* Inner container */}
-    <Box
-      sx={{
-        maxWidth: 1200,
-        width: '90vw',
-        height: '80vh',
-        mx: 'auto',
-        backgroundColor: 'white',
-        p: 2,
-        borderRadius: 2,
-        boxShadow: 3,
-        position: 'relative',                  
-        display: 'grid',
-        gridTemplateColumns: 'auto auto',
-        gridTemplateRows: 'auto auto',
-        gap: 2,
-       }}
+      <div style={{ paddingTop: '64px' }}></div> {/* Spacing for fixed NavBar */}
+
+      {/* Outer white container */}
+      <Box
+        sx={{
+          maxWidth: 1200,
+          width: '90vw',
+          mx: 'auto',
+          backgroundColor: 'white',
+          p: 2,
+          borderRadius: 2,
+          boxShadow: 3,
+        }}
       >
         <Typography variant="h3" align="center" gutterBottom>
           About Dish Discover
         </Typography>
         <Typography variant="body1" align="center" sx={{ mb: 4 }}>
           Dish Discover is an AI-powered web app that helps you decide what to cook based on the ingredients you have at home.
-          Our mission is to reduce food waste, promote healthy eating, and simplify meal planning by inspiring you with creative dishes and generating smart shopping lists.
+          Our mission is to reduce food waste, promote healthy eating, and simplify meal planning by inspiring you with creative dishes
+          and generating smart shopping lists.
         </Typography>
 
-        <Grid2 container gap={4}>
+        {/* 2×2 grid on screens >=600px, single column below that */}
+        <Grid2 container spacing={2}>
           {/* Tile 1 */}
-          <Grid2 size={{ xs: 6, sm: 6 }}>
-            <Card  sx={{ height: '100%', maxWidth: 400, display: 'flex', flexDirection: 'row' }}>
+          <Grid2 xs={12} sm={6}>
+            <Card sx={{ display: 'flex', maxWidth: '100%' }}>
               <CardMedia
                 component="img"
                 image={ingredientsImage}
                 alt="Using ingredients at home"
-                sx={{ height: 200, objectFit: 'cover' }}
+                sx={{ width: 200, objectFit: 'cover' }}
               />
-              <CardContent sx={{ flexGrow: 1 }}>
+              <CardContent>
                 <Typography variant="h5" gutterBottom>
                   Reduce Food Waste
                 </Typography>
@@ -70,15 +67,15 @@ const About = () => {
           </Grid2>
 
           {/* Tile 2 */}
-          <Grid2 size={{ xs: 6, sm: 6 }}>
-            <Card  sx={{ height: '100%', maxWidth: 400, display: 'flex', flexDirection: 'row' }}>
+          <Grid2 xs={12} sm={6}>
+            <Card sx={{ display: 'flex', maxWidth: '100%' }}>
               <CardMedia
                 component="img"
                 image={healthyEatingImage}
                 alt="Healthy eating"
-                sx={{ height: 200, objectFit: 'cover' }}
+                sx={{ width: 200, objectFit: 'cover' }}
               />
-              <CardContent sx={{ flexGrow: 1 }}>
+              <CardContent>
                 <Typography variant="h5" gutterBottom>
                   Promote Healthy Eating
                 </Typography>
@@ -90,15 +87,15 @@ const About = () => {
           </Grid2>
 
           {/* Tile 3 */}
-          <Grid2 size={{ xs: 6, sm: 6 }}>
-            <Card  sx={{ height: '100%', maxWidth: 400, display: 'flex', flexDirection: 'row' }}>
+          <Grid2 xs={12} sm={6}>
+            <Card sx={{ display: 'flex', maxWidth: '100%' }}>
               <CardMedia
                 component="img"
                 image={shoppingListImage}
                 alt="Smart shopping list"
-                sx={{ height: 200, objectFit: 'cover' }}
+                sx={{ width: 200, objectFit: 'cover' }}
               />
-              <CardContent sx={{ flexGrow: 1 }}>
+              <CardContent>
                 <Typography variant="h5" gutterBottom>
                   Smart Shopping Lists
                 </Typography>
@@ -110,15 +107,15 @@ const About = () => {
           </Grid2>
 
           {/* Tile 4 */}
-          <Grid2 size={{ xs: 6, sm: 6 }}>
-            <Card  sx={{ height: '100%', maxWidth: 400, display: 'flex', flexDirection: 'row' }}>
+          <Grid2 xs={12} sm={6}>
+            <Card sx={{ display: 'flex', maxWidth: '100%' }}>
               <CardMedia
                 component="img"
                 image={customDishesImage}
                 alt="Personalized recipes"
-                sx={{ height: 200, objectFit: 'cover' }}
+                sx={{ width: 200, objectFit: 'cover' }}
               />
-              <CardContent sx={{ flexGrow: 1 }}>
+              <CardContent>
                 <Typography variant="h5" gutterBottom>
                   Personalized Recipes
                 </Typography>
