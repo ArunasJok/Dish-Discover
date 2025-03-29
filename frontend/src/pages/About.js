@@ -13,9 +13,10 @@ const About = () => {
     <Box
       sx={{
         backgroundColor: '#f0f0f0',
-        minHeight: '100vh',
+        minHeight: '80vh',
         py: 4,
         position: 'relative',
+        overflowY: 'auto',
       }}      
     >
       <LandingNavButtons />

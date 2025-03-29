@@ -2,7 +2,7 @@
 import React from 'react';
 import { AppBar, Toolbar, Button, Box, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
-import Logo from './Logo';
+import Logo from './images/logo.png';
 
 const LandingNavButtons = () => {
   return (
@@ -13,7 +13,11 @@ const LandingNavButtons = () => {
       <Toolbar sx={{ justifyContent: 'space-between' }}>
         {/* Logo and App Name on the left */}
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Logo />
+          <img
+            src={Logo}
+            alt="Dish Discover Logo"
+            style={{ width: '40px', height: '40px' }}
+          />
           <Typography
             variant="h6"
             component="div"

@@ -28,6 +28,8 @@ const Home = () => {
           borderRadius: 2,
           boxShadow: 3,
           position: 'relative',
+          maxHeight: '80vh',
+          overflowY: 'auto',
         }}
       >
         <Grid2 container sx={{ minHeight: 'calc(100vh - 64px)' }}>
