@@ -18,7 +18,7 @@ const About = () => {
         position: 'relative',
       }}      
     >
-      <NavBar />
+      <LandingNavButtons />
       <div style={{ paddingTop: '64px' }}></div>
       
       {/* Inner container */}

@@ -15,9 +15,9 @@ const Home = () => {
     // Grey background
     <Box sx={{ backgroundColor: '#f0f0f0', minHeight: '100vh', py: 4 }}>
       
-      <NavBar />
+      <LandingNavButtons />
       <div style={{ paddingTop: '64px' }}></div>
-      
+
       {/* Centered white container */}
       <Box
         sx={{
