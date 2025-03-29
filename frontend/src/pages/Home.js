@@ -3,9 +3,9 @@ import React from 'react';
 import {
   Box,
   Typography,
-  Button  
+  Button,
+  Grid2  
 } from '@mui/material';
-import Grid2 from '@mui/material/Unstable_Grid2';
 import { NavLink } from 'react-router-dom';
 import homeImage from '../images/homepage.png';
 import Login from './Login';
