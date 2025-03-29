@@ -13,7 +13,7 @@ import LandingNavButtons from '../components/LandingNavButtons';
 const Home = () => {
   return (
     // Grey background
-    <Box sx={{ backgroundColor: '#f0f0f0', minHeight: '100vh', py: 4 }}>
+    <Box sx={{ backgroundColor: '#f0f0f0', minHeight: '80vh', py: 4 }}>
       
       <LandingNavButtons />
       <div style={{ paddingTop: '64px' }}></div>

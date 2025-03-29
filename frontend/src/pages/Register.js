@@ -34,7 +34,7 @@ const handleSubmit = async (e) => {
 };
 
 return (
-  <Box sx={{ backgroundColor: '#f0f0f0', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
+  <Box sx={{ backgroundColor: '#f0f0f0', minHeight: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
      
       <LandingNavButtons />
       <div style={{ paddingTop: '64px' }}></div>
