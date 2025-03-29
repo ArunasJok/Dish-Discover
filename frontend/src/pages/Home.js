@@ -4,8 +4,7 @@ import {
   Box,
   Typography,
   Button,
-  Grid2,
-  Card  
+  Grid2  
 } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import homeImage from '../images/homepage.png';
@@ -13,26 +12,20 @@ import Login from './Login';
 
 const Home = () => {
   return (
-    // Outer Box for grey background
-    <Box
-      sx={{
-        backgroundColor: '#f0f0f0', // grey background
-        minHeight: '100vh',
-        py: 4, // top/bottom padding
-      }}
-    >
-      {/* Inner Box centered on the page */}
+    // Grey background
+    <Box sx={{ backgroundColor: '#f0f0f0', minHeight: '100vh', py: 4 }}>
+      {/* Centered white container */}
       <Box
         sx={{
           maxWidth: 1200,
-          mx: 'auto', // center horizontally
+          mx: 'auto',
           backgroundColor: 'white',
+          p: 4,
           borderRadius: 2,
-          p: { xs: 2, md: 4 }, // responsive padding
-          position: 'relative', // so the top-right nav can position correctly
+          boxShadow: 3,
+          position: 'relative',
         }}
       >
-        {/* Two-column layout */}
         <Grid2 container sx={{ minHeight: 'calc(100vh - 64px)' }}>
           {/* Left side: illustration & text */}
           <Grid2
@@ -40,11 +33,12 @@ const Home = () => {
             xs={12}
             md={6}
             sx={{
+              backgroundColor: '#f8f8f8',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
-              p: 2,
+              p: 4,
             }}
           >
             <Box
@@ -62,7 +56,7 @@ const Home = () => {
             </Typography>
           </Grid2>
 
-          {/* Right side: Login form */}
+          {/* Right side: Login form & nav buttons */}
           <Grid2
             item
             xs={12}
@@ -72,10 +66,11 @@ const Home = () => {
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
-              p: 2,
+              p: 4,
+              position: 'relative',
             }}
           >
-            {/* Navigation buttons in top-right */}
+            {/* Navigation buttons */}
             <Box
               sx={{
                 position: 'absolute',
@@ -97,7 +92,6 @@ const Home = () => {
             </Box>
 
             <Box sx={{ maxWidth: 400, width: '100%' }}>
-              {/* Login element */}
               <Login />
             </Box>
           </Grid2>

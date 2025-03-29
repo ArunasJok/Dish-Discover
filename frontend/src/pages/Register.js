@@ -34,71 +34,77 @@ const handleSubmit = async (e) => {
 };
 
 return (
-  <Box
-    sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: 'calc(100vh - 64px)', // Adjust if you have a header
-      px: 2,
-    }}
-  >
-    <LandingNavButtons />
-    <Typography variant="h4" gutterBottom>
-      Register
-    </Typography>
-    <Box
-      component="form"
-      onSubmit={handleSubmit}
-      sx={{ width: '100%', maxWidth: 400 }}
-    >
-      <TextField
-        fullWidth
-        margin="normal"
-        label="Username"
-        name="username"
-        value={formData.username}
-        onChange={handleChange}
-        required
-      />
-      <TextField
-        fullWidth
-        margin="normal"
-        label="Email"
-        type="email"
-        name="email"
-        value={formData.email}
-        onChange={handleChange}
-        required
-      />
-      <TextField
-        fullWidth
-        margin="normal"
-        label="Password"
-        type="password"
-        name="password"
-        value={formData.password}
-        onChange={handleChange}
-        required
-      />
-      <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        fullWidth
-        sx={{ mt: 2 }}
+  <Box sx={{ backgroundColor: '#f0f0f0', minHeight: '100vh', py: 4, position: 'relative' }}>
+      {/* White container in the center */}
+      <Box
+        sx={{
+          maxWidth: 600,
+          mx: 'auto',
+          backgroundColor: 'white',
+          p: 4,
+          borderRadius: 2,
+          boxShadow: 3,
+          position: 'relative',
+        }}
       >
-        Register
-      </Button>
+        {/* Navigation buttons */}
+        <LandingNavButtons />
+
+        <Typography variant="h4" align="center" gutterBottom>
+          Register
+        </Typography>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{ width: '100%', maxWidth: 400, mx: 'auto' }}
+        >
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Username"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Email"
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Password"
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ mt: 2 }}
+          >
+            Register
+          </Button>
+        </Box>
+        {message && (
+          <Typography variant="body2" color="error" sx={{ mt: 2, textAlign: 'center' }}>
+            {message}
+          </Typography>
+        )}
+      </Box>
     </Box>
-    {message && (
-      <Typography variant="body2" color="error" sx={{ mt: 2 }}>
-        {message}
-      </Typography>
-    )}
-  </Box>
-);
+  );
 };
 
 export default Register;
