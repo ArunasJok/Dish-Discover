@@ -34,7 +34,7 @@ const Home = () => {
           justifyContent: 'center',
         }}
       >
-        <Grid2 container sx={{ minHeight: 'calc(100vh - 64px)' }}>
+        <Grid2 container>
           {/* Left side: illustration & text */}
           <Grid2
             size={{ xs: 12, md: 6 }}
@@ -57,7 +57,7 @@ const Home = () => {
             <Typography variant="h4" sx={{ 
               fontWeight: 'bold', 
               mb: 1, 
-              textAllign: 'center', 
+              textAlign: 'center', 
               fontSize: { xs: '1.5rem', md: '2rem' },
               }}
             >
@@ -89,7 +89,7 @@ const Home = () => {
             }}
           >         
 
-            <Box sx={{ maxWidth: 400, width: '100%', fileShrink: 1 }}>
+            <Box sx={{ maxWidth: 400, width: '100%', flexShrink: 1 }}>
               <Login />
             </Box>
           </Grid2>

@@ -44,7 +44,7 @@ const About = () => {
         <Grid2 container gap={4}>
           {/* Tile 1 */}
           <Grid2 size={{ xs: 12, sm: 6 }}>
-            <Card sx={{ height: '100%', maxWidth: 400, display: 'flex', flexDirection: 'row' }}>
+            <Card>
               <CardMedia
                 component="img"
                 image={ingredientsImage}
@@ -64,7 +64,7 @@ const About = () => {
 
           {/* Tile 2 */}
           <Grid2 size={{ xs: 12, sm: 6 }}>
-            <Card sx={{ height: '100%', maxWidth: 400, display: 'flex', flexDirection: 'row' }}>
+            <Card>
               <CardMedia
                 component="img"
                 image={healthyEatingImage}
@@ -84,7 +84,7 @@ const About = () => {
 
           {/* Tile 3 */}
           <Grid2 size={{ xs: 12, sm: 6 }}>
-            <Card sx={{ height: '100%', maxWidth: 400, display: 'flex', flexDirection: 'row' }}>
+            <Card>
               <CardMedia
                 component="img"
                 image={shoppingListImage}
@@ -104,7 +104,7 @@ const About = () => {
 
           {/* Tile 4 */}
           <Grid2 size={{ xs: 12, sm: 6 }}>
-            <Card sx={{ height: '100%', maxWidth: 400, display: 'flex', flexDirection: 'row' }}>
+            <Card>
               <CardMedia
                 component="img"
                 image={customDishesImage}
