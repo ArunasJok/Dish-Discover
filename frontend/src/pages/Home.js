@@ -24,12 +24,14 @@ const Home = () => {
           maxWidth: 1200,
           mx: 'auto',
           backgroundColor: 'white',
-          p: 4,
+          p: 2,
           borderRadius: 2,
           boxShadow: 3,
           position: 'relative',
-          maxHeight: '80vh',
-          overflowY: 'auto',
+          maxHeight: '80vh',          
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
         }}
       >
         <Grid2 container sx={{ minHeight: 'calc(100vh - 64px)' }}>
@@ -42,19 +44,32 @@ const Home = () => {
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
-              p: 4,
+              p: 2,
             }}
           >
             <Box
               component="img"
               src={homeImage}
               alt="Cooking pot"
-              sx={{ width: '80%', maxWidth: 400, mb: 3 }}
+              sx={{ width: '100%', maxWidth: 400, mb: 2, flexShrink: 1 }}
             />
-            <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
+            <Typography variant="h4" sx={{ 
+              fontWeight: 'bold', 
+              mb: 1, 
+              textAllign: 'center', 
+              fontSize: { xs: '1.5rem', md: '2rem' },
+              }}
+            >
               Dish Discover - Cook with what you have
             </Typography>
-            <Typography variant="body1" color="textSecondary">
+            <Typography 
+            variant="body1" 
+            color="textSecondary"
+            sx={{
+              textAlign: 'center',
+              fontSize: { xs: '0.9rem', md: '1rem' },
+              }}
+            >
               Helping you cook with the ingredients you have at home to prevent waste, 
               promote healthy eating, and simplify meal planning.
             </Typography>
@@ -68,12 +83,12 @@ const Home = () => {
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
-              p: 4,
+              p: 2,
               position: 'relative',
             }}
           >         
 
-            <Box sx={{ maxWidth: 400, width: '100%' }}>
+            <Box sx={{ maxWidth: 400, width: '100%', fileShrink: 1 }}>
               <Login />
             </Box>
           </Grid2>
