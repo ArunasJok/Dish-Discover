@@ -26,16 +26,18 @@ const About = () => {
     <Box
       sx={{
         maxWidth: 1200,
+        width: '90vw',
+        height: '80vh',
         mx: 'auto',
         backgroundColor: 'white',
         p: 2,
         borderRadius: 2,
         boxShadow: 3,
-        position: 'relative',
-        maxHeight: '80vh',          
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
+        position: 'relative',                  
+        display: 'grid',
+        gridTemplateColumns: 'auto auto',
+        gridTemplateRows: 'auto auto',
+        gap: 2,
        }}
       >
         <Typography variant="h3" align="center" gutterBottom>
