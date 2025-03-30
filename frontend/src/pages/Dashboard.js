@@ -18,7 +18,8 @@ import {
   Card,
   CardContent,
   CardMedia,
-  Grid2
+  Grid2,
+  Button
 } from '@mui/material';
 import * as emoji from 'node-emoji';
 import pluralize from 'pluralize';
@@ -199,9 +200,9 @@ const Dashboard = () => {
       {loading && recommendations.length === 0 ? (
         <Typography>Loading recommendations...</Typography>
       ) : (
-        <Grid container spacing={3}>
+        <Grid2 container spacing={3}>
           {recommendations.map((recipe) => (
-            <Grid item xs={12} sm={6} md={4} key={recipe.id}>
+            <Grid2 item xs={12} sm={6} md={4} key={recipe.id}>
               <Card>
                 <CardMedia
                   component="img"
@@ -217,9 +218,9 @@ const Dashboard = () => {
                   <Button variant="outlined" sx={{ mt: 1 }}>Details</Button>
                 </CardContent>
               </Card>
-            </Grid>
+            </Grid2>
           ))}
-        </Grid>
+        </Grid2>
       )}
 
         {/* Telemetry Section */}
