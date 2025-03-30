@@ -34,6 +34,7 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/searchhistory', searchHistoryRoutes);
 app.use('/api/telemetry', telemetryRoutes);
 app.use('/api/recipes', myRecipeRoutes);
+app.use('/api/recipes/random', externalRoutes);
 
 //Defining route for the root URL
 app.get('/', (req, res) => {

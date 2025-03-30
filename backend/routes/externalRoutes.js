@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const verifyToken = require('../middlewares/authenticationMiddleware');
-const { getRecipesByIngredients, getRecipeInformation } = require('../services/spoonacularService');
+const { getRecipesByIngredients, getRecipeInformation, getRandomRecipes } = require('../services/spoonacularService');
 const SearchHistory = require('../models/SearchHistory');
 const Recipe = require('../models/Recipe');
 const { downloadImage } = require('../services/imageService');
