@@ -1,5 +1,4 @@
 const axios = require('axios');
-
 const SPOONACULAR_API_KEY = process.env.SPOONACULAR_API_KEY;
 const BASE_URL = 'https://api.spoonacular.com';
 
@@ -23,7 +22,7 @@ const getRecipesByIngredients = async (ingredientsArray) => {
     try {
       const params = {
         apiKey: SPOONACULAR_API_KEY,
-        includeNutrition: false,
+        includeNutrition: true,
       };
       const response = await axios.get(`${BASE_URL}/recipes/${recipeId}/information`, { params });
       return response.data;
@@ -32,5 +31,16 @@ const getRecipesByIngredients = async (ingredientsArray) => {
       throw error;
     }
   };
+
+  const getRandomRecipes = async (number = 5) => {
+    const response = await axios.get(
+      `${BASE_URL}/recipes/random?number=${number}&apiKey=${SPOONACULAR_API_KEY}`
+    );
+    return response.data;
+  };
   
-  module.exports = { getRecipesByIngredients, getRecipeInformation };
+  module.exports = { 
+    getRecipesByIngredients, 
+    getRecipeInformation,
+    getRandomRecipes,
+  };

@@ -31,6 +31,31 @@ const Dashboard = () => {
   const [telemetry, setTelemetry] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
   const [filter, setFilter] = useState('');
+  const [recipeOfDay, setRecipeOfDay] = useState(null);
+  const [recommendations, setRecommendations] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchRandomRecipes = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(`${API_URL}/api/recipes/random`, {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+      setRecipeOfDay(res.data.recipeOfDay);
+      setRecommendations(res.data.recommendations);
+    } catch (error) {
+      console.error("Error fetching random recipes:", error);
+      setErrorMessage('Failed to load recipe data.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (authToken) {
+      fetchRandomRecipes();
+    }
+  }, [authToken]);
 
 
   useEffect(() => {
@@ -143,6 +168,59 @@ const Dashboard = () => {
             Last visited: {new Date(user.lastVisited).toLocaleString()}
           </Typography>
         )}
+
+        {/* Recipe of the Day Section */}
+      {loading ? (
+        <Typography>Loading Recipe of the Day...</Typography>
+      ) : recipeOfDay ? (
+        <Box sx={{ mb: 4, textAlign: 'center' }}>
+          <Typography variant="h5" gutterBottom>Recipe of the Day</Typography>
+          <Card sx={{ maxWidth: 600, mx: 'auto' }}>
+            <CardMedia
+              component="img"
+              height="300"
+              image={recipeOfDay.image}
+              alt={recipeOfDay.title}
+            />
+            <CardContent>
+              <Typography variant="h6">{recipeOfDay.title}</Typography>
+              <Typography variant="body2" color="text.secondary">
+                {/* Optionally strip HTML tags from the summary */}
+                {recipeOfDay.summary.replace(/<[^>]*>/g, '').slice(0, 150)}...
+              </Typography>
+              <Button variant="contained" sx={{ mt: 2 }}>View Recipe</Button>
+            </CardContent>
+          </Card>
+        </Box>
+      ) : null}
+
+      {/* Recommendations Section */}
+      <Typography variant="h5" gutterBottom>Recommended Recipes</Typography>
+      {loading && recommendations.length === 0 ? (
+        <Typography>Loading recommendations...</Typography>
+      ) : (
+        <Grid container spacing={3}>
+          {recommendations.map((recipe) => (
+            <Grid item xs={12} sm={6} md={4} key={recipe.id}>
+              <Card>
+                <CardMedia
+                  component="img"
+                  height="200"
+                  image={recipe.image}
+                  alt={recipe.title}
+                />
+                <CardContent>
+                  <Typography variant="h6">{recipe.title}</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {recipe.summary.replace(/<[^>]*>/g, '').slice(0, 100)}...
+                  </Typography>
+                  <Button variant="outlined" sx={{ mt: 1 }}>Details</Button>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      )}
 
         {/* Telemetry Section */}
         <Box sx={{ mt: 4 }}>
