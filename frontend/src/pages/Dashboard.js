@@ -3,6 +3,26 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
+import {
+  Container,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Box,
+  TextField,
+  Card,
+  CardContent,
+  CardMedia,
+  Grid2
+} from '@mui/material';
+import * as emoji from 'node-emoji';
+import pluralize from 'pluralize';
+import missingImage from '../images/missingIngredient.png';
 
 const Dashboard = () => {
   const { authToken } = useContext(AuthContext);
@@ -10,8 +30,9 @@ const Dashboard = () => {
   const [searchHistory, setSearchHistory] = useState([]);
   const [telemetry, setTelemetry] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
+  const [filter, setFilter] = useState('');
 
-  // Fetch user profile, search history, and telemetry data
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -54,50 +75,130 @@ const Dashboard = () => {
     }
   }, [authToken]);
 
-  return (
-    <div className="App">
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-      <h1>Welcome back, {user ? user.username : 'User'}!</h1>
-      {user && user.lastVisited && (
-        <p>Last visited: {new Date(user.lastVisited).toLocaleString()}</p>
-      )}
-      
-      <h2>Your Recipe Search History (Last Week)</h2>
-      <table border="1" cellPadding="5" cellSpacing="0">
-        <thead>
-          <tr>
-            <th>Search Title</th>
-            <th>Date</th>
-            <th>Popular Ingredients</th>
-          </tr>
-        </thead>
-        <tbody>
-          {searchHistory.length > 0 ? (
-            searchHistory.map((entry) => (
-              <tr key={entry._id}>
-                <td>{entry.searchTitle}</td>
-                <td>{new Date(entry.searchDate).toLocaleString()}</td>
-                <td>{entry.popularIngredients.join(', ')}</td>
-              </tr>
-            ))
+  const filteredHistory = searchHistory.filter((entry) => {
+    const lowerFilter = filter.toLowerCase();
+    return (
+      entry.searchTitle.toLowerCase().includes(lowerFilter) ||
+      entry.popularIngredients.join(' ').toLowerCase().includes(lowerFilter)
+    );
+  });
+
+
+  const getIngredientEmoji = (ingredient) => {
+    const key = ingredient.toLowerCase();
+    const found = emoji.get(key);
+    return found !== `:${key}:` ? found : '🥦'; // if not found, return broccoli as default
+  };
+
+  const ingredientImageUrl = (ingredient) => {
+    const singular = pluralize.singular(ingredient);
+    const formatted = singular.toLowerCase().replace(/\s+/g, '-');
+    return `https://spoonacular.com/cdn/ingredients_100x100/${formatted}.jpg`;
+  };
+
+  const renderIngredientTiles = () => {
+    if (!telemetry.popularIngredients || telemetry.popularIngredients.length === 0) {
+      return <Typography variant="body1">No ingredient data available.</Typography>;
+    }
+
+    const ingredients = telemetry.popularIngredients.slice(0, 10);
+    return (
+      <Grid2 container spacing={2}>
+        {ingredients.map((ingredient, idx) => (
+          <Grid2 key={idx} xs={6} sm={4} md={2.4}>
+            <Card sx={{ textAlign: 'center' }}>
+              <CardMedia
+                component="img"
+                image={ingredientImageUrl(ingredient)}
+                alt={ingredient}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = missingImage;
+                }}
+                sx={{ width: '100%', height: 100, objectFit: 'cover' }}
+              />
+              <CardContent sx={{ py: 1, px: 1 }}>
+                <Typography variant="body2">{ingredient}</Typography>
+              </CardContent>
+            </Card>
+          </Grid2>
+        ))}
+      </Grid2>
+    );
+  };
+
+    return (
+      <Container sx={{ mt: 4 }}>
+        {errorMessage && (
+          <Typography variant="body1" color="error" gutterBottom>
+            {errorMessage}
+          </Typography>
+        )}
+
+        <Typography variant="h4" color="primary" gutterBottom>
+          Welcome back, {user && user.username ? user.username : 'User'}!
+        </Typography>
+        {user && user.lastVisited && (
+          <Typography variant="body1" gutterBottom>
+            Last visited: {new Date(user.lastVisited).toLocaleString()}
+          </Typography>
+        )}
+
+        {/* Telemetry Section */}
+        <Box sx={{ mt: 4 }}>
+        <Typography variant="h5" gutterBottom>
+          Most Popular Recent Ingredients
+        </Typography>
+        {renderIngredientTiles()}
+        </Box>
+        
+
+        {/* Search History Section with Filtering */}
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="h5" gutterBottom>
+            Your Recipe Search History (Last Week)
+          </Typography>
+          <TextField
+            label="Filter history"
+            variant="outlined"
+            fullWidth
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+          {filteredHistory.length > 0 ? (
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Search Title</TableCell>
+                    <TableCell>Date</TableCell>
+                    <TableCell>Popular Ingredients</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {filteredHistory.map((entry) => (
+                    <TableRow key={entry._id}>
+                      <TableCell>{entry.searchTitle}</TableCell>
+                      <TableCell>{new Date(entry.searchDate).toLocaleString()}</TableCell>
+                      <TableCell>
+                        {entry.popularIngredients.map((ingredient, index) => (
+                          <span key={index} style={{ marginRight: 4 }}>
+                            {getIngredientEmoji(ingredient)} {ingredient}
+                          </span>
+                        ))}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           ) : (
-            <tr>
-              <td colSpan="3">No search history available.</td>
-            </tr>
+            <Typography variant="body1">No search history available.</Typography>
           )}
-        </tbody>
-      </table>
+        </Box>
+      </Container>
+    );
+  };
 
-      <h2>Telemetry Data</h2>
-      <ul>
-        <li>
-          Most popular searched ingredients:{' '}
-          {telemetry.popularIngredients ? telemetry.popularIngredients.join(', ') : 'N/A'}
-        </li>
-        <li>Recipes searched in the last week: {telemetry.recipesLastWeek || 0}</li>
-      </ul>
-    </div>
-  );
-};
-
-export default Dashboard;
+  export default Dashboard;
