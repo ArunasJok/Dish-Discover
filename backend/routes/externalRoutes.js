@@ -38,6 +38,26 @@ router.get('/recipes', verifyToken, async (req, res) => {
   }
 });
 
+// Endpoint to grab 5 random recipes from the database
+router.get('/recipes/random', verifyToken, async (req, res) => {
+  try {
+    // Get 5 random recipes
+    const randomData = await getRandomRecipes(5); 
+    // getRandomRecipes returns { recipes: [...] }
+    const recipes = randomData.recipes;
+    if (!recipes || recipes.length === 0) {
+      return res.status(404).json({ error: 'No recipes found' });
+    }
+    // Pick the first as Recipe of the Day and the rest as recommendations
+    const recipeOfDay = recipes[0];
+    const recommendations = recipes.slice(1);
+    res.json({ recipeOfDay, recommendations });
+  } catch (error) {
+    console.error("Error fetching random recipes:", error);
+    res.status(500).json({ error: 'Failed to fetch random recipes' });
+  }
+});
+
 // Endpoint to fetch full recipe details using the recipe id
 router.get('/recipes/:id', verifyToken, async (req, res) => {
   try {
@@ -85,24 +105,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Endpoint to grab 5 random recipes from the database
-router.get('/recipes/random', verifyToken, async (req, res) => {
-  try {
-    // Get 5 random recipes
-    const randomData = await getRandomRecipes(5); 
-    // getRandomRecipes returns { recipes: [...] }
-    const recipes = randomData.recipes;
-    if (!recipes || recipes.length === 0) {
-      return res.status(404).json({ error: 'No recipes found' });
-    }
-    // Pick the first as Recipe of the Day and the rest as recommendations
-    const recipeOfDay = recipes[0];
-    const recommendations = recipes.slice(1);
-    res.json({ recipeOfDay, recommendations });
-  } catch (error) {
-    console.error("Error fetching random recipes:", error);
-    res.status(500).json({ error: 'Failed to fetch random recipes' });
-  }
-});
+
 
 module.exports = router;
