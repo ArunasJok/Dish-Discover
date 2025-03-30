@@ -38,11 +38,54 @@ router.get('/recipes', verifyToken, async (req, res) => {
   }
 });
 
-// Endpoint to grab 5 random recipes from the database
-router.get('/recipes/random', verifyToken, async (req, res) => {
+// Endpoint for ingredient telemetry
+router.get('/telemetry/ingredients', verifyToken, async (req, res) => {
   try {
-    // Get 5 random recipes
-    const randomData = await getRandomRecipes(5); 
+    const userId = req.user.userId;
+    console.log('Fetching telemetry for user:', userId);
+
+    // Get all search history entries for this user
+    const searchHistory = await SearchHistory.find({ user: userId });
+    
+    // Create a map to count ingredients
+    const ingredientMap = new Map();
+    
+    // Count occurrences of each ingredient
+    searchHistory.forEach(entry => {
+      entry.popularIngredients.forEach(ingredient => {
+        const count = ingredientMap.get(ingredient) || 0;
+        ingredientMap.set(ingredient, count + 1);
+      });
+    });
+
+    // Convert map to object and sort by count
+    const ingredientCounts = Object.fromEntries(ingredientMap);
+    const popularIngredients = [...ingredientMap.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .map(([ingredient]) => ingredient);
+
+    console.log('Sending telemetry data:', {
+      ingredientCounts,
+      popularIngredients
+    });
+
+    res.json({
+      ingredientCounts,
+      popularIngredients
+    });
+
+  } catch (error) {
+    console.error('Error in telemetry endpoint:', error);
+    res.status(500).json({ error: 'Failed to fetch ingredient telemetry' });
+  }
+});
+
+// Endpoint to grab 7 random recipes from the database
+router.get('/recipes/random', verifyToken, async (req, res) => {
+  console.log("GET /recipes/random route hit");
+  try {
+    // Get 7 random recipes
+    const randomData = await getRandomRecipes(7); 
     // getRandomRecipes returns { recipes: [...] }
     const recipes = randomData.recipes;
     if (!recipes || recipes.length === 0) {

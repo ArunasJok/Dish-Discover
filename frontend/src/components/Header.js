@@ -1,8 +1,8 @@
 // Header component
-import React, { useContext } from 'react';
+import React, { useContext} from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box} from '@mui/material';
 import Logo from '../images/logo.png';
 //import './Header.css';
 
@@ -32,6 +32,7 @@ const Header = () => {
     { label: 'Shopping List', to: '/shopping-list' },
   ];
 
+  
   const linksToRender = authToken ? dashboardLinks : publicLinks;
 
   return (

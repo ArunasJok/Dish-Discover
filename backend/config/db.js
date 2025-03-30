@@ -4,10 +4,10 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    // Using the connection string from Azure Cosmos DB
-    //const conn = await mongoose.connect(process.env.MONGO_CONNECTION_STRING, {     
-    //});
-    const conn = await mongoose.connect(process.env.MONGO_CONNECTION_STRING, {
+    // Use local MongoDB connection for development
+    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/dishdiscover', {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
     });
     console.log(`MongoDB connected: ${conn.connection.host}`);
   } catch (error) {
