@@ -136,7 +136,7 @@ const Dashboard = () => {
         )}
 
         <Typography variant="h4" color="primary" gutterBottom>
-          Welcome back, {user && user.username ? user.username : 'User'}! 👋
+          Welcome back, {user && user.username ? user.username : 'User'}!
         </Typography>
         {user && user.lastVisited && (
           <Typography variant="body1" gutterBottom>
