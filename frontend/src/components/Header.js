@@ -1,7 +1,9 @@
 import React, { useContext } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import './Header.css';
+import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
+import Logo from '../images/logo.png';
+//import './Header.css';
 
 const Header = () => {
   const { authToken, logout } = useContext(AuthContext);
@@ -13,41 +15,78 @@ const Header = () => {
   };
 
   // Links for users who are not logged in
-  const publicLinks = (
-    <>
-      <li><NavLink to="/" end>Home</NavLink></li>
-      <li><NavLink to="/about">About</NavLink></li>
-      <li><NavLink to="/login">Login</NavLink></li>
-      <li><NavLink to="/register">Register</NavLink></li>
-    </>
-  );
+  const publicLinks = [
+    { label: 'Home', to: '/' },
+    { label: 'About', to: '/about' },    
+    { label: 'Register', to: '/register' },
+  ];
 
   // Links for authenticated users
-  const dashboardLinks = (
-    <>
-      <li><NavLink to="/dashboard">Dashboard</NavLink></li>
-      <li><NavLink to="/my-recipes">My Recipes</NavLink></li>
-      <li><NavLink to="/meal-planner">Meal Planner</NavLink></li>
-      <li><NavLink to="/ingredients">Find a dish</NavLink></li>
-      <li><NavLink to="/profile">Profile</NavLink></li>
-      <li><NavLink to="/shopping-list">Shopping List</NavLink></li>
-      <li>
-        <button onClick={handleLogout} className="logout-btn">Logout</button>
-      </li>
-    </>
-  );
+  const dashboardLinks = [
+    { label: 'Dashboard', to: '/dashboard' },
+    { label: 'My Recipes', to: '/my-recipes' },
+    { label: 'Meal Planner', to: '/meal-planner' },
+    { label: 'Find a Dish', to: '/ingredients' },
+    { label: 'Profile', to: '/profile' },
+    { label: 'Shopping List', to: '/shopping-list' },
+  ];
+
+  const linksToRender = authToken ? dashboardLinks : publicLinks;
 
   return (
-    <header className="header">
-      <div className="logo">
-        <NavLink to="/" end>Dish Discover</NavLink>
-      </div>
-      <nav>
-        <ul className="nav-links">
-          {authToken ? dashboardLinks : publicLinks}
-        </ul>
-      </nav>
-    </header>
+    <AppBar position="static" color="default" elevation={2}>
+      <Toolbar sx={{ justifyContent: 'space-between' }}>
+        {/* Left side: Logo and App Name */}
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box
+            component="img"
+            src={Logo}
+            alt="Dish Discover Logo"
+            sx={{ height: 40, mr: 1 }}
+          />
+          <Typography
+            variant="h6"
+            component={NavLink}
+            to="/"
+            sx={{
+              textDecoration: 'none',
+              color: 'inherit',
+              fontWeight: 600,
+            }}
+          >
+            Dish Discover
+          </Typography>
+        </Box>
+        {/* Right side: Navigation links */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          {linksToRender.map((link) => (
+            <Button
+              key={link.to}
+              component={NavLink}
+              to={link.to}
+              sx={{
+                textTransform: 'none',
+                color: 'inherit',
+                // Highlight active link with a bottom border
+                '&.active': {
+                  borderBottom: '2px solid',
+                },
+              }}
+            >
+              {link.label}
+            </Button>
+          ))}
+          {authToken && (
+            <Button
+              onClick={handleLogout}
+              sx={{ textTransform: 'none', color: 'inherit' }}
+            >
+              Logout
+            </Button>
+          )}
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 };
 

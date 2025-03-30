@@ -22,7 +22,7 @@ const getRecipesByIngredients = async (ingredientsArray) => {
     try {
       const params = {
         apiKey: SPOONACULAR_API_KEY,
-        includeNutrition: true,
+        includeNutrition: false,
       };
       const response = await axios.get(`${BASE_URL}/recipes/${recipeId}/information`, { params });
       return response.data;
@@ -33,12 +33,19 @@ const getRecipesByIngredients = async (ingredientsArray) => {
   };
 
   const getRandomRecipes = async (number = 5) => {
-    const response = await axios.get(
-      `${BASE_URL}/recipes/random?number=${number}&apiKey=${SPOONACULAR_API_KEY}`
-    );
-    return response.data;
+    try {
+      const params = {
+        number: number,
+        apiKey: SPOONACULAR_API_KEY,
+      };
+      const response = await axios.get(`${BASE_URL}/recipes/random`, { params });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching random recipes:', error.message);
+      throw error;
+    }
   };
-  
+    
   module.exports = { 
     getRecipesByIngredients, 
     getRecipeInformation,
