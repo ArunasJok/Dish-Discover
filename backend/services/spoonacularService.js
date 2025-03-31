@@ -1,6 +1,6 @@
 const axios = require('axios');
 const SPOONACULAR_API_KEY = process.env.SPOONACULAR_API_KEY;
-const BASE_URL = 'https://api.spoonacular.com';
+const BASE_URL = process.env.BASE_URL || 'https://api.spoonacular.com';
 
 const getRecipesByIngredients = async (ingredientsArray) => {
     try {
@@ -32,16 +32,25 @@ const getRecipesByIngredients = async (ingredientsArray) => {
     }
   };
 
-  const getRandomRecipes = async (number = 5) => {
+  const getRandomRecipes = async (number = 7) => {
     try {
-      const params = {
-        number: number,
-        apiKey: SPOONACULAR_API_KEY,
-      };
-      const response = await axios.get(`${BASE_URL}/recipes/random`, { params });
+      console.log('Fetching random recipes from Spoonacular API...');
+      const response = await axios.get(`${BASE_URL}/recipes/random`, {
+        params: {
+          apiKey: SPOONACULAR_API_KEY,
+          number: number,
+          tags: 'main course',
+          addRecipeInformation: true
+        }
+      });
+  
+      if (!response.data || !response.data.recipes) {
+        throw new Error('Invalid response from Spoonacular API');
+      }
+  
       return response.data;
     } catch (error) {
-      console.error('Error fetching random recipes:', error.message);
+      console.error('Spoonacular API error:', error.response?.data || error.message);
       throw error;
     }
   };

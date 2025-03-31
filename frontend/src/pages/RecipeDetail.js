@@ -1,6 +1,6 @@
 // src/pages/RecipeDetail.js
 import React, { useEffect, useState, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
@@ -13,20 +13,24 @@ import {
   List,
   ListItem,
   ListItemText,
-  Box
+  Stack
 } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 
 const RecipeDetail = () => {
-  const { id } = useParams(); // id is the Spoonacular recipe ID
+  const { id: spoonacularId } = useParams(); // id is the Spoonacular recipe ID
   const { authToken } = useContext(AuthContext);
   const [recipe, setRecipe] = useState(null);
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
         // Calling the integrated recipe detail endpoint.
-        const res = await axios.get(`${API_URL}/api/external/recipes/${id}`, {
+        const res = await axios.get(`${API_URL}/api/external/recipes/${spoonacularId}`, {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
         setRecipe(res.data);
@@ -41,26 +45,50 @@ const RecipeDetail = () => {
     } else {
       setMessage('You must be logged in to view recipe details.');
     }
-  }, [id, authToken]);
+  }, [spoonacularId, authToken]);
 
   const handleSave = async () => {
     try {
+      const sanitizedIngredients = recipe.extendedIngredients.map(ingredient => ({
+        id: ingredient.id || 0,
+        name: ingredient.name || '',
+        amount: parseFloat(ingredient.amount) || 0,
+        unit: ingredient.unit || '',
+        original: ingredient.original || ''
+      }));
+  
       const payload = {
-        spoonacularId: recipe.id,
-        title: recipe.title,
+        spoonacularId: parseInt(recipe.id),
+        title: recipe.title.trim(),
         image: recipe.image,
+        instructions: recipe.instructions || '',
+        extendedIngredients: sanitizedIngredients,
         usedIngredients: recipe.usedIngredients || [],
         missedIngredients: recipe.missedIngredients || [],
-        likes: recipe.likes || 0,
-        details: recipe
+        likes: parseInt(recipe.likes) || 0
       };
+  
       const res = await axios.post(`${API_URL}/api/recipes/save`, payload, {
         headers: { 'Authorization': `Bearer ${authToken}` }
       });
+  
       setMessage(res.data.message);
     } catch (err) {
       console.error('Error saving recipe:', err);
-      setMessage('Failed to save recipe.');
+      setMessage(err.response?.data?.error || 'Failed to save recipe');
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`${API_URL}/api/recipes/${spoonacularId}`, {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+      setMessage('Recipe deleted successfully');
+      navigate('/my-recipes');
+    } catch (err) {
+      console.error('Error deleting recipe:', err);
+      setMessage(err.response?.data?.error || 'Failed to delete recipe');
     }
   };
 
@@ -74,18 +102,55 @@ const RecipeDetail = () => {
 
   return (
     <Container sx={{ mt: 4 }}>
-      <Typography variant="h4" color="primary" gutterBottom>
-        {recipe.title}
-      </Typography>
+      <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
+        <Button
+          variant="outlined"
+          startIcon={<ArrowBackIcon />}
+          onClick={() => navigate(-1)}
+        >
+          Back
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleSave}
+        >
+          Save Recipe
+        </Button>
+        <Button
+          variant="contained"
+          color="error"
+          startIcon={<DeleteIcon />}
+          onClick={handleDelete}
+        >
+          Delete Recipe
+        </Button>
+      </Stack>
+
+      <Paper 
+      elevation={3} 
+      sx={{ 
+        mb: 4, 
+        overflow: 'hidden',
+        maxWidth: '100%',
+        borderRadius: 2
+      }}
+    >
       <CardMedia
         component="img"
         image={recipe.image}
         alt={recipe.title}
-        sx={{ width: '100%', maxHeight: 400, objectFit: 'cover', mb: 2 }}
+        sx={{
+          width: '100%',
+          maxHeight: 400,
+          objectFit: 'cover'
+        }}
       />
-      <Button variant="contained" color="secondary" onClick={handleSave} sx={{ mb: 2 }}>
-        Save Recipe
-      </Button>
+    </Paper>
+
+    <Typography variant="h4" gutterBottom color="primary">
+      {recipe.title}
+    </Typography>
       <Typography variant="h5" gutterBottom>
         Instructions
       </Typography>

@@ -24,6 +24,7 @@
     "morgan": "^1.10.0",
     "pm2": "^5.4.3",
     "redis": "^4.7.0",
+    "unsplash-js": "^7.0.19",
     "winston": "^3.17.0"
   },
   "devDependencies": {

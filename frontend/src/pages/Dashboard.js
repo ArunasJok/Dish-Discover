@@ -25,11 +25,11 @@ import {
 } from '@mui/material';
 import { keyframes } from '@mui/system';
 import * as emoji from 'node-emoji';
-import pluralize from 'pluralize';
+//import pluralize from 'pluralize';
 import missingImage from '../images/missingIngredient.png';
 
-
-
+const PIXABAY_API_KEY = process.env.REACT_APP_PIXABAY_API_KEY;
+const PIXABAY_API_URL = 'https://pixabay.com/api/';
 
 const Dashboard = () => {
   const { authToken } = useContext(AuthContext);
@@ -43,6 +43,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [showWelcome, setShowWelcome] = useState(true);
   const navigate = useNavigate();
+  const [ingredientImages, setIngredientImages] = useState({});
 
   const handleViewRecipe = (recipeId) => {
     navigate(`/recipe/${recipeId}`);
@@ -80,51 +81,66 @@ const Dashboard = () => {
 
   const fetchRandomRecipes = useCallback(async () => {
     try {
-      // Check if we have cached data and if it's still valid
+      // First try to get from cache
       const cached = localStorage.getItem('randomRecipes');
       if (cached) {
         const { data, timestamp } = JSON.parse(cached);
         const now = new Date().getTime();
-        const hours = 2;
-        
-        // If cache is less than 2 hours old, use it
-        if (now - timestamp < hours * 60 * 60 * 1000) {
-          console.log('Number of recommendations:', data.recommendations.length);
+        const twoHours = 2 * 60 * 60 * 1000;
+        if (now - timestamp < twoHours) {
+          console.log('Using cached recipe data');
           setRecipeOfDay(data.recipeOfDay);
           setRecommendations(data.recommendations);
           setLoading(false);
-          return;
+          return; // Use cached data if it's less than 2 hours old
         }
       }
 
-      // If no cache or cache is expired, fetch new data
       setLoading(true);
-      const res = await axios.get(`${API_URL}/api/recipes/random`, {
+      console.log('Cache expired or not found, fetching fresh recipes...');
+  
+      console.log('Fetching fresh random recipes...');
+      const res = await axios.get(`${API_URL}/api/external/recipes/random`, {
         headers: { 'Authorization': `Bearer ${authToken}` }
       });
-      console.log('Recommendations received:', res.data.recommendations.length);
-
-      // Cache the new data with timestamp
+  
+      if (!res.data || !res.data.recipeOfDay) {
+        throw new Error('Invalid response format');
+      }
+  
+      // Cache the new data
       localStorage.setItem('randomRecipes', JSON.stringify({
         data: res.data,
         timestamp: new Date().getTime()
       }));
-
+  
       setRecipeOfDay(res.data.recipeOfDay);
-      setRecommendations(res.data.recommendations);
-    } catch (error) {
-      console.error("Error fetching random recipes:", error);
-      setErrorMessage('Failed to load recipe data.');
-    } finally {
+      setRecommendations(res.data.recommendations || []);
       setLoading(false);
+    } catch (error) {
+      console.error('Error fetching random recipes:', error);      
+      setErrorMessage('Failed to load recipes. Please try again later.');
+
+      // Try to use cached data as fallback
+      const cached = localStorage.getItem('randomRecipes');
+    if (cached) {
+      console.log('Using cached data as fallback');
+      const { data } = JSON.parse(cached);
+      setRecipeOfDay(data.recipeOfDay);
+      setRecommendations(data.recommendations);
+    } else {
+      setErrorMessage('Failed to load recipes. Please try again later.');
     }
-  }, [authToken]);
+  } finally {
+    setLoading(false);
+  }
+}, [authToken]);
 
   useEffect(() => {
-    if (authToken) {
-      fetchRandomRecipes();      
-    }
-  }, [authToken, fetchRandomRecipes])
+  if (authToken && !recipeOfDay) {
+    fetchRandomRecipes();
+  }
+}, [authToken, fetchRandomRecipes, recipeOfDay]);
 
 
   useEffect(() => {
@@ -203,6 +219,8 @@ const Dashboard = () => {
     );
   });
 
+  
+
 
   const getIngredientEmoji = (ingredient) => {
     const key = ingredient.toLowerCase();
@@ -210,11 +228,79 @@ const Dashboard = () => {
     return found !== `:${key}:` ? found : '🥦'; // if not found, return broccoli as default
   };
 
-  const ingredientImageUrl = (ingredient) => {
-    const singular = pluralize.singular(ingredient);
-    const formatted = singular.toLowerCase().replace(/\s+/g, '-');
-    return `https://spoonacular.com/cdn/ingredients_100x100/${formatted}.jpg`;
-  };
+  // const ingredientImageUrl = async (ingredient) => {
+  //   try {
+  //     const result = await unsplash.search.getPhotos({
+  //       query: `${ingredient} food ingredient`,
+  //       perPage: 1,
+  //       orientation: 'square'
+  //     });
+  
+  //     if (result.response?.results?.length > 0) {
+  //       return result.response.results[0].urls.small;
+  //     }
+  //     return missingImage;
+  //   } catch (error) {
+  //     console.error(`Error fetching image for ${ingredient}:`, error);
+  //     return missingImage;
+  //   }
+  // };
+
+  useEffect(() => {
+    const loadImages = async () => {
+      const newImages = {};
+      // Only fetch images for top 10 ingredients
+      const topIngredients = telemetry.popularIngredients.slice(0, 10);
+      
+      for (const ingredient of topIngredients) {
+        try {
+          const searchQuery = `${ingredient.toLowerCase().trim()} isolated`;
+          console.log(`Fetching image for: ${searchQuery}`);
+  
+          const result = await axios.get(PIXABAY_API_URL, {
+            params: {
+              key: PIXABAY_API_KEY,
+              q: searchQuery,
+              image_type: 'photo',
+              orientation: 'horizontal',
+              safesearch: true,
+              per_page: 3,
+              category: 'food'
+            }
+          });
+          
+          if (result.data.hits.length > 0) {
+            // Find most relevant image
+            const relevantPhoto = result.data.hits.find(photo => 
+              photo.tags.toLowerCase().includes(ingredient.toLowerCase())
+            );
+            
+            newImages[ingredient] = relevantPhoto ? 
+              relevantPhoto.webformatURL : 
+              result.data.hits[0].webformatURL;
+          } else {
+            console.warn(`No results found for ${ingredient}`);
+            newImages[ingredient] = missingImage;
+          }
+  
+        } catch (error) {
+          console.error(`Error loading image for ${ingredient}:`, error);
+          newImages[ingredient] = missingImage;
+        }
+      }
+      setIngredientImages(newImages);
+    };
+  
+    if (telemetry.popularIngredients?.length > 0) {
+      loadImages();
+    }
+  }, [telemetry.popularIngredients]);
+
+  // const ingredientImageUrl = (ingredient) => {
+  //   const singular = pluralize.singular(ingredient);
+  //   const formatted = singular.toLowerCase().replace(/\s+/g, '-');
+  //   return `https://spoonacular.com/cdn/ingredients_100x100/${formatted}.jpg`;
+  // };
 
   const renderIngredientTiles = () => {
     if (!telemetry.popularIngredients || telemetry.popularIngredients.length === 0) {
@@ -256,7 +342,7 @@ const Dashboard = () => {
           >
             <CardMedia
               component="img"
-              image={ingredientImageUrl(ingredient)}
+              image={ingredientImages[ingredient] || missingImage}
               alt={ingredient}
               onError={(e) => {
                 e.target.onerror = null;
@@ -268,6 +354,20 @@ const Dashboard = () => {
                 objectFit: 'cover'
               }}
             />
+            <Typography
+              variant="caption"
+              sx={{
+                position: 'absolute',
+                bottom: 8,
+                right: 8,
+                color: 'rgba(255, 255, 255, 0.7)',
+                textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
+                zIndex: 3,
+                fontSize: '0.7rem'
+              }}
+            >
+              Photo by Pixabay
+            </Typography>
             <Box
               className="ingredient-overlay"
               sx={{
@@ -402,8 +502,8 @@ const Dashboard = () => {
     <Box
   sx={{
     position: 'absolute',
-    top: 90,
-    right: -45,
+    top: 60,
+    right: -70,
     transform: 'rotate(45deg)',
     background: 'linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 100%)',
     padding: '10px 70px',

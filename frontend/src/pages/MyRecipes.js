@@ -15,9 +15,11 @@ import {
   Paper,
   Button,
   Box,
+  Stack
 } from '@mui/material';
 import RateRecipe from '../components/RateRecipe';
 import { API_URL } from '../config';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const MyRecipes = () => {
   const { authToken } = useContext(AuthContext);
@@ -36,6 +38,19 @@ const MyRecipes = () => {
     }
   }, [authToken]);
 
+  const handleDelete = async (spoonacularId) => {
+    try {
+      await axios.delete(`${API_URL}/api/recipes/${spoonacularId}`, {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+      setMessage('Recipe deleted successfully');
+      fetchMyRecipes(); // Refresh the list
+    } catch (err) {
+      console.error('Error deleting recipe:', err);
+      setMessage(err.response?.data?.error || 'Failed to delete recipe');
+    }
+  };
+
   useEffect(() => {
     if (authToken) {
       fetchMyRecipes();
@@ -53,49 +68,86 @@ const MyRecipes = () => {
         </Typography>
       )}
       {recipes.length > 0 ? (
-        <TableContainer component={Paper} sx={{ mt: 2 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Recipe Title</TableCell>
-                <TableCell>Image</TableCell>
-                <TableCell>Current Rating</TableCell>
-                <TableCell>Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {recipes.map((recipe) => (
-                <TableRow key={recipe._id}>
-                  <TableCell>
-                    <Button
-                      component={Link}
-                      to={`/recipe/${recipe.spoonacularId}`}
-                      color="primary"
-                    >
-                      {recipe.title}
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Box
-                      component="img"
-                      src={recipe.image}
-                      alt={recipe.title}
-                      sx={{ width: 150, height: 'auto' }}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body1">
-                      {recipe.rating.toFixed(1)} ({recipe.ratingCount} ratings)
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
+        <TableContainer 
+        component={Paper} 
+        sx={{ 
+          mt: 2,
+          maxWidth: '100%',
+          '& td': { 
+            verticalAlign: 'middle',
+            p: 2
+          }
+        }}
+      >
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Recipe</TableCell>
+              <TableCell>Preview</TableCell>
+              <TableCell>Rating</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {recipes.map((recipe) => (
+              <TableRow key={recipe._id} 
+                sx={{ 
+                  '&:hover': { 
+                    backgroundColor: 'rgba(0, 0, 0, 0.04)' 
+                  }
+                }}
+              >
+                <TableCell>
+                  <Typography variant="subtitle1" gutterBottom>
+                    {recipe.title}
+                  </Typography>
+                  <Button
+                    component={Link}
+                    to={`/recipe/${recipe.spoonacularId}`}
+                    color="primary"
+                    variant="outlined"
+                    size="small"
+                  >
+                    View Details
+                  </Button>
+                </TableCell>
+                <TableCell>
+                  <Box
+                    component="img"
+                    src={recipe.image}
+                    alt={recipe.title}
+                    sx={{ 
+                      width: 100, 
+                      height: 100, 
+                      objectFit: 'cover',
+                      borderRadius: 1
+                    }}
+                  />
+                </TableCell>
+                <TableCell>
+                  <Typography variant="body1">
+                    {recipe.rating.toFixed(1)} ({recipe.ratingCount} ratings)
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Stack direction="row" spacing={2} alignItems="center">
                     <RateRecipe recipeId={recipe._id} onRatingUpdated={fetchMyRecipes} />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      size="small"
+                      startIcon={<DeleteIcon />}
+                      onClick={() => handleDelete(recipe.spoonacularId)}
+                    >
+                      Delete
+                    </Button>
+                  </Stack>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
       ) : (
         <Typography variant="body1" sx={{ mt: 2 }}>
           No saved recipes found.

@@ -82,72 +82,65 @@ router.get('/telemetry/ingredients', verifyToken, async (req, res) => {
 
 // Endpoint to grab 7 random recipes from the database
 router.get('/recipes/random', verifyToken, async (req, res) => {
-  console.log("GET /recipes/random route hit");
   try {
-    // Get 7 random recipes
-    const randomData = await getRandomRecipes(7); 
-    // getRandomRecipes returns { recipes: [...] }
-    const recipes = randomData.recipes;
-    if (!recipes || recipes.length === 0) {
-      return res.status(404).json({ error: 'No recipes found' });
+    console.log('Fetching random recipes...');
+    const randomData = await getRandomRecipes(7);
+    
+    if (!randomData || !randomData.recipes || !randomData.recipes.length) {
+      console.error('No recipes returned from Spoonacular');
+      return res.status(404).json({ 
+        error: 'No recipes found',
+        details: 'Empty response from recipe service'
+      });
     }
-    // Pick the first as Recipe of the Day and the rest as recommendations
+
+    const recipes = randomData.recipes;
     const recipeOfDay = recipes[0];
     const recommendations = recipes.slice(1);
-    res.json({ recipeOfDay, recommendations });
+
+    console.log(`Successfully fetched ${recipes.length} recipes`);
+    res.json({ 
+      recipeOfDay, 
+      recommendations,
+      timestamp: new Date().toISOString()
+    });
+
   } catch (error) {
-    console.error("Error fetching random recipes:", error);
-    res.status(500).json({ error: 'Failed to fetch random recipes' });
+    console.error('Error in random recipes endpoint:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch random recipes',
+      details: error.message || 'Unknown error'
+    });
   }
 });
 
 // Endpoint to fetch full recipe details using the recipe id
-router.get('/recipes/:id', verifyToken, async (req, res) => {
+router.get('/recipes/:spoonacularId', verifyToken, async (req, res) => {
   try {
-    const spoonacularId = req.params.id;
+    const { spoonacularId } = req.params;
     // Checking if this recipe is already saved locally for this user
     let recipe = await Recipe.findOne({
       spoonacularId: Number(spoonacularId),
       user: req.user.userId
     });
+
     if (recipe) {
-      console.log("Returning locally saved recipe detail");
+      console.log(`Returning locally saved recipe detail for spoonacularId: ${spoonacularId}`);
       return res.json(recipe);
     }
     
     // If not found locally, fetch recipe details from Spoonacular API
+    console.log(`Fetching recipe details from Spoonacular API for id: ${spoonacularId}`);
     const recipeInfo = await getRecipeInformation(spoonacularId);
     res.json(recipeInfo);
-    } catch (error) {
-      console.error("Error fetching recipe details:", error);
-      res.status(500).json({ error: 'Failed to fetch recipe details' });
-    }
-  });
-
-// Endpoint to save a recipe to the database
-router.post('/', async (req, res) => {
-  const { spoonacularId, title, summary, image, ingredients, instructions } = req.body;
-  try {
-    let recipe = await Recipe.findOne({ spoonacularId });
-    if (!recipe) {
-      //Download the image and update the image field
-      let imagePath = image;
-      try {
-        const fileName = `recipe-${spoonacularId}.jpg`;
-        imagePath = await downloadImage(image, fileName);
-      } catch (error) {
-        console.error('Error downloading image:', error);
-        // Fallback to original URL if download fails
-      }
-      recipe = new Recipe({ spoonacularId, title, summary, image: imagePath, ingredients, instructions });
-      await recipe.save();
-    }
-    res.status(200).json(recipe);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+  } catch (error) {
+    console.error(`Error fetching recipe details for spoonacularId ${req.params.spoonacularId}:`, error);
+    res.status(500).json({ 
+      error: 'Failed to fetch recipe details',
+      details: error.message 
+    });
   }
 });
-
 
 
 module.exports = router;
