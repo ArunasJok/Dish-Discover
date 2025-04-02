@@ -34,12 +34,39 @@ const RecipeDetail = () => {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
         setRecipe(res.data);
+
+        try {
+          const historyPayload = {
+            recipeId: parseInt(res.data.id),  // Ensure this is a number
+            title: res.data.title,
+            ingredients: res.data.extendedIngredients?.map(ing => ing.original) || [],
+            image: res.data.image || '',
+            searchDate: new Date().toISOString()  // Format date properly
+          };
+  
+          console.log('Saving to history:', historyPayload); // Debug log
+  
+          const historyResponse = await axios.post(
+            `${API_URL}/api/searchhistory`, 
+            historyPayload,
+            {
+              headers: { 
+                'Authorization': `Bearer ${authToken}`,
+                'Content-Type': 'application/json'
+              }
+            }
+          );
+  
+          console.log('History saved:', historyResponse.data); // Debug log
+        } catch (historyError) {
+          console.error('Error saving to search history:', historyError.response?.data || historyError);
+        }
       } catch (error) {
         console.error('Error fetching recipe details:', error);
-        setMessage('Failed to load recipe details.');
+        setMessage(error.response?.data?.message || 'Failed to load recipe details.');
       }
     };
-
+  
     if (authToken) {
       fetchRecipe();
     } else {

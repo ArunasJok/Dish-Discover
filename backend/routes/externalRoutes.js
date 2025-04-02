@@ -24,11 +24,17 @@ router.get('/recipes', verifyToken, async (req, res) => {
       const searchEntry = new SearchHistory({
         user: req.user.userId,
         searchTitle: ingredients,
-        popularIngredients: ingredientArray
+        popularIngredients: ingredientArray,
+        searchDate: new Date()
       });
-      await searchEntry.save();
-    } else {
-      console.warn("No user found in req.user; search history not recorded.");
+
+      try {
+        await searchEntry.save();
+        console.log('Search history saved successfully');
+      } catch (historyError) {
+        console.warn('Error saving search history:', historyError);
+        // Continue execution even if history save fails
+      }
     }
     
     res.json(recipes);
@@ -52,21 +58,29 @@ router.get('/telemetry/ingredients', verifyToken, async (req, res) => {
     
     // Count occurrences of each ingredient
     searchHistory.forEach(entry => {
-      entry.popularIngredients.forEach(ingredient => {
-        const count = ingredientMap.get(ingredient) || 0;
-        ingredientMap.set(ingredient, count + 1);
-      });
+      if (entry?.popularIngredients?.length > 0) {
+        entry.popularIngredients.forEach(ingredient => {
+          if (ingredient) {
+            const count = ingredientMap.get(ingredient) || 0;
+            ingredientMap.set(ingredient, count + 1);
+          }
+        });
+      }
     });
 
     // Convert map to object and sort by count
-    const ingredientCounts = Object.fromEntries(ingredientMap);
-    const popularIngredients = [...ingredientMap.entries()]
-      .sort((a, b) => b[1] - a[1])
+    const sortedIngredients = [...ingredientMap.entries()]
+      .sort((a, b) => b[1] - a[1]);
+
+    const ingredientCounts = Object.fromEntries(sortedIngredients);
+    const popularIngredients = sortedIngredients
+      .slice(0, 10)
       .map(([ingredient]) => ingredient);
 
     console.log('Sending telemetry data:', {
       ingredientCounts,
-      popularIngredients
+      popularIngredients,
+      totalEntries: searchHistory.length
     });
 
     res.json({
@@ -76,7 +90,10 @@ router.get('/telemetry/ingredients', verifyToken, async (req, res) => {
 
   } catch (error) {
     console.error('Error in telemetry endpoint:', error);
-    res.status(500).json({ error: 'Failed to fetch ingredient telemetry' });
+    res.status(500).json({ 
+      error: 'Failed to fetch ingredient telemetry',
+      details: error.message 
+    });
   }
 });
 

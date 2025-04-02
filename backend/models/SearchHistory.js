@@ -1,11 +1,33 @@
-// Stores individual search history for a user
 const mongoose = require('mongoose');
 
-const SearchHistorySchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  searchTitle: { type: String, required: true },
-  searchDate: { type: Date, default: Date.now },
-  popularIngredients: [String] // For example, ingredients that were most frequently used in that search
+const searchHistorySchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  recipeId: {
+    type: Number,
+    required: true
+  },
+  title: {
+    type: String,
+    required: true
+  },
+  ingredients: [{
+    type: String,
+    required: false
+  }],
+  image: {
+    type: String,
+    required: false
+  },
+  searchDate: {
+    type: Date,
+    default: Date.now
+  }
+}, {
+  timestamps: true
 });
 
-module.exports = mongoose.model('SearchHistory', SearchHistorySchema);
+module.exports = mongoose.model('SearchHistory', searchHistorySchema);

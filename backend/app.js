@@ -48,6 +48,15 @@ app.use((req, res, next) => {
     next(error);
 });
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error('Server Error:', err);
+    res.status(500).json({
+      error: 'Internal Server Error',
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
+  });
+
 app.use(errorHandler);
 
 // Connect to MongoDB
