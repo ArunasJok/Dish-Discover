@@ -20,7 +20,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 
 const RecipeDetail = () => {
-  const { id: spoonacularId } = useParams(); // id is the Spoonacular recipe ID
+  const { id: spoonacularId } = useParams();
   const { authToken } = useContext(AuthContext);
   const [recipe, setRecipe] = useState(null);
   const [message, setMessage] = useState('');
@@ -37,14 +37,14 @@ const RecipeDetail = () => {
 
         try {
           const historyPayload = {
-            recipeId: parseInt(res.data.id),  // Ensure this is a number
+            recipeId: parseInt(res.data.id), 
             title: res.data.title,
             ingredients: res.data.extendedIngredients?.map(ing => ing.original) || [],
             image: res.data.image || '',
-            searchDate: new Date().toISOString()  // Format date properly
+            searchDate: new Date().toISOString()
           };
   
-          console.log('Saving to history:', historyPayload); // Debug log
+          console.log('Saving to history:', historyPayload); 
   
           const historyResponse = await axios.post(
             `${API_URL}/api/searchhistory`, 
@@ -56,10 +56,17 @@ const RecipeDetail = () => {
               }
             }
           );
+          
+          if (!historyResponse.data) {
+            throw new Error('No response data from search history save');
+          }
   
-          console.log('History saved:', historyResponse.data); // Debug log
+          console.log('History saved:', historyResponse.data);
         } catch (historyError) {
-          console.error('Error saving to search history:', historyError.response?.data || historyError);
+          console.error('Error saving to search history:', { 
+            error: historyError.response?.data || historyError,
+            status: historyError.response?.status || 500,
+            payload: historyError.response?.data || null });
         }
       } catch (error) {
         console.error('Error fetching recipe details:', error);

@@ -17,6 +17,12 @@ import SearchHistory from '../components/dashboard/SearchHistory';
 const PIXABAY_API_KEY = process.env.REACT_APP_PIXABAY_API_KEY;
 const PIXABAY_API_URL = 'https://pixabay.com/api/';
 
+const formatError = (error) => {
+  if (typeof error === 'string') return error;
+  if (error?.message) return error.message;
+  return 'An unexpected error occurred';
+};
+
 const Dashboard = () => {
   const { authToken } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -68,7 +74,16 @@ const Dashboard = () => {
   });
 
   // Combine errors for display
-  const displayError = recipesError || userDataError;  
+  const displayError = recipesError || userDataError 
+    ? formatError(recipesError || userDataError)
+    : null; 
+
+    const validTelemetry = {
+      ingredientCounts: telemetry?.ingredientCounts || {},
+      popularIngredients: Array.isArray(telemetry?.popularIngredients) 
+        ? telemetry.popularIngredients 
+        : []
+    };
 
   return (
     <Container sx={{ mt: 4 }}>
@@ -102,10 +117,7 @@ const Dashboard = () => {
 
       <Box sx={{ mb: 6 }}>
         <IngredientTiles 
-          telemetry={{
-            ingredientCounts: telemetry.ingredientCounts || {},
-            popularIngredients: telemetry.popularIngredients || []
-          }}        
+          telemetry={validTelemetry}        
           PIXABAY_API_KEY={PIXABAY_API_KEY}
           PIXABAY_API_URL={PIXABAY_API_URL}
         />

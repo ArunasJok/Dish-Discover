@@ -9,7 +9,7 @@ export const useWelcomeMessage = () => {
       setShowWelcome(false);
     } else {
       sessionStorage.setItem('hasSeenWelcome', 'true');
-      const timer = setTimeout(() => setShowWelcome(false), 10000);
+      const timer = setTimeout(() => setShowWelcome(false), 20000);
       return () => clearTimeout(timer);
     }
   }, []);

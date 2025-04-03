@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography, Fade } from '@mui/material';
 
 const WelcomeMessage = ({ user, showWelcome, slideIn }) => (
-  <Fade in={showWelcome} timeout={5000}>
+  <Fade in={showWelcome} timeout={15000}>
     <Box 
       sx={{ 
         position: 'fixed', 

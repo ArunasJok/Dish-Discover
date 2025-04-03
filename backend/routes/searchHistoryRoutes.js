@@ -1,15 +1,13 @@
-// Route that returns search history for the current user
 const express = require('express');
 const router = express.Router();
 const verifyToken = require('../middlewares/authenticationMiddleware');
 const SearchHistory = require('../models/SearchHistory');
 
 // GET /api/searchhistory
-// Returns an array of search history entries for the current user
 router.get('/', verifyToken, async (req, res) => {
   try {
-    // Assuming your token payload contains userId
-    const histories = await SearchHistory.find({ user: req.user.userId }).sort({ searchDate: -1 });
+    const histories = await SearchHistory.find({ user: req.user.userId })
+      .sort({ searchDate: -1 });
     res.json(histories);
   } catch (error) {
     console.error("Error fetching search history:", error);
@@ -18,7 +16,6 @@ router.get('/', verifyToken, async (req, res) => {
 });
 
 // DELETE /api/searchhistory
-// Clears search history for the current user
 router.delete('/', verifyToken, async (req, res) => {
   try {
     await SearchHistory.deleteMany({ user: req.user.userId });
@@ -30,13 +27,20 @@ router.delete('/', verifyToken, async (req, res) => {
 });
 
 // POST /api/searchhistory
-// Adds a new search history entry
 router.post('/', verifyToken, async (req, res) => {
   try {
-    console.log('Received history payload:', req.body); // Debug log
-    console.log('User ID:', req.user.userId); // Debug log
-
     const { recipeId, title, ingredients, image } = req.body;
+    const userId = req.user.userId;
+
+    // Debug logging
+    console.log('Creating search history:', {
+      userId,
+      recipeId,
+      title,
+      ingredientsCount: ingredients?.length || 0,
+      hasImage: !!image,
+      timestamp: new Date().toISOString()
+    });
 
     // Validate required fields
     if (!recipeId || !title) {
@@ -50,7 +54,7 @@ router.post('/', verifyToken, async (req, res) => {
     }
 
     const newHistory = new SearchHistory({
-      user: req.user.userId,
+      user: userId,
       recipeId,
       title,
       ingredients: ingredients || [],
@@ -59,11 +63,23 @@ router.post('/', verifyToken, async (req, res) => {
     });
 
     const savedHistory = await newHistory.save();
-    console.log('Saved history:', savedHistory); // Debug log
+    
+    // Debug logging
+    console.log('Saved search history:', {
+      id: savedHistory._id,
+      userId: savedHistory.user,
+      recipeId: savedHistory.recipeId,
+      timestamp: savedHistory.searchDate
+    });
 
     res.status(201).json(savedHistory);
   } catch (error) {
-    console.error('Error saving search history:', error);
+    console.error('Error saving search history:', {
+      error: error.message,
+      stack: error.stack,
+      userId: req.user?.userId
+    });
+    
     res.status(500).json({
       error: 'Failed to save search history',
       details: error.message

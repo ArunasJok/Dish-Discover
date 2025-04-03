@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { API_URL } from '../config';
 
@@ -9,78 +9,83 @@ export const useUserData = (authToken) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const processSearchHistory = (history) => {
+  const processSearchHistory = useCallback((history) => {
+    console.log('Processing search history:', {
+      entries: history.length,
+      sampleEntry: history[0]
+    });
+
     const ingredientCounts = {};
     
     history.forEach(entry => {
-      if (entry.popularIngredients) {
-        entry.popularIngredients.forEach(ingredient => {
-          ingredientCounts[ingredient] = (ingredientCounts[ingredient] || 0) + 1;
+      // Process search query ingredients instead of recipe ingredients
+      if (entry.searchIngredients && Array.isArray(entry.searchIngredients)) {
+        entry.searchIngredients.forEach(ingredient => {
+          if (typeof ingredient === 'string' && ingredient.trim()) {
+            const normalizedIngredient = ingredient.toLowerCase().trim();
+            ingredientCounts[normalizedIngredient] = 
+              (ingredientCounts[normalizedIngredient] || 0) + 1;
+          }
         });
       }
     });
 
+    console.log('Processed ingredient counts:', ingredientCounts);
+
     // Sort ingredients by count and get top ones
     const sortedIngredients = Object.entries(ingredientCounts)
-      .sort(([, a], [, b]) => b - a);
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 10); // Limit to top 10 ingredients
 
-    return {
+    const result = {
       ingredientCounts,
       popularIngredients: sortedIngredients.map(([ingredient]) => ingredient)
     };
-  };
+
+    console.log('Final telemetry:', result);
+    return result;
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!authToken) return;
+      if (!authToken) {
+        console.log('No auth token provided');
+        return;
+      }
 
       try {
         setLoading(true);
-        console.log('Fetching user data with token:', authToken.substring(0, 10) + '...');
+        console.log('Fetching user data...');
         
-        // Fetch all data concurrently
-        const [profileRes, historyRes, telemetryRes] = await Promise.all([
+        const [profileRes, historyRes] = await Promise.all([
           axios.get(`${API_URL}/api/profile`, {
             headers: { 'Authorization': `Bearer ${authToken}` }
           }),
           axios.get(`${API_URL}/api/searchhistory`, {
             headers: { 'Authorization': `Bearer ${authToken}` }
-          }),
-          axios.get(`${API_URL}/api/telemetry/ingredients`, {
-            headers: { 'Authorization': `Bearer ${authToken}` }
           })
         ]);
 
         const searchHistoryData = historyRes.data;
-        console.log('Search history entries:', searchHistoryData.length);
+        console.log(`Received ${searchHistoryData.length} search history entries`);
 
-        // Try server telemetry first, fall back to local processing
-        let processedTelemetry = {
-          ingredientCounts: telemetryRes.data.ingredientCounts,
-          popularIngredients: telemetryRes.data.popularIngredients
-        };
-
-        // If server telemetry is empty but we have history, process locally
-        if (Object.keys(processedTelemetry.ingredientCounts).length === 0 && searchHistoryData.length > 0) {
-          console.log('Processing telemetry from search history...');
-          processedTelemetry = processSearchHistory(searchHistoryData);
-          console.log('Processed telemetry:', processedTelemetry);
-        }
+        // Always process history locally for consistent results
+        const processedTelemetry = processSearchHistory(searchHistoryData);
 
         setUser(profileRes.data);
         setSearchHistory(searchHistoryData);
         setTelemetry(processedTelemetry);
 
       } catch (error) {
-        console.error('Error fetching user data:', error.response || error);
-        setError('Failed to load user data. Please try again later.');
+        console.error('Error fetching user data:', error);
+        setError(error.response?.data?.message || 'Failed to load user data');
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [authToken]);
+  }, [authToken, processSearchHistory]);
 
   return {
     user,

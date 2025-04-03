@@ -131,7 +131,11 @@ const MyRecipes = () => {
                 </TableCell>
                 <TableCell>
                   <Stack direction="row" spacing={2} alignItems="center">
-                    <RateRecipe recipeId={recipe._id} onRatingUpdated={fetchMyRecipes} />
+                    <RateRecipe 
+                      recipeId={recipe._id}
+                      spoonacularId={recipe.spoonacularId} 
+                      onRatingUpdated={fetchMyRecipes}
+                    />
                     <Button
                       variant="contained"
                       color="error"

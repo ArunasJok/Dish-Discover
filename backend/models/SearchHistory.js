@@ -8,16 +8,22 @@ const searchHistorySchema = new mongoose.Schema({
   },
   recipeId: {
     type: Number,
-    required: true
+    required: true,
+    trim: true
   },
   title: {
     type: String,
     required: true
   },
-  ingredients: [{
-    type: String,
-    required: false
-  }],
+  searchIngredients: {
+    type: [String],
+    required: true,
+    default: []
+  },
+  ingredients: {
+    type: [String],
+    default: []
+  },
   image: {
     type: String,
     required: false
@@ -28,6 +34,21 @@ const searchHistorySchema = new mongoose.Schema({
   }
 }, {
   timestamps: true
+});
+
+// Add validation middleware
+searchHistorySchema.pre('save', function(next) {
+  // Ensure searchIngredients is an array
+  if (!Array.isArray(this.searchIngredients)) {
+    this.searchIngredients = [];
+  }
+  
+  // Clean up ingredients - remove empty strings and trim
+  this.searchIngredients = this.searchIngredients
+    .filter(ing => typeof ing === 'string' && ing.trim())
+    .map(ing => ing.trim().toLowerCase());
+
+  next();
 });
 
 module.exports = mongoose.model('SearchHistory', searchHistorySchema);

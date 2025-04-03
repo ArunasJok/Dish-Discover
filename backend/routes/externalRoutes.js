@@ -14,33 +14,47 @@ router.get('/recipes', verifyToken, async (req, res) => {
     if (!ingredients) {
       return res.status(400).json({ error: 'Ingredients query parameter is required' });
     }
-    const ingredientArray = ingredients.split(',').map(item => item.trim());
-    
-    // Fetch recipes from Spoonacular API
-    const recipes = await getRecipesByIngredients(ingredientArray);
-    
-    // Record search history entry for the logged-in user
-    if (req.user && req.user.userId) {
-      const searchEntry = new SearchHistory({
-        user: req.user.userId,
-        searchTitle: ingredients,
-        popularIngredients: ingredientArray,
-        searchDate: new Date()
-      });
 
+    // Parse and clean ingredients
+    const searchedIngredients = ingredients
+      .split(',')
+      .map(i => i.trim())
+      .filter(i => i);
+
+    if (searchedIngredients.length === 0) {
+      return res.status(400).json({ error: 'No valid ingredients provided' });
+    }
+
+    // Fetch recipes from Spoonacular API
+    const recipes = await getRecipesByIngredients(searchedIngredients);
+
+    // Record search history ONCE per search, not per recipe
+    if (req.user?.userId && recipes.length > 0) {
       try {
+        // Create single search history entry for this search
+        const searchEntry = new SearchHistory({
+          user: req.user.userId,
+          recipeId: recipes[0].id, // Store first recipe ID
+          title: `Search for ${searchedIngredients.join(', ')}`,
+          searchIngredients: searchedIngredients,
+          ingredients: [], // No need to store recipe ingredients here
+          searchDate: new Date()
+        });
+
         await searchEntry.save();
-        console.log('Search history saved successfully');
+        console.log('Saved search history entry with ingredients:', searchedIngredients);
       } catch (historyError) {
-        console.warn('Error saving search history:', historyError);
-        // Continue execution even if history save fails
+        console.error('Error saving search history:', historyError);
       }
     }
-    
+
     res.json(recipes);
   } catch (error) {
     console.error("Error fetching recipes:", error);
-    res.status(500).json({ error: 'Failed to fetch recipes' });
+    res.status(500).json({ 
+      error: 'Failed to fetch recipes',
+      details: error.message 
+    });
   }
 });
 
@@ -50,16 +64,13 @@ router.get('/telemetry/ingredients', verifyToken, async (req, res) => {
     const userId = req.user.userId;
     console.log('Fetching telemetry for user:', userId);
 
-    // Get all search history entries for this user
     const searchHistory = await SearchHistory.find({ user: userId });
-    
-    // Create a map to count ingredients
     const ingredientMap = new Map();
     
-    // Count occurrences of each ingredient
+    // Count occurrences of searched ingredients
     searchHistory.forEach(entry => {
-      if (entry?.popularIngredients?.length > 0) {
-        entry.popularIngredients.forEach(ingredient => {
+      if (entry?.searchIngredients?.length > 0) {
+        entry.searchIngredients.forEach(ingredient => {
           if (ingredient) {
             const count = ingredientMap.get(ingredient) || 0;
             ingredientMap.set(ingredient, count + 1);
@@ -68,7 +79,6 @@ router.get('/telemetry/ingredients', verifyToken, async (req, res) => {
       }
     });
 
-    // Convert map to object and sort by count
     const sortedIngredients = [...ingredientMap.entries()]
       .sort((a, b) => b[1] - a[1]);
 

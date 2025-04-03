@@ -167,34 +167,42 @@ const IngredientTiles = ({ telemetry, PIXABAY_API_KEY, PIXABAY_API_URL }) => {
       >
         Most Searched Ingredients
       </Typography>
-
+  
       <Grid2 
-        container 
-        spacing={2}
-        justifyContent="center"
-        sx={{ width: '100%' }}
-      >
-        {state.topIngredients.map((ingredient, idx) => (
-          <Grid2 
-            key={idx} 
-            xs={12}      // Full width on mobile
-            sm={6}       // 2 tiles per row on small screens
-            md={4}       // 3 tiles per row on medium screens
-            lg={2.4}     // 5 tiles per row on large screens (2.4 * 5 = 12)
-          >
-            <Card
-              sx={{
-                height: { xs: '150px', sm: '180px', md: '200px' }, // Responsive height
-                position: 'relative',
-                overflow: 'hidden',
-                transition: 'transform 0.3s ease',
-                '&:hover': {
-                  transform: 'scale(1.05)',
-                  '& .ingredient-overlay': {
-                    opacity: 1
+          container 
+          spacing={2}
+          sx={{ 
+            width: '100%',
+            display: 'grid',
+            gridTemplateColumns: {
+              xs: '1fr',               // 1 column on mobile
+              sm: 'repeat(2, 1fr)',    // 2 columns on small screens
+              md: 'repeat(3, 1fr)',    // 3 columns on medium screens
+              lg: 'repeat(5, 1fr)'     // 5 columns on large screens
+            },
+            gap: 2
+          }}
+        >
+          {state.topIngredients.map((ingredient, idx) => (
+            <Grid2 key={idx}>
+              <Card
+                sx={{
+                  height: {
+                    xs: '150px',
+                    sm: '180px',
+                    md: '200px',
+                    lg: '220px'
+                  },
+                  position: 'relative',
+                  overflow: 'hidden',
+                  transition: 'transform 0.3s ease',
+                  '&:hover': {
+                    transform: 'scale(1.05)',
+                    '& .ingredient-overlay': {
+                      opacity: 1
+                    }
                   }
-                }
-              }}
+                }}
             >
               <CardMedia
                 component="img"

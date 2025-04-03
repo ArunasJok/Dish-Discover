@@ -4,6 +4,15 @@ const router = express.Router();
 const verifyToken = require('../middlewares/authenticationMiddleware');
 const Recipe = require('../models/Recipe');
 
+const validateRating = (req, res, next) => {
+  const rating = Number(req.body.rating);
+  if (isNaN(rating) || rating < 1 || rating > 5) {
+    return res.status(400).json({ error: 'Rating must be between 1 and 5' });
+  }
+  req.body.rating = rating; // Store converted number
+  next();
+};
+
 // POST /api/recipes/save. Save a recipe to the user's profile
 router.post('/save', verifyToken, async (req, res) => {
   try {
@@ -64,30 +73,63 @@ router.get('/my', verifyToken, async (req, res) => {
 
 // PUT /api/recipes/rate/:id
 // Update a recipe's rating
-router.put('/rate/:spoonacularId', verifyToken, async (req, res) => {
+router.put('/rate/:spoonacularId', verifyToken, validateRating, async (req, res) => {
   try {
-    const { spoonacularId } = req.params;
+    const spoonacularId = parseInt(req.params.spoonacularId);
     const { rating } = req.body;
     
+    console.log('Rating request:', {
+      spoonacularId,
+      userId: req.user.userId,
+      rating
+    });
+
     const recipe = await Recipe.findOne({ 
       spoonacularId,
       user: req.user.userId 
     });
 
     if (!recipe) {
-      return res.status(404).json({ error: 'Recipe not found' });
+      console.log('Recipe not found:', { spoonacularId, userId: req.user.userId });
+      return res.status(404).json({ 
+        error: 'Recipe not found',
+        details: 'Recipe must be saved before rating' 
+      });
     }
 
     // Update rating using a simple average formula
-    const totalRating = recipe.rating * recipe.ratingCount + rating;
-    recipe.ratingCount += 1;
-    recipe.rating = totalRating / recipe.ratingCount;
+    const totalRating = (recipe.rating || 0) * (recipe.ratingCount || 0) + rating;
+    recipe.ratingCount = (recipe.ratingCount || 0) + 1;
+    recipe.rating = parseFloat((totalRating / recipe.ratingCount).toFixed(1));
+    
     await recipe.save();
     
-    res.json({ message: 'Rating updated', recipe });
+    console.log('Rating updated:', {
+      recipeId: recipe._id,
+      spoonacularId: recipe.spoonacularId,
+      newRating: recipe.rating,
+      count: recipe.ratingCount
+    });
+
+    res.json({ 
+      message: 'Rating updated',
+      recipe: {
+        id: recipe._id,
+        rating: recipe.rating,
+        ratingCount: recipe.ratingCount
+      }
+    });
   } catch (error) {
-    console.error('Error rating recipe:', error);
-    res.status(500).json({ error: 'Failed to rate recipe' });
+    console.error('Error rating recipe:', {
+      error: error.message,
+      stack: error.stack,
+      userId: req.user?.userId,
+      spoonacularId: req.params.spoonacularId
+    });
+    res.status(500).json({ 
+      error: 'Failed to rate recipe',
+      details: error.message
+    });
   }
 });
 
