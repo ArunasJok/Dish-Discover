@@ -17,6 +17,8 @@ const About = () => {
         minHeight: '80vh',
         py: 4,
         position: 'relative',
+        mt: 5,
+        pb: 8
       }}
     >
       <LandingNavButtons />

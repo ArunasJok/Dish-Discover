@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../services/apiService';
 import { Box, TextField, Button, Typography } from '@mui/material';
 import LandingNavButtons from '../components/LandingNavButtons';
+import { sharedBoxStyle } from '../components/sharedBoxStyle';
 
 const Register = () => {
    const [formData, setFormData] = useState({
@@ -34,24 +35,13 @@ const handleSubmit = async (e) => {
 };
 
 return (
-  <Box sx={{ backgroundColor: '#f0f0f0', minHeight: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
+  <Box sx={{ backgroundColor: '#f0f0f0', minHeight: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4, mt: 0 }}>
      
       <LandingNavButtons />
       <div style={{ paddingTop: '64px' }}></div>
 
       {/* White container in the center */}
-      <Box
-        sx={{
-          maxWidth: 600,
-          mx: 'auto',
-          backgroundColor: 'white',
-          p: 4,
-          borderRadius: 2,
-          boxShadow: 3,
-          position: 'relative',
-        }}
-      >        
-
+      <Box sx={sharedBoxStyle}>
         <Typography variant="h4" align="center" gutterBottom>
           Register
         </Typography>

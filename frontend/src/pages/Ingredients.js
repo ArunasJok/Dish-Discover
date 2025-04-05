@@ -1,26 +1,29 @@
-// Ingredients page component to fetch recipes by ingredients
 import React, { useState, useContext } from 'react';
-//import axios from 'axios';
 import { getSpoonacularRecipes } from '../services/apiService';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-
-
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Card,
+  CardMedia,
+  CardContent,
+  Grid,
+  Box,
+} from '@mui/material';
 
 const Ingredients = () => {
-  // State to store the ingredients as string and fetched recipes array
   const [ingredients, setIngredients] = useState('');
   const [recipes, setRecipes] = useState([]);
   const [message, setMessage] = useState('');
   const { authToken } = useContext(AuthContext);
 
-
-  // Updating the ingredients state as the user types
   const handleChange = (e) => {
     setIngredients(e.target.value);
   };
 
-  // Handle the form submission to fetch recipe recommendations
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!ingredients) {
@@ -28,7 +31,6 @@ const Ingredients = () => {
       return;
     }
     try {
-      
       const data = await getSpoonacularRecipes(ingredients, authToken);
       setRecipes(data);
       setMessage('');
@@ -39,46 +41,65 @@ const Ingredients = () => {
   };
 
   return (
-    <div className="App">
-      <h2>Find Recipes by Ingredients</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Enter ingredients (comma separated)"
+    <Container maxWidth="md" sx={{ mt: 12 }}>
+      <Typography variant="h4" component="h2" gutterBottom>
+        Find Recipes by Ingredients
+      </Typography>
+      <Box component="form" onSubmit={handleSubmit} sx={{ mb: 3 }}>
+        <TextField
+          fullWidth
+          label="Enter ingredients (comma separated)"
+          variant="outlined"
           value={ingredients}
           onChange={handleChange}
-          style={{ padding: '10px', width: '300px', marginRight: '10px' }}
+          margin="normal"
         />
-        <button type="submit" style={{ padding: '10px' }}>Get Recipes</button>
-      </form>
-      {message && <p>{message}</p>}
-      <div style={{ marginTop: '20px' }}>
-        <h3>Recipe Recommendations</h3>
-        {recipes.length > 0 ? (
-          <ul>
-            {recipes.map((recipe) => (
-              <li key={recipe.id} style={{ marginBottom: '15px' }}>
-                <Link to={`/recipe/${recipe.id}`}>
-                  <strong>{recipe.title}</strong>
-                </Link>
-                <div>
-                  <img 
-                    src={recipe.image} 
-                    alt={recipe.title} 
-                    style={{ width: '200px', height: 'auto', marginTop: '10px' }} 
-                  />
-                </div>
-                <p>Used Ingredients: {recipe.usedIngredients.map(ing => ing.name).join(', ')}</p>
-                <p>Missed Ingredients: {recipe.missedIngredients.map(ing => ing.name).join(', ')}</p>
-                <p>Likes: {recipe.likes}</p>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No recipes to display. Enter ingredients and click "Get Recipes".</p>
-        )}
-      </div>
-    </div>
+        <Button variant="contained" color="primary" type="submit">
+          Get Recipes
+        </Button>
+      </Box>
+      {message && (
+        <Typography variant="body2" color="error" sx={{ mt: 2 }}>
+          {message}
+        </Typography>
+      )}
+      {recipes.length > 0 ? (
+        <Grid container spacing={3}>
+          {recipes.map((recipe) => (
+            <Grid item xs={12} sm={6} key={recipe.id}>
+              <Card>
+                <CardMedia
+                  component="img"
+                  height="200"
+                  image={recipe.image}
+                  alt={recipe.title}
+                />
+                <CardContent>
+                  <Typography variant="h6" component="div">
+                    <Link to={`/recipe/${recipe.id}`}>{recipe.title}</Link>
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Used Ingredients:{' '}
+                    {recipe.usedIngredients.map((ing) => ing.name).join(', ')}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Missed Ingredients:{' '}
+                    {recipe.missedIngredients.map((ing) => ing.name).join(', ')}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Likes: {recipe.likes}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        <Typography variant="body1">
+          No recipes to display. Enter ingredients and click "Get Recipes".
+        </Typography>
+      )}
+    </Container>
   );
 };
 

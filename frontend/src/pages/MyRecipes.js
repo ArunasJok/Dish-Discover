@@ -2,29 +2,31 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import {
   Container,
   Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Button,
+  Stack,
+  Snackbar,
+  Alert,
+  TextField,
   Box,
-  Stack
+  IconButton,
+  Collapse,
 } from '@mui/material';
-import RateRecipe from '../components/RateRecipe';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { API_URL } from '../config';
-import DeleteIcon from '@mui/icons-material/Delete';
+import RecipeCard from '../components/RecipeCard';
+
 
 const MyRecipes = () => {
   const { authToken } = useContext(AuthContext);
   const [recipes, setRecipes] = useState([]);
+  const [filterQuery, setFilterQuery] = useState('');
+  const [expanded, setExpanded] = useState({});
   const [message, setMessage] = useState('');
+  const [open, setOpen] = useState(false);
 
   const fetchMyRecipes = useCallback(async () => {
     try {
@@ -35,6 +37,7 @@ const MyRecipes = () => {
     } catch (error) {
       console.error('Error fetching saved recipes:', error);
       setMessage('Failed to fetch saved recipes');
+      setOpen(true);
     }
   }, [authToken]);
 
@@ -44,10 +47,12 @@ const MyRecipes = () => {
         headers: { 'Authorization': `Bearer ${authToken}` }
       });
       setMessage('Recipe deleted successfully');
-      fetchMyRecipes(); // Refresh the list
+      setOpen(true);
+      fetchMyRecipes();
     } catch (err) {
       console.error('Error deleting recipe:', err);
       setMessage(err.response?.data?.error || 'Failed to delete recipe');
+      setOpen(true);
     }
   };
 
@@ -57,106 +62,80 @@ const MyRecipes = () => {
     }
   }, [authToken, fetchMyRecipes]);
 
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
+
+  const toggleExpand = (id) => {
+    setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+
+  const filteredRecipes = recipes.filter(recipe =>
+    recipe.title.toLowerCase().includes(filterQuery.toLowerCase())
+  );
+
   return (
-    <Container sx={{ mt: 4 }}>
+    <Container sx={{ mt: 8 }}>
       <Typography variant="h4" color="primary" gutterBottom>
         My Saved Recipes
       </Typography>
-      {message && (
-        <Typography variant="body1" color="error" gutterBottom>
-          {message}
-        </Typography>
-      )}
-      {recipes.length > 0 ? (
-        <TableContainer 
-        component={Paper} 
-        sx={{ 
-          mt: 2,
-          maxWidth: '100%',
-          '& td': { 
-            verticalAlign: 'middle',
-            p: 2
-          }
-        }}
-      >
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Recipe</TableCell>
-              <TableCell>Preview</TableCell>
-              <TableCell>Rating</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {recipes.map((recipe) => (
-              <TableRow key={recipe._id} 
-                sx={{ 
-                  '&:hover': { 
-                    backgroundColor: 'rgba(0, 0, 0, 0.04)' 
-                  }
-                }}
-              >
-                <TableCell>
-                  <Typography variant="subtitle1" gutterBottom>
-                    {recipe.title}
-                  </Typography>
-                  <Button
-                    component={Link}
-                    to={`/recipe/${recipe.spoonacularId}`}
-                    color="primary"
-                    variant="outlined"
-                    size="small"
-                  >
-                    View Details
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Box
-                    component="img"
-                    src={recipe.image}
-                    alt={recipe.title}
-                    sx={{ 
-                      width: 100, 
-                      height: 100, 
-                      objectFit: 'cover',
-                      borderRadius: 1
-                    }}
-                  />
-                </TableCell>
-                <TableCell>
-                  <Typography variant="body1">
-                    {recipe.rating.toFixed(1)} ({recipe.ratingCount} ratings)
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  <Stack direction="row" spacing={2} alignItems="center">
-                    <RateRecipe 
-                      recipeId={recipe._id}
-                      spoonacularId={recipe.spoonacularId} 
-                      onRatingUpdated={fetchMyRecipes}
-                    />
-                    <Button
-                      variant="contained"
-                      color="error"
-                      size="small"
-                      startIcon={<DeleteIcon />}
-                      onClick={() => handleDelete(recipe.spoonacularId)}
-                    >
-                      Delete
-                    </Button>
-                  </Stack>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+
+      <Box sx={{ mb: 3 }}>
+        <TextField
+          fullWidth
+          variant="outlined"
+          label="Filter recipes"
+          value={filterQuery}
+          onChange={(e) => setFilterQuery(e.target.value)}
+        />
+      </Box>
+
+      {filteredRecipes.length > 0 ? (
+        <Stack spacing={2}>
+          {filteredRecipes.map((recipe) => {
+          const isExpanded = expanded[recipe._id] || false;
+          return (
+            <Box key={recipe._id} sx={{ border: '1px solid #ccc', borderRadius: 1, p: 1 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="h6">{recipe.title}</Typography>
+                <IconButton onClick={() => toggleExpand(recipe._id)}>
+                  {isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                </IconButton>
+              </Box>
+              <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+                <RecipeCard
+                  recipe={recipe}
+                  onDelete={handleDelete}
+                  showRating={true}
+                  showDeleteButton={true}
+                  hideTitle={true}
+                  onRatingUpdated={fetchMyRecipes}
+                />
+              </Collapse>
+            </Box>
+          );
+        })}
+        </Stack>
       ) : (
         <Typography variant="body1" sx={{ mt: 2 }}>
           No saved recipes found.
         </Typography>
       )}
+      
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleClose} severity={message.includes('success') ? 'success' : 'error'}>
+          {message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

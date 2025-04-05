@@ -13,10 +13,10 @@ import LandingNavButtons from '../components/LandingNavButtons';
 const Home = () => {
   return (
     // Grey background
-    <Box sx={{ backgroundColor: '#f0f0f0', minHeight: '80vh', py: 4 }}>
+    <Box sx={{ backgroundColor: '#f0f0f0', minHeight: '80vh', py: 2, mt: 5, pb: 8 }}>
       
       <LandingNavButtons />
-      <div style={{ paddingTop: '64px' }}></div>
+      <div style={{ paddingTop: '54px' }}></div>
 
       {/* Centered white container */}
       <Box
@@ -25,10 +25,10 @@ const Home = () => {
           mx: 'auto',
           backgroundColor: 'white',
           p: 2,
-          borderRadius: 2,
+          borderRadius: 4,
           boxShadow: 3,
-          position: 'relative',
-          maxHeight: '80vh',          
+          position: 'top',
+          maxHeight: '95vh',          
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
@@ -58,7 +58,7 @@ const Home = () => {
               fontWeight: 'bold', 
               mb: 1, 
               textAlign: 'center', 
-              fontSize: { xs: '1.5rem', md: '2rem' },
+              fontSize: { xs: '1.5rem', md: '2rem', lg: '2.5rem' },
               }}
             >
               Dish Discover - Cook with what you have
@@ -68,7 +68,7 @@ const Home = () => {
             color="textSecondary"
             sx={{
               textAlign: 'center',
-              fontSize: { xs: '0.9rem', md: '1rem' },
+              fontSize: { xs: '0.9rem', md: '1rem', lg: '1.2rem' },
               }}
             >
               Helping you cook with the ingredients you have at home to prevent waste, 

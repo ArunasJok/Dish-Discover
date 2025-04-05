@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../services/apiService';
 import { AuthContext } from '../context/AuthContext';
 import { Box, TextField, Button, Typography } from '@mui/material';
+import { sharedBoxStyle } from '../components/sharedBoxStyle';
 
 
 
@@ -43,7 +44,7 @@ const Login = () => {
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit}>
+    <Box sx={sharedBoxStyle} component="form" onSubmit={handleSubmit}>
       <Typography variant="h5" gutterBottom>
         Please Login
       </Typography>

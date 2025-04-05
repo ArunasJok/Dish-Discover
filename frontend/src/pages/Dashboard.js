@@ -86,7 +86,7 @@ const Dashboard = () => {
     };
 
   return (
-    <Container sx={{ mt: 4 }}>
+    <Container sx={{ mt: 8 }}>
       {displayError && (
         <Typography variant="body1" color="error" gutterBottom>
           {displayError}

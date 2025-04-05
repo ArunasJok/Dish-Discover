@@ -54,7 +54,7 @@ const Profile = () => {
   };
 
   return (
-    <Container sx={{ mt: 4 }}>
+    <Container sx={{ mt: 8 }}>
       <Typography variant="h4" color="primary" gutterBottom>
         Profile
       </Typography>
