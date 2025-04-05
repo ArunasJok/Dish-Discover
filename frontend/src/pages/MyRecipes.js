@@ -26,7 +26,7 @@ const MyRecipes = () => {
   const [filterQuery, setFilterQuery] = useState('');
   const [expanded, setExpanded] = useState({});
   const [message, setMessage] = useState('');
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); 
 
   const fetchMyRecipes = useCallback(async () => {
     try {
@@ -79,9 +79,31 @@ const MyRecipes = () => {
   );
 
   return (
-    <Container sx={{ mt: 8 }}>
-      <Typography variant="h4" color="primary" gutterBottom>
-        My Saved Recipes
+    <Container
+      sx={{
+        mt: 8,
+        minHeight: '100vh',
+        position: 'relative',
+        zIndex: 1,
+      }}
+    >     
+      <Typography 
+        variant="h4" 
+        gutterBottom 
+        sx={{ 
+          fontWeight: 600,
+          color: 'primary.main',
+          textAlign: 'left',
+          mb: 3,
+          fontFamily: '"Poppins", "Helvetica Neue", sans-serif',
+          borderBottom: '2px solid',
+          borderColor: 'primary.light',
+          paddingBottom: 1,
+          letterSpacing: '0.5px',
+          backgroundColor: 'rgba(255,255,255,0.8)'
+        }}
+      >
+        Saved Recipes
       </Typography>
 
       <Box sx={{ mb: 3 }}>
@@ -91,34 +113,88 @@ const MyRecipes = () => {
           label="Filter recipes"
           value={filterQuery}
           onChange={(e) => setFilterQuery(e.target.value)}
+          sx={{ backgroundColor: 'rgba(255,255,255,0.9)' }}
         />
       </Box>
 
       {filteredRecipes.length > 0 ? (
         <Stack spacing={2}>
           {filteredRecipes.map((recipe) => {
-          const isExpanded = expanded[recipe._id] || false;
-          return (
-            <Box key={recipe._id} sx={{ border: '1px solid #ccc', borderRadius: 1, p: 1 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="h6">{recipe.title}</Typography>
-                <IconButton onClick={() => toggleExpand(recipe._id)}>
-                  {isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                </IconButton>
-              </Box>
-              <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-                <RecipeCard
-                  recipe={recipe}
-                  onDelete={handleDelete}
-                  showRating={true}
-                  showDeleteButton={true}
-                  hideTitle={true}
-                  onRatingUpdated={fetchMyRecipes}
+            const isExpanded = expanded[recipe._id] || false;
+            return (
+              <Box
+                key={recipe._id}
+                // The entire recipe item uses the recipe image as its background
+                sx={{
+                  border: '1px solid #ccc',
+                  borderRadius: 2,
+                  p: 1,
+                  position: 'relative',
+                  backgroundImage: `url(${recipe.image})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  transition: 'background 0.5s ease-in-out',
+                }}
+              >
+                {/* Overlay to make the background image appear fainter */}
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    bgcolor: 'rgba(65, 65, 65, 0.35)',
+                    zIndex: 0,
+                    transition: 'opacity 0.5s ease-in-out',
+                    borderRadius: 2,
+                  }}
                 />
-              </Collapse>
-            </Box>
-          );
-        })}
+                {/* Header */}
+                <Box
+                  sx={{
+                    position: 'relative',
+                    zIndex: 1,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                    px: 1,
+                    bgcolor: 'rgba(0, 0, 0, 0.5)',
+                    borderRadius: 1,
+                  }}
+                  onClick={() => toggleExpand(recipe._id)}
+                >
+                  <Typography 
+                  variant="h6" 
+                  sx={{
+                    color: 'white',
+                    fontWeight: 'bold',
+                    fontFamily: '"Poppins", "Helvetica Neue", sans-serif',
+                  }}
+                  >
+                    {recipe.title}
+                  </Typography>
+                  <IconButton onClick={() => toggleExpand(recipe._id)}>
+                    {isExpanded ? <ExpandLessIcon sx={{ color: 'white' }} /> : <ExpandMoreIcon sx={{ color: 'white' }} />}
+                  </IconButton>
+                </Box>
+                <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+                  {/* Expanded content appears over the same background */}
+                  <Box sx={{ mt: 1, position: 'relative', zIndex: 1 }}>
+                    <RecipeCard
+                      recipe={recipe}
+                      onDelete={handleDelete}
+                      showRating={true}
+                      showDeleteButton={true}
+                      hideTitle={true}
+                      onRatingUpdated={fetchMyRecipes}
+                    />
+                  </Box>
+                </Collapse>
+              </Box>
+            );
+          })}
         </Stack>
       ) : (
         <Typography variant="body1" sx={{ mt: 2 }}>
@@ -130,7 +206,7 @@ const MyRecipes = () => {
         open={open}
         autoHideDuration={6000}
         onClose={handleClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        anchorOrigin={{ vertical: 'center', horizontal: 'center' }}
       >
         <Alert onClose={handleClose} severity={message.includes('success') ? 'success' : 'error'}>
           {message}

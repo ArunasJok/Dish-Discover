@@ -79,7 +79,7 @@ const Header = () => {
               mr: 4,
               fontSize: '1.2rem',
               '&:hover': {
-                textShadow: '0 0 5px rgba(255, 255, 255, 0.8)',
+                textShadow: '0 0 5px rgba(20, 219, 20, 0.8)',
               },
             }}
           >

@@ -18,7 +18,7 @@ import RecipeDetail from './pages/RecipeDetail';
 function App() {
   return (
     <Router>
-      <Layout>
+      <Layout bgColor="primary.light">
         <Routes>
           {/* Public Pages */}
           <Route path="/" element={<Home />} />

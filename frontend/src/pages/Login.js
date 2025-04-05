@@ -6,6 +6,7 @@ import { loginUser } from '../services/apiService';
 import { AuthContext } from '../context/AuthContext';
 import { Box, TextField, Button, Typography } from '@mui/material';
 import { sharedBoxStyle } from '../components/sharedBoxStyle';
+import LandingNavButtons from '../components/LandingNavButtons';
 
 
 
@@ -44,52 +45,70 @@ const Login = () => {
   };
 
   return (
-    <Box sx={sharedBoxStyle} component="form" onSubmit={handleSubmit}>
-      <Typography variant="h5" gutterBottom>
-        Please Login
-      </Typography>
+    
+    <Box sx={{ 
+      backgroundColor: 'transparent', 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center',       
+      mt: 0,
+      }}>
 
-      <TextField
-        label="Email"
-        type="email"
-        name="email"
-        placeholder="Email"
-        onChange={handleChange}
-        value={credentials.email}
-        fullWidth
-        required
-        sx={{ mb: 2 }}
-      />
-
-      <TextField
-        label="Password"
-        type="password"
-        name="password"
-        placeholder="Password"
-        onChange={handleChange}
-        value={credentials.password}
-        fullWidth
-        required
-        sx={{ mb: 2 }}
-      />
-
-      <Button
-        type="submit"
-        variant="contained"
-        disabled={isLoading}
-        fullWidth
-        sx={{ textTransform: 'none' }}
-      >
-        {isLoading ? 'Logging in...' : 'Login'}
-      </Button>
-
-      {message && (
-        <Typography variant="body2" color="error" sx={{ mt: 1 }}>
-          {message}
+        <LandingNavButtons />
+              <div style={{ paddingTop: '64px' }}></div>
+              
+      <Box 
+      sx={sharedBoxStyle} 
+      component="form"
+      mt={4} 
+      onSubmit={handleSubmit}>
+        <Typography variant="h5" gutterBottom>
+          Please Login
         </Typography>
-      )}
-    </Box>
+
+        <TextField
+          label="Email"
+          type="email"
+          name="email"
+          placeholder="Email"
+          onChange={handleChange}
+          value={credentials.email}
+          fullWidth
+          required
+          sx={{ mb: 2 }}
+        />
+
+        <TextField
+          label="Password"
+          type="password"
+          name="password"
+          placeholder="Password"
+          onChange={handleChange}
+          value={credentials.password}
+          fullWidth
+          required
+          sx={{ mb: 2 }}
+        />
+
+        <Button
+          type="submit"
+          variant="contained"
+          disabled={isLoading}
+          fullWidth
+          sx={{ textTransform: 'none' }}
+        >
+          {isLoading ? 'Logging in...' : 'Login'}
+        </Button>
+
+        {message && (
+          <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+            {message}
+          </Typography>
+        )}
+      </Box>
+    </Box>    
   );
 };
+
 
 export default Login;
