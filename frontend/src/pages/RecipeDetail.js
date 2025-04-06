@@ -172,7 +172,7 @@ const RecipeDetail = () => {
         open={open}
         autoHideDuration={6000}
         onClose={handleClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
           {message}

@@ -15,6 +15,8 @@ const profileRoutes = require('./routes/profileRoutes');
 const telemetryRoutes = require('./routes/telemetryRoutes');
 const searchHistoryRoutes = require('./routes/searchhistoryRoutes');
 const myRecipeRoutes = require('./routes/myRecipeRoutes');
+const path = require('path');
+
 
 const app = express();
 const port = process.env.PORT
@@ -34,7 +36,8 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/searchhistory', searchHistoryRoutes);
 app.use('/api/telemetry', telemetryRoutes);
 app.use('/api/recipes', myRecipeRoutes);
-app.use('/api', externalRoutes);
+//app.use('/api', externalRoutes);
+
 
 //Defining route for the root URL
 app.get('/', (req, res) => {

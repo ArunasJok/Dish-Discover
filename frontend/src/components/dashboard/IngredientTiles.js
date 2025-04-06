@@ -205,14 +205,15 @@ const IngredientTiles = ({ telemetry, PIXABAY_API_KEY, PIXABAY_API_URL }) => {
                 }}
             >
               <CardMedia
-                component="img"
-                height="200"
+                component="img"                
                 image={state.ingredientImages[ingredient] || missingImage}
                 alt={ingredient}
                 onError={(e) => handleImageError(e, ingredient)}
       sx={{
         objectFit: 'cover',
-        backgroundColor: 'grey.100'
+        backgroundColor: 'grey.100',
+        width: '100%',
+        height: '100%',
       }}
               />
               <Box

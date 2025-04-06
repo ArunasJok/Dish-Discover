@@ -14,10 +14,10 @@ import Logo from '../images/logo.png';
 const Home = () => {
   return (
     // Grey background
-    <Box sx={{ backgroundColor: 'primary.light', minHeight: '70vh', py: 2, mt: 5, pb: 4 }}>
+    <Box sx={{ backgroundColor: 'primary.light', minHeight: '60vh', py: 2, mt: 5, pb: 4 }}>
       
       <LandingNavButtons />
-      <div style={{ paddingTop: '54px' }}></div>
+      <div style={{ paddingTop: '44px' }}></div>
 
       {/* Centered white container */}
       <Box
@@ -46,9 +46,9 @@ const Home = () => {
               alignItems: 'center',
               p: 2,
               position: 'relative',
-              maxHeight: 580,
+              maxHeight: 700,
               mt: { xs: 0, md: 4 },
-              mb: { xs: 2, md: 0 },
+              mb: { xs: 2, md: 4 },              
               borderRadius: 4,
             }}
           >

@@ -160,7 +160,7 @@ const MyRecipes = () => {
                     alignItems: 'center',
                     cursor: 'pointer',
                     px: 1,
-                    bgcolor: 'rgba(0, 0, 0, 0.5)',
+                    bgcolor: 'hsla(0, 22.20%, 96.50%, 0.50)',
                     borderRadius: 1,
                   }}
                   onClick={() => toggleExpand(recipe._id)}
@@ -168,7 +168,7 @@ const MyRecipes = () => {
                   <Typography 
                   variant="h6" 
                   sx={{
-                    color: 'white',
+                    color: 'black',
                     fontWeight: 'bold',
                     fontFamily: '"Poppins", "Helvetica Neue", sans-serif',
                   }}
@@ -187,7 +187,7 @@ const MyRecipes = () => {
                       onDelete={handleDelete}
                       showRating={true}
                       showDeleteButton={true}
-                      hideTitle={true}
+                      hideTitle={false}
                       onRatingUpdated={fetchMyRecipes}
                     />
                   </Box>
@@ -206,7 +206,7 @@ const MyRecipes = () => {
         open={open}
         autoHideDuration={6000}
         onClose={handleClose}
-        anchorOrigin={{ vertical: 'center', horizontal: 'center' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert onClose={handleClose} severity={message.includes('success') ? 'success' : 'error'}>
           {message}

@@ -80,7 +80,8 @@ const RecommendedRecipes = ({ loading = false, recommendations = [], onViewRecip
               component="img"
               sx={{
                 height: '100%',
-                width: '100%'
+                width: '100%',
+                objectFit: 'cover'
               }}
               image={recipe.image}
               alt={recipe.title}

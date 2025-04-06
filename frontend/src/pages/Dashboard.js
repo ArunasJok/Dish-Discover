@@ -102,7 +102,7 @@ const Dashboard = () => {
       <Box sx={{ mb: 6 }}>
         <RecipeOfTheDay 
           loading={recipesLoading}
-          recipe={recipeOfDay || {}}
+          recipeOfDay={recipeOfDay || {}}
           onViewRecipe={handleViewRecipe}
         />
       </Box>

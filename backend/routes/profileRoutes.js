@@ -1,9 +1,44 @@
 
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const User = require('../models/User');
 const verifyToken = require('../middlewares/authenticationMiddleware');
-const User = require('../models/User'); 
 
+const storage = multer.memoryStorage();
+const upload = multer({ 
+    storage,
+    limits: {
+        fileSize: 2 * 1024 * 1024 // 2MB limit
+    },
+    fileFilter: (req, file, cb) => {
+        if (!file.mimetype.startsWith('image/')) {
+            return cb(new Error('Only images are allowed'));
+        }
+        cb(null, true);
+    }
+});
+
+// Handle avatar upload
+router.post('/avatar', verifyToken, upload.single('avatar'), async (req, res) => {
+  try {
+      if (!req.file) {
+          return res.status(400).json({ error: 'No file uploaded' });
+      }
+
+      // Convert image to base64
+      const base64Image = req.file.buffer.toString('base64');
+      const avatarUrl = `data:${req.file.mimetype};base64,${base64Image}`;
+
+      // Update user profile
+      await User.findByIdAndUpdate(req.user.id, { avatarUrl });
+
+      res.json({ avatarUrl });
+  } catch (error) {
+      console.error('Avatar upload error:', error);
+      res.status(500).json({ error: 'Failed to upload avatar' });
+  }
+});
 // Protected route to get the current user's profile
 router.get('/', verifyToken, async (req, res) => {
     try {

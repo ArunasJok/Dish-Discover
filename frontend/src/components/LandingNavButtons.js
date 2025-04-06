@@ -34,7 +34,7 @@ const LandingNavButtons = () => {
           <img
             src={Logo}
             alt="Dish Discover Logo"
-            style={{ width: '80px', height: '80px' }}
+            style={{ width: '40px', height: '40px' }}
           />
           
         </Box>

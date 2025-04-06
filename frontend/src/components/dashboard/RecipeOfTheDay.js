@@ -6,7 +6,25 @@ const RecipeOfTheDay = ({ loading, recipeOfDay, onViewRecipe }) => {
   if (!recipeOfDay) return null;
 
   return (
-    <Box sx={{ mb: 4, width: '100%', height: { xs: '500px', md: '600px' }, position: 'relative' }}>
+    <>
+    <Typography 
+          variant="h4" 
+          gutterBottom 
+          sx={{ 
+            fontWeight: 600,
+            color: 'primary.main',
+            textAlign: 'left',
+            mb: 3,
+            fontFamily: '"Poppins", "Helvetica Neue", sans-serif',
+            borderBottom: '2px solid',
+            borderColor: 'primary.light',
+            paddingBottom: 1,
+            letterSpacing: '0.5px'
+          }}
+        >
+          Recipe of the Day
+        </Typography>
+    <Box sx={{ mb: 4, width: '100%', height: { xs: '100px', md: '200px' }, position: 'relative' }}>
       <Box component="img"
         src={recipeOfDay.image}
         alt={recipeOfDay.title}
@@ -16,15 +34,34 @@ const RecipeOfTheDay = ({ loading, recipeOfDay, onViewRecipe }) => {
           objectFit: 'cover'
         }}
       />
-      <Box sx={{ 
+      <Box 
+      sx={{ 
         position: 'absolute',
-        bottom: 0,
+        top: 0,
         left: 0,
         right: 0,
+        bottom: 0,
         p: { xs: 3, md: 6 },
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
         background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%)'
-      }}>
-        <Typography variant="h3" sx={{ color: 'white', mb: 2 }}>
+      }}
+      >
+        <Typography 
+          variant="h3" 
+          sx={{ 
+            color: 'white', 
+            mb: 2,
+            animation: 'pulse 2s infinite',
+            '@keyframes pulse': {
+              '0%': { transform: 'scale(1)' },
+              '50%': { transform: 'scale(1.1)' },
+              '100%': { transform: 'scale(1)' }
+            }
+          }}
+        >
           {recipeOfDay.title}
         </Typography>
         <Button 
@@ -36,6 +73,7 @@ const RecipeOfTheDay = ({ loading, recipeOfDay, onViewRecipe }) => {
         </Button>
       </Box>
     </Box>
+    </>
   );
 };
 
