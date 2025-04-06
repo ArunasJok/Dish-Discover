@@ -6,7 +6,7 @@ const getRecipesByIngredients = async (ingredientsArray) => {
     try {
       const params = {
         ingredients: ingredientsArray.join(','),
-        number: 5, // Change this value to get more recipes (e.g., 5)
+        number: 6, // Change this value to get more recipes
         apiKey: SPOONACULAR_API_KEY,
       };
 
