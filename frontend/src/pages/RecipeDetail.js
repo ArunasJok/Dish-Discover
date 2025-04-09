@@ -1,38 +1,80 @@
-// src/pages/RecipeDetail.js
 import React, { useEffect, useState, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
 import {
   Container,
   Typography,
-  Button,
-  CardMedia,
-  Paper,
-  List,
-  ListItem,
-  ListItemText,
-  Box
+  IconButton,
+  Snackbar,
+  Alert,
 } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import RecipeCard from '../components/RecipeCard';
+//import DeleteIcon from '@mui/icons-material/Delete';
 
 const RecipeDetail = () => {
-  const { id } = useParams(); // id is the Spoonacular recipe ID
+  const { id: spoonacularId } = useParams();
   const { authToken } = useContext(AuthContext);
   const [recipe, setRecipe] = useState(null);
   const [message, setMessage] = useState('');
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  //const location = useLocation();
+  //const isSavedRecipe = location.pathname.startsWith('/my-recipes');
 
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        // Calling the integrated recipe detail endpoint.
-        const res = await axios.get(`${API_URL}/api/external/recipes/${id}`, {
+        const res = await axios.get(`${API_URL}/api/external/recipes/${spoonacularId}`, {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
+
+        const recipeData = res.data;
+
+        if (!recipeData.instructions) {
+          recipeData.instructions = "";
+        }
         setRecipe(res.data);
+
+        try {
+          const historyPayload = {
+            recipeId: parseInt(res.data.id),
+            title: res.data.title,
+            ingredients: res.data.extendedIngredients?.map(ing => ing.original) || [],
+            image: res.data.image || '',
+            searchDate: new Date().toISOString()
+          };
+
+          console.log('Saving to history:', historyPayload);
+
+          const historyResponse = await axios.post(
+            `${API_URL}/api/searchhistory`,
+            historyPayload,
+            {
+              headers: {
+                'Authorization': `Bearer ${authToken}`,
+                'Content-Type': 'application/json'
+              }
+            }
+          );
+
+          if (!historyResponse.data) {
+            throw new Error('No response data from search history save');
+          }
+
+          console.log('History saved:', historyResponse.data);
+        } catch (historyError) {
+          console.error('Error saving to search history:', {
+            error: historyError.response?.data || historyError,
+            status: historyError.response?.status || 500,
+            payload: historyError.response?.data || null
+          });
+        }
       } catch (error) {
         console.error('Error fetching recipe details:', error);
-        setMessage('Failed to load recipe details.');
+        setMessage(error.response?.data?.message || 'Failed to load recipe details.');
       }
     };
 
@@ -41,27 +83,63 @@ const RecipeDetail = () => {
     } else {
       setMessage('You must be logged in to view recipe details.');
     }
-  }, [id, authToken]);
+  }, [spoonacularId, authToken]);
 
   const handleSave = async () => {
     try {
+      const sanitizedIngredients = recipe.extendedIngredients.map(ingredient => ({
+        id: ingredient.id || 0,
+        name: ingredient.name || '',
+        amount: parseFloat(ingredient.amount) || 0,
+        unit: ingredient.unit || '',
+        original: ingredient.original || ''
+      }));
+
       const payload = {
-        spoonacularId: recipe.id,
-        title: recipe.title,
+        spoonacularId: parseInt(recipe.id),
+        title: recipe.title.trim(),
         image: recipe.image,
+        instructions: recipe.instructions || '',
+        extendedIngredients: sanitizedIngredients,
         usedIngredients: recipe.usedIngredients || [],
         missedIngredients: recipe.missedIngredients || [],
-        likes: recipe.likes || 0,
-        details: recipe
+        likes: parseInt(recipe.likes) || 0
       };
+
       const res = await axios.post(`${API_URL}/api/recipes/save`, payload, {
         headers: { 'Authorization': `Bearer ${authToken}` }
       });
+
       setMessage(res.data.message);
+      setOpen(true);
     } catch (err) {
       console.error('Error saving recipe:', err);
-      setMessage('Failed to save recipe.');
+      setMessage(err.response?.data?.error || 'Failed to save recipe');
+      setOpen(true);
     }
+  };
+
+  // const handleDelete = async () => {
+  //   try {
+  //     await axios.delete(`${API_URL}/api/recipes/${spoonacularId}`, {
+  //       headers: { 'Authorization': `Bearer ${authToken}` }
+  //     });
+  //     setMessage('Recipe deleted successfully');
+  //     setOpen(true);
+  //     navigate('/my-recipes');
+  //   } catch (err) {
+  //     console.error('Error deleting recipe:', err);
+  //     setMessage(err.response?.data?.error || 'Failed to delete recipe');
+  //     setOpen(true);
+  //   }
+  // };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
   };
 
   if (!recipe) {
@@ -73,48 +151,33 @@ const RecipeDetail = () => {
   }
 
   return (
-    <Container sx={{ mt: 4 }}>
-      <Typography variant="h4" color="primary" gutterBottom>
-        {recipe.title}
-      </Typography>
-      <CardMedia
-        component="img"
-        image={recipe.image}
-        alt={recipe.title}
-        sx={{ width: '100%', maxHeight: 400, objectFit: 'cover', mb: 2 }}
-      />
-      <Button variant="contained" color="secondary" onClick={handleSave} sx={{ mb: 2 }}>
-        Save Recipe
-      </Button>
-      <Typography variant="h5" gutterBottom>
-        Instructions
-      </Typography>
-      {recipe.instructions ? (
-        <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
-          <div dangerouslySetInnerHTML={{ __html: recipe.instructions }} />
-        </Paper>
-      ) : (
-        <Typography variant="body1">No instructions available.</Typography>
+    <Container sx={{ mt: 8 }}>
+      <IconButton
+        onClick={() => navigate(-1)}
+        aria-label="back"
+        sx={{ mb: 2 }}
+      >
+        <ArrowBackIcon />
+      </IconButton>
+
+      {recipe && (
+        <RecipeCard 
+          recipe={recipe}
+          onSave={handleSave}
+          showSaveButton={true}
+        />
       )}
-      {message && (
-        <Typography variant="body1" color="error" gutterBottom>
+
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
           {message}
-        </Typography>
-      )}
-      <Typography variant="h6" gutterBottom>
-        Ingredients
-      </Typography>
-      {recipe.extendedIngredients && recipe.extendedIngredients.length > 0 ? (
-        <List>
-          {recipe.extendedIngredients.map((ing) => (
-            <ListItem key={ing.id}>
-              <ListItemText primary={ing.original} />
-            </ListItem>
-          ))}
-        </List>
-      ) : (
-        <Typography variant="body1">No ingredients information available.</Typography>
-      )}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

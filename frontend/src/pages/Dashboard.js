@@ -1,204 +1,136 @@
-// src/pages/Dashboard.js
-import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Container, Typography, Box } from '@mui/material';
+import { keyframes } from '@mui/system';
 import { AuthContext } from '../context/AuthContext';
-import { API_URL } from '../config';
-import {
-  Container,
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Box,
-  TextField,
-  Card,
-  CardContent,
-  CardMedia,
-  Grid2
-} from '@mui/material';
-import * as emoji from 'node-emoji';
-import pluralize from 'pluralize';
-import missingImage from '../images/missingIngredient.png';
+import { useRecipes } from '../hooks/useRecipes';
+import { useUserData } from '../hooks/useUserData';
+import { useWelcomeMessage } from '../hooks/useWelcomeMessage';
+
+// Import components
+import WelcomeMessage from '../components/dashboard/WelcomeMessage';
+import RecipeOfTheDay from '../components/dashboard/RecipeOfTheDay';
+import RecommendedRecipes from '../components/dashboard/RecommendedRecipes';
+import IngredientTiles from '../components/dashboard/IngredientTiles';
+import SearchHistory from '../components/dashboard/SearchHistory';
+
+const PIXABAY_API_KEY = process.env.REACT_APP_PIXABAY_API_KEY;
+const PIXABAY_API_URL = 'https://pixabay.com/api/';
+
+const formatError = (error) => {
+  if (typeof error === 'string') return error;
+  if (error?.message) return error.message;
+  return 'An unexpected error occurred';
+};
 
 const Dashboard = () => {
   const { authToken } = useContext(AuthContext);
-  const [user, setUser] = useState(null);
-  const [searchHistory, setSearchHistory] = useState([]);
-  const [telemetry, setTelemetry] = useState({});
-  const [errorMessage, setErrorMessage] = useState('');
-  const [filter, setFilter] = useState('');
+  const navigate = useNavigate();
+  
+  // Custom hooks for data fetching
+  const { 
+    loading: recipesLoading, 
+    recipeOfDay, 
+    recommendations, 
+    error: recipesError 
+  } = useRecipes(authToken);
 
+  console.log('Recommendations:', recommendations);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await axios.get(`${API_URL}/api/profile`, {
-          headers: { 'Authorization': `Bearer ${authToken}` }
-        });
-        setUser(res.data);
-      } catch (error) {
-        console.error('Error fetching profile:', error);
-        setErrorMessage('Failed to fetch user profile.');
-      }
-    };
+  const {
+    user,
+    searchHistory,
+    telemetry,
+    loading: userDataLoading,
+    error: userDataError
+  } = useUserData(authToken);
 
-    const fetchSearchHistory = async () => {
-      try {
-        const res = await axios.get(`${API_URL}/api/searchhistory`, {
-          headers: { 'Authorization': `Bearer ${authToken}` }
-        });
-        setSearchHistory(res.data);
-      } catch (error) {
-        console.error('Error fetching search history:', error);
-      }
-    };
+  const { showWelcome } = useWelcomeMessage();
 
-    const fetchTelemetry = async () => {
-      try {
-        const res = await axios.get(`${API_URL}/api/telemetry`, {
-          headers: { 'Authorization': `Bearer ${authToken}` }
-        });
-        setTelemetry(res.data);
-      } catch (error) {
-        console.error('Error fetching telemetry:', error);
-      }
-    };
+  // Local state
+  const [filter, setFilter] = useState('');  
 
-    if (authToken) {
-      fetchProfile();
-      fetchSearchHistory();
-      fetchTelemetry();
-    }
-  }, [authToken]);
+  // Animation setup
+  const slideIn = keyframes`
+    from { opacity: 0; transform: translateX(100px); }
+    to { opacity: 1; transform: translateX(0); }
+  `;
 
-  const filteredHistory = searchHistory.filter((entry) => {
-    const lowerFilter = filter.toLowerCase();
-    return (
-      entry.searchTitle.toLowerCase().includes(lowerFilter) ||
-      entry.popularIngredients.join(' ').toLowerCase().includes(lowerFilter)
-    );
+  // Navigation handler
+  const handleViewRecipe = (recipeId) => {
+    navigate(`/recipe/${recipeId}`);
+  };
+
+   // Filter logic
+   const filteredHistory = searchHistory.filter(entry => {
+    if (!entry || !entry.searchTitle) return false;
+    
+    const lowerFilter = (filter || '').toLowerCase();
+    const titleMatch = entry.searchTitle.toLowerCase().includes(lowerFilter);
+    const ingredientsMatch = Array.isArray(entry.popularIngredients) && 
+      entry.popularIngredients.join(' ').toLowerCase().includes(lowerFilter);
+    
+    return titleMatch || ingredientsMatch;
   });
 
+  // Combine errors for display
+  const displayError = recipesError || userDataError 
+    ? formatError(recipesError || userDataError)
+    : null; 
 
-  const getIngredientEmoji = (ingredient) => {
-    const key = ingredient.toLowerCase();
-    const found = emoji.get(key);
-    return found !== `:${key}:` ? found : '🥦'; // if not found, return broccoli as default
-  };
+    const validTelemetry = {
+      ingredientCounts: telemetry?.ingredientCounts || {},
+      popularIngredients: Array.isArray(telemetry?.popularIngredients) 
+        ? telemetry.popularIngredients 
+        : []
+    };
 
-  const ingredientImageUrl = (ingredient) => {
-    const singular = pluralize.singular(ingredient);
-    const formatted = singular.toLowerCase().replace(/\s+/g, '-');
-    return `https://spoonacular.com/cdn/ingredients_100x100/${formatted}.jpg`;
-  };
-
-  const renderIngredientTiles = () => {
-    if (!telemetry.popularIngredients || telemetry.popularIngredients.length === 0) {
-      return <Typography variant="body1">No ingredient data available.</Typography>;
-    }
-
-    const ingredients = telemetry.popularIngredients.slice(0, 10);
-    return (
-      <Grid2 container spacing={2}>
-        {ingredients.map((ingredient, idx) => (
-          <Grid2 key={idx} xs={6} sm={4} md={2.4}>
-            <Card sx={{ textAlign: 'center' }}>
-              <CardMedia
-                component="img"
-                image={ingredientImageUrl(ingredient)}
-                alt={ingredient}
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = missingImage;
-                }}
-                sx={{ width: '100%', height: 100, objectFit: 'cover' }}
-              />
-              <CardContent sx={{ py: 1, px: 1 }}>
-                <Typography variant="body2">{ingredient}</Typography>
-              </CardContent>
-            </Card>
-          </Grid2>
-        ))}
-      </Grid2>
-    );
-  };
-
-    return (
-      <Container sx={{ mt: 4 }}>
-        {errorMessage && (
-          <Typography variant="body1" color="error" gutterBottom>
-            {errorMessage}
-          </Typography>
-        )}
-
-        <Typography variant="h4" color="primary" gutterBottom>
-          Welcome back, {user && user.username ? user.username : 'User'}!
+  return (
+    <Container sx={{ mt: 8 }}>
+      {displayError && (
+        <Typography variant="body1" color="error" gutterBottom>
+          {displayError}
         </Typography>
-        {user && user.lastVisited && (
-          <Typography variant="body1" gutterBottom>
-            Last visited: {new Date(user.lastVisited).toLocaleString()}
-          </Typography>
-        )}
+      )}
 
-        {/* Telemetry Section */}
-        <Box sx={{ mt: 4 }}>
-        <Typography variant="h5" gutterBottom>
-          Most Popular Recent Ingredients
-        </Typography>
-        {renderIngredientTiles()}
-        </Box>
-        
+      <WelcomeMessage 
+        user={user} 
+        showWelcome={showWelcome} 
+        slideIn={slideIn} 
+      />
 
-        {/* Search History Section with Filtering */}
-        <Box sx={{ mt: 4 }}>
-          <Typography variant="h5" gutterBottom>
-            Your Recipe Search History (Last Week)
-          </Typography>
-          <TextField
-            label="Filter history"
-            variant="outlined"
-            fullWidth
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-          {filteredHistory.length > 0 ? (
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Search Title</TableCell>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Popular Ingredients</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {filteredHistory.map((entry) => (
-                    <TableRow key={entry._id}>
-                      <TableCell>{entry.searchTitle}</TableCell>
-                      <TableCell>{new Date(entry.searchDate).toLocaleString()}</TableCell>
-                      <TableCell>
-                        {entry.popularIngredients.map((ingredient, index) => (
-                          <span key={index} style={{ marginRight: 4 }}>
-                            {getIngredientEmoji(ingredient)} {ingredient}
-                          </span>
-                        ))}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          ) : (
-            <Typography variant="body1">No search history available.</Typography>
-          )}
-        </Box>
-      </Container>
-    );
-  };
+      <Box sx={{ mb: 6 }}>
+        <RecipeOfTheDay 
+          loading={recipesLoading}
+          recipeOfDay={recipeOfDay || {}}
+          onViewRecipe={handleViewRecipe}
+        />
+      </Box>
 
-  export default Dashboard;
+      <Box sx={{ mb: 6 }}>
+        <RecommendedRecipes 
+          loading={recipesLoading}
+          recommendations={Array.isArray(recommendations) ? recommendations : []}
+          onViewRecipe={handleViewRecipe}
+        />
+      </Box>
+
+      <Box sx={{ mb: 6 }}>
+        <IngredientTiles 
+          telemetry={validTelemetry}        
+          PIXABAY_API_KEY={PIXABAY_API_KEY}
+          PIXABAY_API_URL={PIXABAY_API_URL}
+        />
+      </Box>
+
+      <SearchHistory 
+        filteredHistory={filteredHistory}
+        filter={filter}
+        onFilterChange={setFilter}
+        loading={userDataLoading}
+      />
+    </Container>
+  );
+};
+
+export default Dashboard;

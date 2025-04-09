@@ -1,163 +1,46 @@
 // Layout page component
-import React, { useState, useContext } from 'react';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  Box,
-  IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-} from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import { useLocation, NavLink, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
-//import Header from './Header';
+import React from 'react';
+import { Box } from '@mui/material';
+import { useLocation } from 'react-router-dom';
+import Header from './Header';  
 import Footer from './Footer';
 
-const Layout = ({ children }) => {
-  const { authToken, logout } = useContext(AuthContext);
-  const navigate = useNavigate();
+const Layout = ({ children, bgColor }) => {
   const location = useLocation();
-  const landingRoutes = ['/', '/about', '/register'];
-  const isLanding = landingRoutes.includes(location.pathname);
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
-
-  // Navigation links for guest users
-  const publicLinks = [
-    { label: 'Home', to: '/' },
-    { label: 'About', to: '/about' },    
-    { label: 'Register', to: '/register' },
-  ];
-
-  // Navigation links for authenticated users
-  const dashboardLinks = [
-    { label: 'Dashboard', to: '/dashboard' },
-    { label: 'My Recipes', to: '/my-recipes' },
-    { label: 'Meal Planner', to: '/meal-planner' },
-    { label: 'Find a Dish', to: '/ingredients' },
-    { label: 'Profile', to: '/profile' },
-    { label: 'Shopping List', to: '/shopping-list' },
-  ];
-
-  // Choose which set of links to display
-  const links = authToken ? dashboardLinks : publicLinks;
-
-  // Drawer content for mobile navigation
-  const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-      <Typography variant="h6" sx={{ my: 2 }}>
-        Dish Discover
-      </Typography>
-      <List>
-        {links.map((link) => (
-          <ListItem key={link.to} disablePadding>
-            <ListItemButton component={NavLink} to={link.to}>
-              <ListItemText primary={link.label} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-        {authToken && (
-          <ListItem disablePadding>
-            <ListItemButton onClick={handleLogout}>
-              <ListItemText primary="Logout" />
-            </ListItemButton>
-          </ListItem>
-        )}
-      </List>
-    </Box>
-  );
-
+  const publicRoutes = ['/', '/about', '/login', '/register'];
+  const effectiveMainBg = publicRoutes.includes(location.pathname) ? (bgColor || 'white') : 'white';
   return (
-    // A flex container to ensure footer stays at the bottom.
-    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      {/* Render Header only if not on the Home route */}
-      {!isLanding && (
-        <>
-          <AppBar position="static">
-            <Toolbar>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                onClick={handleDrawerToggle}
-                sx={{ mr: 2, display: { sm: 'none' } }}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography
-                variant="h6"
-                component={NavLink}
-                to="/"
-                sx={{ flexGrow: 1, textDecoration: 'none', color: 'inherit' }}
-              >
-                Dish Discover
-              </Typography>
-              <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-                {links.map((link) => (
-                  <Button
-                    key={link.to}
-                    component={NavLink}
-                    to={link.to}
-                    color="inherit"
-                    sx={{
-                      textTransform: 'none',
-                      '&.active': { backgroundColor: '#555' },
-                    }}
-                  >
-                    {link.label}
-                  </Button>
-                ))}
-                {authToken && (
-                  <Button
-                    onClick={handleLogout}
-                    color="inherit"
-                    sx={{ textTransform: 'none' }}
-                  >
-                    Logout
-                  </Button>
-                )}
-              </Box>
-            </Toolbar>
-          </AppBar>
-          <Box component="nav">
-            <Drawer
-              variant="temporary"
-              open={mobileOpen}
-              onClose={handleDrawerToggle}
-              ModalProps={{
-                keepMounted: true,
-              }}
-              sx={{
-                display: { xs: 'block', sm: 'none' },
-                '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240 },
-              }}
-            >
-              {drawer}
-            </Drawer>
-          </Box>
-        </>
-      )}
-
-      {/* Main content */}
-      <Box component="main" sx={{ flex: 1, padding: 2, position: 'relative' }}>
-        {children}
+    // Outer container with full width and background color
+    <Box sx={{ 
+      backgroundColor: 'primary.light', 
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      }}
+    >
+      <Header />
+      {/* Full-width container with background, then center content */}
+      <Box sx={{ 
+          py: 2,
+          px: { xs: 2, md: 0 },  
+          flexGrow: 1,
+        }}
+      >
+        <Box 
+          component="main" 
+          sx={{ 
+            maxWidth: '1200px', 
+            margin: '0 auto', 
+            p: 2,
+            backgroundColor: effectiveMainBg,
+            borderRadius: 4,
+            boxShadow: 3, 
+            position: 'relative' 
+          }}
+        >
+          {children}
+        </Box>
       </Box>
-
-      {/* Footer */}
       <Footer />
     </Box>
   );

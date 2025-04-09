@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const verifyToken = require('../middlewares/authenticationMiddleware');
-const { getRecipesByIngredients, getRecipeInformation } = require('../services/spoonacularService');
+const { getRecipesByIngredients, getRecipeInformation, getRandomRecipes } = require('../services/spoonacularService');
 const SearchHistory = require('../models/SearchHistory');
 const Recipe = require('../models/Recipe');
 const { downloadImage } = require('../services/imageService');
@@ -14,75 +14,160 @@ router.get('/recipes', verifyToken, async (req, res) => {
     if (!ingredients) {
       return res.status(400).json({ error: 'Ingredients query parameter is required' });
     }
-    const ingredientArray = ingredients.split(',').map(item => item.trim());
-    
-    // Fetch recipes from Spoonacular API
-    const recipes = await getRecipesByIngredients(ingredientArray);
-    
-    // Record search history entry for the logged-in user
-    if (req.user && req.user.userId) {
-      const searchEntry = new SearchHistory({
-        user: req.user.userId,
-        searchTitle: ingredients,
-        popularIngredients: ingredientArray
-      });
-      await searchEntry.save();
-    } else {
-      console.warn("No user found in req.user; search history not recorded.");
+
+    // Parse and clean ingredients
+    const searchedIngredients = ingredients
+      .split(',')
+      .map(i => i.trim())
+      .filter(i => i);
+
+    if (searchedIngredients.length === 0) {
+      return res.status(400).json({ error: 'No valid ingredients provided' });
     }
-    
+
+    // Fetch recipes from Spoonacular API
+    const recipes = await getRecipesByIngredients(searchedIngredients);
+
+    // Record search history ONCE per search, not per recipe
+    if (req.user?.userId && recipes.length > 0) {
+      try {
+        // Create single search history entry for this search
+        const searchEntry = new SearchHistory({
+          user: req.user.userId,
+          recipeId: recipes[0].id, // Store first recipe ID
+          title: `Search for ${searchedIngredients.join(', ')}`,
+          searchIngredients: searchedIngredients,
+          ingredients: [], // No need to store recipe ingredients here
+          searchDate: new Date()
+        });
+
+        await searchEntry.save();
+        console.log('Saved search history entry with ingredients:', searchedIngredients);
+      } catch (historyError) {
+        console.error('Error saving search history:', historyError);
+      }
+    }
+
     res.json(recipes);
   } catch (error) {
     console.error("Error fetching recipes:", error);
-    res.status(500).json({ error: 'Failed to fetch recipes' });
+    res.status(500).json({ 
+      error: 'Failed to fetch recipes',
+      details: error.message 
+    });
+  }
+});
+
+// Endpoint for ingredient telemetry
+router.get('/telemetry/ingredients', verifyToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    console.log('Fetching telemetry for user:', userId);
+
+    const searchHistory = await SearchHistory.find({ user: userId });
+    const ingredientMap = new Map();
+    
+    // Count occurrences of searched ingredients
+    searchHistory.forEach(entry => {
+      if (entry?.searchIngredients?.length > 0) {
+        entry.searchIngredients.forEach(ingredient => {
+          if (ingredient) {
+            const count = ingredientMap.get(ingredient) || 0;
+            ingredientMap.set(ingredient, count + 1);
+          }
+        });
+      }
+    });
+
+    const sortedIngredients = [...ingredientMap.entries()]
+      .sort((a, b) => b[1] - a[1]);
+
+    const ingredientCounts = Object.fromEntries(sortedIngredients);
+    const popularIngredients = sortedIngredients
+      .slice(0, 10)
+      .map(([ingredient]) => ingredient);
+
+    console.log('Sending telemetry data:', {
+      ingredientCounts,
+      popularIngredients,
+      totalEntries: searchHistory.length
+    });
+
+    res.json({
+      ingredientCounts,
+      popularIngredients
+    });
+
+  } catch (error) {
+    console.error('Error in telemetry endpoint:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch ingredient telemetry',
+      details: error.message 
+    });
+  }
+});
+
+// Endpoint to grab 7 random recipes from the database
+router.get('/recipes/random', verifyToken, async (req, res) => {
+  try {
+    console.log('Fetching random recipes...');
+    const randomData = await getRandomRecipes(7);
+    
+    if (!randomData || !randomData.recipes || !randomData.recipes.length) {
+      console.error('No recipes returned from Spoonacular');
+      return res.status(404).json({ 
+        error: 'No recipes found',
+        details: 'Empty response from recipe service'
+      });
+    }
+
+    const recipes = randomData.recipes;
+    const recipeOfDay = recipes[0];
+    const recommendations = recipes.slice(1);
+
+    console.log(`Successfully fetched ${recipes.length} recipes`);
+    res.json({ 
+      recipeOfDay, 
+      recommendations,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('Error in random recipes endpoint:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch random recipes',
+      details: error.message || 'Unknown error'
+    });
   }
 });
 
 // Endpoint to fetch full recipe details using the recipe id
-router.get('/recipes/:id', verifyToken, async (req, res) => {
+router.get('/recipes/:spoonacularId', verifyToken, async (req, res) => {
   try {
-    const spoonacularId = req.params.id;
+    const { spoonacularId } = req.params;
     // Checking if this recipe is already saved locally for this user
     let recipe = await Recipe.findOne({
       spoonacularId: Number(spoonacularId),
       user: req.user.userId
     });
+
     if (recipe) {
-      console.log("Returning locally saved recipe detail");
+      console.log(`Returning locally saved recipe detail for spoonacularId: ${spoonacularId}`);
       return res.json(recipe);
     }
     
     // If not found locally, fetch recipe details from Spoonacular API
+    console.log(`Fetching recipe details from Spoonacular API for id: ${spoonacularId}`);
     const recipeInfo = await getRecipeInformation(spoonacularId);
     res.json(recipeInfo);
-    } catch (error) {
-      console.error("Error fetching recipe details:", error);
-      res.status(500).json({ error: 'Failed to fetch recipe details' });
-    }
-  });
-
-// Endpoint to save a recipe to the database
-router.post('/', async (req, res) => {
-  const { spoonacularId, title, summary, image, ingredients, instructions } = req.body;
-  try {
-    let recipe = await Recipe.findOne({ spoonacularId });
-    if (!recipe) {
-      //Download the image and update the image field
-      let imagePath = image;
-      try {
-        const fileName = `recipe-${spoonacularId}.jpg`;
-        imagePath = await downloadImage(image, fileName);
-      } catch (error) {
-        console.error('Error downloading image:', error);
-        // Fallback to original URL if download fails
-      }
-      recipe = new Recipe({ spoonacularId, title, summary, image: imagePath, ingredients, instructions });
-      await recipe.save();
-    }
-    res.status(200).json(recipe);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+  } catch (error) {
+    console.error(`Error fetching recipe details for spoonacularId ${req.params.spoonacularId}:`, error);
+    res.status(500).json({ 
+      error: 'Failed to fetch recipe details',
+      details: error.message 
+    });
   }
 });
+
 
 module.exports = router;

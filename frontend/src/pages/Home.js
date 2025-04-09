@@ -9,26 +9,26 @@ import {
 import homeImage from '../images/homepage.png';
 import Login from './Login';
 import LandingNavButtons from '../components/LandingNavButtons';
+import Logo from '../images/logo.png';
 
 const Home = () => {
   return (
     // Grey background
-    <Box sx={{ backgroundColor: '#f0f0f0', minHeight: '80vh', py: 4 }}>
+    <Box sx={{ backgroundColor: 'primary.light', minHeight: '60vh', py: 2, mt: 5, pb: 4 }}>
       
       <LandingNavButtons />
-      <div style={{ paddingTop: '64px' }}></div>
+      <div style={{ paddingTop: '44px' }}></div>
 
       {/* Centered white container */}
       <Box
         sx={{
           maxWidth: 1200,
           mx: 'auto',
-          backgroundColor: 'white',
-          p: 2,
-          borderRadius: 2,
+          backgroundColor: 'grey.100',          
+          borderRadius: 4,
           boxShadow: 3,
-          position: 'relative',
-          maxHeight: '80vh',          
+          position: 'top',
+          maxHeight: 700,          
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
@@ -46,33 +46,46 @@ const Home = () => {
               alignItems: 'center',
               p: 2,
               position: 'relative',
+              maxHeight: 700,
+              mt: { xs: 0, md: 4 },
+              mb: { xs: 2, md: 4 },              
+              borderRadius: 4,
             }}
           >
             <Box
               component="img"
               src={homeImage}
               alt="Cooking pot"
-              sx={{ width: '100%', maxWidth: 400, mb: 2, flexShrink: 1 }}
+              sx={{
+                width: { xs: '40%', sm: '100%' },
+                maxWidth: 400,
+                mb: 2,
+                flexShrink: 1,
+              }}
             />
-            <Typography variant="h4" sx={{ 
+            <Typography 
+            variant="h4" 
+            sx={{ 
               fontWeight: 'bold', 
               mb: 1, 
               textAlign: 'center', 
-              fontSize: { xs: '1.5rem', md: '2rem' },
+              fontSize: { xs: '1.2rem', md: '2rem', lg: '2.5rem' },
+              fontFamily: '"Poppins", "Helvetica Neue", sans-serif',
               }}
             >
-              Dish Discover - Cook with what you have
+              Cook with what you have
             </Typography>
             <Typography 
             variant="body1" 
             color="textSecondary"
             sx={{
               textAlign: 'center',
-              fontSize: { xs: '0.9rem', md: '1rem' },
+              fontSize: { xs: '0.8rem', md: '1rem', lg: '1.2rem' },
+              fontFamily: '"Poppins", "Helvetica Neue", sans-serif',
               }}
             >
-              Helping you cook with the ingredients you have at home to prevent waste, 
-              promote healthy eating, and simplify meal planning.
+              Helping you cook with the ingredients you have at home. Preventing waste, 
+              promoting healthy eating, and simplifying meal planning.
             </Typography>
           </Grid2>
 
@@ -84,12 +97,28 @@ const Home = () => {
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
-              p: 2,
               position: 'relative',
+              p: { xs: 1, md: 2 },
             }}
-          >         
+          >
+            <Box 
+            component="img"
+            src={Logo}
+            alt="Dish Discover Logo"
 
-            <Box sx={{ maxWidth: 400, width: '100%', flexShrink: 1 }}>
+            sx={{ 
+              display: 'flex', 
+              width: { xs: '40%', sm: '100%' },
+              maxWidth: 200,
+              maxHeight: 200,
+              mt: 8,
+              mb: 0,
+              flexShrink: 1,
+               }}
+              >                           
+            </Box>         
+
+            <Box sx={{ maxWidth: 400, width: '100%', p: { xs: 1, md: 2 }, flexShrink: 1 }}>
               <Login />
             </Box>
           </Grid2>
