@@ -11,9 +11,16 @@ import {
   useTheme,
   IconButton,
   Menu,
-  MenuItem 
+  MenuItem,
+  Badge 
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import PersonIcon from '@mui/icons-material/Person';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import SmartToyIcon from '@mui/icons-material/SmartToy';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import SearchIcon from '@mui/icons-material/Search';
 import Logo from '../images/logo.png';
 
 const Header = () => {
@@ -22,6 +29,15 @@ const Header = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const shoppingListCount = React.useMemo(() => {
+    try {
+      const shoppingList = JSON.parse(localStorage.getItem('shoppingList') || '[]');
+      return shoppingList.length;
+    } catch (err) {
+      return 0;
+    }
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -35,12 +51,20 @@ const Header = () => {
   ];
 
   const dashboardLinks = [
-    { label: 'Dashboard', to: '/dashboard' },
-    { label: 'My Recipes', to: '/my-recipes' },
-    { label: 'AI Assistant', to: '/meal-planner' },
-    { label: 'Find a Dish', to: '/ingredients' },
-    { label: 'Profile', to: '/profile' },
-    { label: 'Shopping List', to: '/shopping-list' },
+    { label: 'Dashboard', to: '/dashboard', icon: <DashboardIcon fontSize="small" sx={{ mr: 0.5 }} /> },
+    { label: 'My Recipes', to: '/my-recipes', icon: <FavoriteIcon fontSize="small" sx={{ mr: 0.5 }} /> },
+    { label: 'AI Assistant', to: '/meal-planner', icon: <SmartToyIcon fontSize="small" sx={{ mr: 0.5 }} /> },
+    { label: 'Find a Dish', to: '/ingredients', icon: <SearchIcon fontSize="small" sx={{ mr: 0.5 }} /> },
+    { label: 'Profile', to: '/profile', icon: <PersonIcon fontSize="small" sx={{ mr: 0.5 }} /> },
+    { 
+      label: 'Shopping List', 
+      to: '/shopping-list', 
+      icon: (
+        <Badge badgeContent={shoppingListCount} color="error" sx={{ mr: 0.5 }}>
+          <ShoppingCartIcon fontSize="small" />
+        </Badge>
+      )
+    },
   ];
 
   const linksToRender = authToken ? dashboardLinks : publicLinks;

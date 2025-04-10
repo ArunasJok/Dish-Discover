@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState} from 'react';
 import {
     Typography,
     Button,
@@ -9,10 +9,12 @@ import {
     CardMedia,
     CardContent,
     Paper,
+    Tooltip
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import RateRecipe from './RateRecipe';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
@@ -29,13 +31,52 @@ const RecipeCard = ({
     const initialCheckedState = recipe.extendedIngredients
         ? recipe.extendedIngredients.map(() => false)
         : [];
-    const [checkedState, setCheckedState] = React.useState(initialCheckedState);
+    const [checkedState, setCheckedState] = useState(initialCheckedState);
+    const [showSuccessToast, setShowSuccessToast] = useState(false);
 
     const handleCheck = (index) => {
         const updatedChecked = [...checkedState];
         updatedChecked[index] = !updatedChecked[index];
         setCheckedState(updatedChecked);
     };
+
+    const getSelectedIngredients = () => {
+        return recipe.extendedIngredients?.filter((_, index) => checkedState[index]) || [];
+    };
+
+    const addToShoppingList = () => {
+       
+        const selectedIngredients = getSelectedIngredients();
+        
+        if (selectedIngredients.length === 0) return;        
+       
+        const existingList = JSON.parse(localStorage.getItem('shoppingList') || '[]');        
+        
+        const newItems = selectedIngredients.map(ingredient => ({
+            ...ingredient,
+            recipeTitle: recipe.title,
+            addedOn: new Date().toISOString()
+        }));        
+       
+        const combined = [...existingList];
+        newItems.forEach(item => {
+            const existingIndex = combined.findIndex(existing => 
+                existing.id === item.id && existing.recipeTitle === item.recipeTitle
+            );
+            if (existingIndex === -1) {
+                combined.push(item);
+            }
+        });        
+      
+        localStorage.setItem('shoppingList', JSON.stringify(combined));        
+        
+        setShowSuccessToast(true);
+        setTimeout(() => setShowSuccessToast(false), 2000);        
+        
+        setCheckedState(initialCheckedState);
+    };
+
+    const selectedCount = checkedState.filter(Boolean).length;
 
     return (
         <Card elevation={3}>
@@ -96,9 +137,25 @@ const RecipeCard = ({
                                 overflowY: 'auto',
                             }}
                         >
-                            <Typography variant="h6" gutterBottom sx={{ fontSize: '1rem' }}>
-                                Ingredients
-                            </Typography>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                                <Typography variant="h6" sx={{ fontSize: '1rem' }}>
+                                    Ingredients
+                                </Typography>
+                                <Tooltip title={selectedCount === 0 ? "Select ingredients first" : "Add to shopping list"}>
+                                    <span>
+                                        <Button
+                                            variant="outlined"
+                                            color="secondary"
+                                            size="small"
+                                            startIcon={<AddShoppingCartIcon />}
+                                            onClick={addToShoppingList}
+                                            disabled={selectedCount === 0}
+                                        >
+                                            Add to List {selectedCount > 0 && `(${selectedCount})`}
+                                        </Button>
+                                    </span>
+                                </Tooltip>
+                            </Box>
                             <Grid2 container spacing={2}>
                               <Grid2 item xs={6}>
                                   {recipe.extendedIngredients?.map((ing, index) =>
@@ -144,11 +201,30 @@ const RecipeCard = ({
                                       ) : null
                                   )}
                               </Grid2>
-                          </Grid2>
+                            </Grid2>
+                            {showSuccessToast && (
+                                <Box 
+                                    sx={{ 
+                                        position: 'absolute', 
+                                        bottom: 16, 
+                                        left: '50%', 
+                                        transform: 'translateX(-50%)',
+                                        bgcolor: 'success.main',
+                                        color: 'white',
+                                        py: 1,
+                                        px: 2,
+                                        borderRadius: 1,
+                                        boxShadow: 2
+                                    }}
+                                >
+                                    Added to shopping list!
+                                </Box>
+                            )}
                         </Paper>
                     </Grid2>
                 </Grid2>
 
+                {/* Rest of your component */}
                 <Grid2 item xs={12}>
                     <Paper elevation={2} sx={{ p: 2, mt: 2 }}>
                         <Typography variant="h6" gutterBottom>

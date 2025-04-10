@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
     },
     avatarUrl: {
         type: String,
-        default: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...' // Add a default base64 avatar
+        default: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...'
     },
     dietaryPreferences: {
         type: [String],
