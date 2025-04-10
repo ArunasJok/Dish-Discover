@@ -1,7 +1,20 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Container, Typography, TextField, Button, Paper, Box, CircularProgress } from '@mui/material';
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { 
+    Container, 
+    Typography, 
+    TextField, 
+    Button, 
+    Paper, 
+    Box, 
+    CircularProgress,
+    List,
+    ListItem,
+    ListItemText,
+    Divider 
+} from '@mui/material';
 import { AuthContext } from '../context/AuthContext';
 import { sendChatMessage } from '../services/aiService';
+import ReactMarkdown from 'react-markdown';
 
 const DishAI = () => {
     const [userInput, setUserInput] = useState('');
@@ -11,6 +24,7 @@ const DishAI = () => {
         return sessionStorage.getItem('lastIngredients') || '';
     });
     const { authToken } = useContext(AuthContext);
+    const chatEndRef = useRef(null);
 
     useEffect(() => {
         // Initial greeting
@@ -22,33 +36,41 @@ const DishAI = () => {
         }]);
     }, [recentIngredients]);
 
+    useEffect(() => {
+        chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [conversation]);
+
     const handleSendMessage = async () => {
       if (!userInput.trim()) return;
       setLoading(true);
   
-      try {
-          const data = await sendChatMessage(
-              userInput,
-              recentIngredients,
-              conversation,
-              authToken
-          );
-  
-          setConversation(prev => [...prev, 
-              { role: 'user', content: userInput },
-              { role: 'assistant', content: data.response }
-          ]);
-      } catch (error) {
-          console.error('Chat request failed:', error);
-          setConversation(prev => [...prev, 
-              { role: 'user', content: userInput },
-              { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' }
-          ]);
-      } finally {
-          setLoading(false);
-          setUserInput('');
-      }
-  };
+      try {       
+        const formattedMessage = userInput.includes("recipe") ? 
+            `${userInput} (Please format your response with clear headings, bullet points for ingredients, and numbered steps for instructions. Use markdown formatting.)` :
+            userInput;
+            
+        const data = await sendChatMessage(
+            formattedMessage,
+            recentIngredients,
+            conversation,
+            authToken
+        );
+
+        setConversation(prev => [...prev, 
+            { role: 'user', content: userInput },
+            { role: 'assistant', content: data.response }
+        ]);
+    } catch (error) {
+        console.error('Chat request failed:', error);
+        setConversation(prev => [...prev, 
+            { role: 'user', content: userInput },
+            { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' }
+        ]);
+    } finally {
+        setLoading(false);
+        setUserInput('');
+    }
+};
 
     return (
         <Container maxWidth="md" sx={{ mt: 12 }}>
@@ -77,9 +99,31 @@ const DishAI = () => {
                             boxShadow: 1
                         }}
                     >
-                        <Typography>{message.content}</Typography>
+                        {message.role === 'user' ? (
+                            <Typography>{message.content}</Typography>
+                        ) : (
+                            <ReactMarkdown
+                                components={{
+                                    h1: props => <Typography variant="h5" {...props} sx={{ mt: 2, mb: 1, fontWeight: 'bold' }} />,
+                                    h2: props => <Typography variant="h6" {...props} sx={{ mt: 2, mb: 1, fontWeight: 'bold' }} />,
+                                    h3: props => <Typography variant="subtitle1" {...props} sx={{ mt: 1.5, mb: 0.5, fontWeight: 'bold' }} />,
+                                    p: props => <Typography variant="body1" {...props} sx={{ my: 1 }} />,
+                                    ul: props => <List dense disablePadding {...props} sx={{ pl: 2 }} />,
+                                    ol: props => <List dense {...props} sx={{ pl: 2 }} component="ol" />,
+                                    li: props => (
+                                        <ListItem sx={{ display: 'list-item', pl: 0, py: 0.25 }}>
+                                            <ListItemText primary={props.children} />
+                                        </ListItem>
+                                    ),
+                                    hr: () => <Divider sx={{ my: 1.5 }} />
+                                }}
+                            >
+                                {message.content}
+                            </ReactMarkdown>
+                        )}
                     </Box>
                 ))}
+                <div ref={chatEndRef} />
                 {loading && (
                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                         <CircularProgress size={24} />
@@ -92,10 +136,12 @@ const DishAI = () => {
                     fullWidth
                     value={userInput}
                     onChange={(e) => setUserInput(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                    onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
                     placeholder="Ask about recipes or meal planning..."
                     variant="outlined"
                     disabled={loading}
+                    multiline
+                    maxRows={3}
                 />
                 <Button
                     variant="contained"

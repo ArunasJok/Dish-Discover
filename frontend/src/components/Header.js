@@ -37,7 +37,7 @@ const Header = () => {
   const dashboardLinks = [
     { label: 'Dashboard', to: '/dashboard' },
     { label: 'My Recipes', to: '/my-recipes' },
-    { label: 'Meal Planner', to: '/meal-planner' },
+    { label: 'AI Assistant', to: '/meal-planner' },
     { label: 'Find a Dish', to: '/ingredients' },
     { label: 'Profile', to: '/profile' },
     { label: 'Shopping List', to: '/shopping-list' },
