@@ -4,6 +4,7 @@ import { Typography, Card, CardMedia, Box, CircularProgress, Grid2 } from '@mui/
 import axios from 'axios';
 import * as emoji from 'node-emoji';
 import missingImage from '../../images/missingIngredient.png';
+import { API_URL } from '../../config';
 
 const getIngredientEmoji = (ingredient) => {
   const key = ingredient.toLowerCase();
@@ -245,9 +246,7 @@ IngredientTiles.propTypes = {
   telemetry: PropTypes.shape({
     ingredientCounts: PropTypes.object.isRequired,
     popularIngredients: PropTypes.array.isRequired
-  }).isRequired,
-  PIXABAY_API_KEY: PropTypes.string.isRequired,
-  PIXABAY_API_URL: PropTypes.string.isRequired
+  }).isRequired
 };
 
 export default IngredientTiles;

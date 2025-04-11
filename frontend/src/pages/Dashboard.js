@@ -117,9 +117,7 @@ const Dashboard = () => {
 
       <Box sx={{ mb: 6 }}>
         <IngredientTiles 
-          telemetry={validTelemetry}        
-          PIXABAY_API_KEY={PIXABAY_API_KEY}
-          PIXABAY_API_URL={PIXABAY_API_URL}
+          telemetry={validTelemetry}          
         />
       </Box>
 
