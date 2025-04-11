@@ -26,7 +26,7 @@ export const useRecipes = (authToken) => {
       }
 
       setLoading(true);
-      const res = await axios.get(`${API_URL}/api/recipes/random`, {
+      const res = await axios.get(`${API_URL}/api/external/recipes/random`, {
         headers: { 'Authorization': `Bearer ${authToken}` }
       });
 

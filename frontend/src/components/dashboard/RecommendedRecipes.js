@@ -13,7 +13,7 @@ const RecommendedRecipes = ({ loading = false, recommendations = [], onViewRecip
     }
   
     if (!recommendations || recommendations.length === 0) {
-        console.log('No recommendations - conditions:', {  // Add this debug line
+        console.log('No recommendations - conditions:', {  
             isUndefined: !recommendations,
             isEmpty: recommendations?.length === 0
           });

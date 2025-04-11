@@ -14,7 +14,7 @@ const getIngredientEmoji = (ingredient) => {
 
 const MAX_RETRIES = 3; // Number of different images to try
 
-const IngredientTiles = ({ telemetry, PIXABAY_API_KEY, PIXABAY_API_URL }) => {
+const IngredientTiles = ({ telemetry}) => {
     // Initialize state
     const [state, setState] = useState({
       loading: true,
@@ -29,7 +29,7 @@ const IngredientTiles = ({ telemetry, PIXABAY_API_KEY, PIXABAY_API_URL }) => {
       try {
         console.log(`Loading image for ${ingredient}, attempt ${retryCount + 1}`);
         
-        const result = await axios.get(`${API_URL}/api/proxy/pixabay`, {
+        const result = await axios.get(`${API_URL}/api/external/proxy/pixabay`, {
           params: {
             q: encodeURIComponent(`${ingredient} food`)
           }

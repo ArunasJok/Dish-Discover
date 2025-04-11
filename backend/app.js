@@ -30,13 +30,13 @@ app.use(require('cors')());
 //Route integration
 app.use('/api/auth', authenticationRoutes);
 app.use('/api/recipes', recipeRoutes);
-//app.use('/api/external', externalRoutes);
+app.use('/api/external', externalRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/searchhistory', searchHistoryRoutes);
 app.use('/api/telemetry', telemetryRoutes);
 app.use('/api/recipes', myRecipeRoutes);
-app.use('/api', externalRoutes);
+//app.use('/api', externalRoutes);
 
 
 //Defining route for the root URL
