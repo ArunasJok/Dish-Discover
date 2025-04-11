@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const axios = require('axios');
 const verifyToken = require('../middlewares/authenticationMiddleware');
 const { getRecipesByIngredients, getRecipeInformation, getRandomRecipes } = require('../services/spoonacularService');
 const SearchHistory = require('../models/SearchHistory');
@@ -174,6 +175,13 @@ router.get('/proxy/pixabay', async (req, res) => {
     // Get query params from frontend but use API key from backend env
     const { q } = req.query;
     
+    if (!q) {
+      return res.status(400).json({ error: 'Missing query parameter' });
+    }
+    
+    console.log('Pixabay proxy request received for:', q);
+    console.log('Using Pixabay API key:', process.env.PIXABAY_API_KEY ? 'Key exists' : 'Key missing');
+    
     const response = await axios.get('https://pixabay.com/api/', {
       params: {
         key: process.env.PIXABAY_API_KEY,
@@ -188,10 +196,23 @@ router.get('/proxy/pixabay', async (req, res) => {
       }
     });
     
+    console.log(`Pixabay response for "${q}": ${response.data.hits?.length || 0} images found`);
     res.json(response.data);
   } catch (error) {
-    console.error('Pixabay proxy error:', error);
-    res.status(500).json({ error: 'Failed to fetch from Pixabay' });
+    console.error('Pixabay proxy error:', error.message);
+    
+    // More detailed error logging
+    if (error.response) {
+      console.error('Pixabay API error details:', {
+        status: error.response.status,
+        data: error.response.data
+      });
+    }
+    
+    res.status(500).json({ 
+      error: 'Failed to fetch from Pixabay',
+      message: error.message
+    });
   }
 });
 

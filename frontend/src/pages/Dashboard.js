@@ -14,8 +14,7 @@ import RecommendedRecipes from '../components/dashboard/RecommendedRecipes';
 import IngredientTiles from '../components/dashboard/IngredientTiles';
 import SearchHistory from '../components/dashboard/SearchHistory';
 
-const PIXABAY_API_KEY = process.env.REACT_APP_PIXABAY_API_KEY;
-const PIXABAY_API_URL = 'https://pixabay.com/api/';
+
 
 const formatError = (error) => {
   if (typeof error === 'string') return error;
