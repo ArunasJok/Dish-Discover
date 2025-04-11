@@ -17,6 +17,18 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    avatarUrl: {
+        type: String,
+        default: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...'
+    },
+    dietaryPreferences: {
+        type: [String],
+        default: []
+    },
+    allergies: {
+        type: [String],
+        default: []
+    },
     favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Recipe' }]
 }, { timestamps: true });
 

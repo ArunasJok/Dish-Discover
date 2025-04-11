@@ -15,6 +15,8 @@ const profileRoutes = require('./routes/profileRoutes');
 const telemetryRoutes = require('./routes/telemetryRoutes');
 const searchHistoryRoutes = require('./routes/searchhistoryRoutes');
 const myRecipeRoutes = require('./routes/myRecipeRoutes');
+const path = require('path');
+
 
 const app = express();
 const port = process.env.PORT
@@ -34,6 +36,8 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/searchhistory', searchHistoryRoutes);
 app.use('/api/telemetry', telemetryRoutes);
 app.use('/api/recipes', myRecipeRoutes);
+//app.use('/api', externalRoutes);
+
 
 //Defining route for the root URL
 app.get('/', (req, res) => {
@@ -46,6 +50,15 @@ app.use((req, res, next) => {
     error.status = 404;
     next(error);
 });
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error('Server Error:', err);
+    res.status(500).json({
+      error: 'Internal Server Error',
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
+  });
 
 app.use(errorHandler);
 

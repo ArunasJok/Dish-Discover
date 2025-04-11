@@ -13,10 +13,12 @@ const About = () => {
   return (
     <Box
       sx={{
-        backgroundColor: '#f0f0f0',
+        backgroundColor: 'primary.light',
         minHeight: '80vh',
         py: 4,
         position: 'relative',
+        mt: 2,
+        pb: 4
       }}
     >
       <LandingNavButtons />
@@ -25,13 +27,14 @@ const About = () => {
       {/* Outer container */}
       <Box
         sx={{
-          maxWidth: 1200,
+          maxWidth: 1160,
           width: '90vw',
           mx: 'auto',
-          backgroundColor: 'white',
+          backgroundColor: 'grey.100',
           p: 2,
-          borderRadius: 2,
+          borderRadius: 4,
           boxShadow: 3,
+          mt: { xs: 0, md: 0 },
         }}
       >
         <Typography variant="h3" align="center" gutterBottom>
@@ -57,7 +60,7 @@ const About = () => {
               component="img"
               image={ingredientsImage}
               alt="Using ingredients at home"
-              sx={{ width: 200, objectFit: 'cover' }}
+              sx={{ width: 180, objectFit: 'cover' }}
             />
             <CardContent>
               <Typography variant="h5" gutterBottom>
@@ -75,7 +78,7 @@ const About = () => {
               component="img"
               image={healthyEatingImage}
               alt="Healthy eating"
-              sx={{ width: 200, objectFit: 'cover' }}
+              sx={{ width: 180, objectFit: 'cover' }}
             />
             <CardContent>
               <Typography variant="h5" gutterBottom>
@@ -93,7 +96,7 @@ const About = () => {
               component="img"
               image={shoppingListImage}
               alt="Smart shopping list"
-              sx={{ width: 200, objectFit: 'cover' }}
+              sx={{ width: 180, objectFit: 'cover' }}
             />
             <CardContent>
               <Typography variant="h5" gutterBottom>
@@ -111,7 +114,7 @@ const About = () => {
               component="img"
               image={customDishesImage}
               alt="Personalized recipes"
-              sx={{ width: 200, objectFit: 'cover' }}
+              sx={{ width: 180, objectFit: 'cover' }}
             />
             <CardContent>
               <Typography variant="h5" gutterBottom>

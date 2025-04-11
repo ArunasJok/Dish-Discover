@@ -5,27 +5,42 @@ import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
 import { Box, TextField, Button, Typography } from '@mui/material';
 
-const RateRecipe = ({ recipeId, onRatingUpdated }) => {
+const RateRecipe = ({ recipeId, spoonacularId, onRatingUpdated }) => {
   const [rating, setRating] = useState('');
   const [message, setMessage] = useState('');
   const { authToken } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage('');
+
     try {
-      await axios.put(
-        `${API_URL}/api/recipes/rate/${recipeId}`,
+      console.log('Submitting rating:', {
+        spoonacularId,
+        rating: Number(rating)
+      });
+
+      const response = await axios.put(
+        `${API_URL}/api/recipes/rate/${spoonacularId}`,
         { rating: Number(rating) },
-        { headers: { 'Authorization': `Bearer ${authToken}` } }
+        { 
+          headers: { 
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json'
+          }
+        }
       );
-      setMessage('Rating updated!');
-      if (onRatingUpdated) {
-        onRatingUpdated();
+
+      if (response.data) {
+        setMessage('Rating updated!');
+        if (onRatingUpdated) {
+          onRatingUpdated();
+        }
+        setRating('');
       }
-      setRating('');
     } catch (error) {
       console.error('Error rating recipe:', error);
-      setMessage('Failed to rate recipe');
+      setMessage(error.response?.data?.error || 'Failed to rate recipe');
     }
   };
 

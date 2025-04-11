@@ -3,8 +3,9 @@ import React, { useState } from 'react';
 //import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../services/apiService';
-import { Box, TextField, Button, Typography } from '@mui/material';
+import { Box, TextField, Button, Typography, Alert} from '@mui/material';
 import LandingNavButtons from '../components/LandingNavButtons';
+import { sharedBoxStyle } from '../components/sharedBoxStyle';
 
 const Register = () => {
    const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ const Register = () => {
 
 });
 const [message, setMessage] = useState('');
+//const [snackbarOpen, setSnackbarOpen] = useState(false);
 const navigate = useNavigate();
 
 // Handle form changes
@@ -26,32 +28,36 @@ const handleSubmit = async (e) => {
   e.preventDefault();
   try {
     const data = await registerUser(formData);
+    // Set a success message and open the snackbar
     setMessage(data.message);
-    navigate('/login');
+    setMessage('Registration successful! Redirecting to Home page...');
+    //setSnackbarOpen(true);
+    // Redirect after 2 seconds
+    setTimeout(() => {
+      navigate('/');
+    }, 3000);
   } catch (err) {
     setMessage(err.response?.data?.error || 'Registration failed');
   }
 };
 
 return (
-  <Box sx={{ backgroundColor: '#f0f0f0', minHeight: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
+  <Box sx={{ 
+    backgroundColor: 'primary.light', 
+    minHeight: '80vh', 
+    display: 'flex', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    py: 4, 
+    mt: 0 
+    }}
+  >
      
       <LandingNavButtons />
       <div style={{ paddingTop: '64px' }}></div>
 
       {/* White container in the center */}
-      <Box
-        sx={{
-          maxWidth: 600,
-          mx: 'auto',
-          backgroundColor: 'white',
-          p: 4,
-          borderRadius: 2,
-          boxShadow: 3,
-          position: 'relative',
-        }}
-      >        
-
+      <Box sx={sharedBoxStyle}>
         <Typography variant="h4" align="center" gutterBottom>
           Register
         </Typography>
@@ -100,11 +106,24 @@ return (
           </Button>
         </Box>
         {message && (
-          <Typography variant="body2" color="error" sx={{ mt: 2, textAlign: 'center' }}>
+          <Alert 
+            severity={message.includes('successful') ? 'success' : 'error'} 
+            sx={{ mt: 2, textAlign: 'center' }}
+          >
             {message}
-          </Typography>
+          </Alert>
         )}
       </Box>
+      {/* <Snackbar 
+        open={snackbarOpen} 
+        autoHideDuration={2000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: 'center', horizontal: 'center' }}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          {message}
+        </Alert>
+      </Snackbar> */}
     </Box>
   );
 };

@@ -10,7 +10,7 @@ import Dashboard from './pages/Dashboard';
 import MyRecipes from './pages/MyRecipes';
 import Profile from './pages/Profile';
 import ShoppingList from './pages/ShoppingList';
-import MealPlanner from './pages/MealPlanner';
+import DishAI from './pages/DishAI';
 import Ingredients from './pages/Ingredients';
 import RecipeDetail from './pages/RecipeDetail';
 
@@ -18,7 +18,7 @@ import RecipeDetail from './pages/RecipeDetail';
 function App() {
   return (
     <Router>
-      <Layout>
+      <Layout bgColor="primary.light">
         <Routes>
           {/* Public Pages */}
           <Route path="/" element={<Home />} />
@@ -28,7 +28,7 @@ function App() {
           {/* Protected / Authenticated Pages */}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/my-recipes" element={<MyRecipes />} />
-          <Route path="/meal-planner" element={<MealPlanner />} />
+          <Route path="/meal-planner" element={<DishAI />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/shopping-list" element={<ShoppingList />} />
           <Route path="/ingredients" element={<Ingredients />} />
