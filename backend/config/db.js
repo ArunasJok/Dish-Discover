@@ -16,7 +16,7 @@ const mongoose = require('mongoose');
 //   }
 // };
 
-// Use Azure Cosmos DB connection for production
+//Use Azure Cosmos DB connection for production
 const connectDB = async () => {
     try {    
       const conn = await mongoose.connect(process.env.MONGO_CONNECTION_STRING, {
