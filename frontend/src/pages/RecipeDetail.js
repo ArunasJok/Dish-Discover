@@ -27,7 +27,7 @@ const RecipeDetail = () => {
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const res = await axios.get(`${API_URL}/api/external/recipes/${spoonacularId}`, {
+        const res = await axios.get(`${API_URL}/api/recipes/${spoonacularId}`, {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
 

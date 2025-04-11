@@ -26,7 +26,7 @@ export const loginUser = async (credentials) => {
 export const getSpoonacularRecipes = async (ingredients, token) => {
   try {
     // ingredients should be a comma-separated string
-    const response = await axios.get(`${API_URL}/api/external/recipes?ingredients=${ingredients}`, {
+    const response = await axios.get(`${API_URL}/api/recipes?ingredients=${ingredients}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -39,7 +39,7 @@ export const getSpoonacularRecipes = async (ingredients, token) => {
 
 export const getRecipeDetail = async (recipeId) => {
   try {
-    const response = await axios.get(`${API_URL}/api/external/recipes/${recipeId}`);
+    const response = await axios.get(`${API_URL}/api/recipes/${recipeId}`);
     return response.data;
   } catch (error) {
     throw error;
