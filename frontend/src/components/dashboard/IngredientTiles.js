@@ -12,7 +12,6 @@ const getIngredientEmoji = (ingredient) => {
 };
 
 const MAX_RETRIES = 3; // Number of different images to try
-const RESULTS_PER_PAGE = 10; // Number of results to fetch from Pixabay
 
 const IngredientTiles = ({ telemetry, PIXABAY_API_KEY, PIXABAY_API_URL }) => {
     // Initialize state
@@ -24,22 +23,14 @@ const IngredientTiles = ({ telemetry, PIXABAY_API_KEY, PIXABAY_API_URL }) => {
       imageRetries: {}
     });
   
-    // Create memoized version of loadImageForIngredient
+    
     const loadImageForIngredient = useCallback(async (ingredient, retryCount = 0) => {
       try {
         console.log(`Loading image for ${ingredient}, attempt ${retryCount + 1}`);
         
-        const result = await axios.get(PIXABAY_API_URL, {
+        const result = await axios.get(`${API_URL}/api/proxy/pixabay`, {
           params: {
-            key: PIXABAY_API_KEY,
-            q: encodeURIComponent(`${ingredient} food`),
-            image_type: 'photo',
-            orientation: 'horizontal',
-            safesearch: true,
-            per_page: RESULTS_PER_PAGE,
-            category: 'food',
-            min_width: 300,
-            min_height: 200
+            q: encodeURIComponent(`${ingredient} food`)
           }
         });
   
@@ -53,7 +44,7 @@ const IngredientTiles = ({ telemetry, PIXABAY_API_KEY, PIXABAY_API_URL }) => {
         console.error(`Error loading image for ${ingredient}:`, error);
         return null;
       }
-    }, [PIXABAY_API_KEY, PIXABAY_API_URL]);
+    }, []);
 
   const handleImageError = async (e, ingredient) => {
     try {

@@ -169,5 +169,31 @@ router.get('/recipes/:spoonacularId', verifyToken, async (req, res) => {
   }
 });
 
+router.get('/proxy/pixabay', async (req, res) => {
+  try {
+    // Get query params from frontend but use API key from backend env
+    const { q } = req.query;
+    
+    const response = await axios.get('https://pixabay.com/api/', {
+      params: {
+        key: process.env.PIXABAY_API_KEY,
+        q,
+        image_type: 'photo',
+        orientation: 'horizontal',
+        safesearch: true,
+        per_page: 10,
+        category: 'food',
+        min_width: 300,
+        min_height: 200
+      }
+    });
+    
+    res.json(response.data);
+  } catch (error) {
+    console.error('Pixabay proxy error:', error);
+    res.status(500).json({ error: 'Failed to fetch from Pixabay' });
+  }
+});
+
 
 module.exports = router;
