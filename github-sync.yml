@@ -8,11 +8,10 @@ pool:
 
 steps:
 - checkout: self  
-  persistCredentials: true  # Allow the action to push changes back to the repository
-  fetchDepth: 0  # Ensures full history is cloned
-  clean: true  # ensures a fresh checkout to avoid any cached data issues
+  persistCredentials: true
+  fetchDepth: 0
+  clean: true
 
-# Configure Git with a user name and email (GitHub requires this for pushes)
 - script: |
     echo "Listing local branches..."
     git fetch origin '+refs/heads/*:refs/heads/*'
@@ -29,13 +28,24 @@ steps:
     git repack -a -d
     git gc
 
+    # Create or use personal access token as a pipeline variable
+    # Replace with a secure Azure DevOps pipeline variable
+    GITHUB_PAT=$(GITHUB_TOKEN)
+    
     echo "Adding GitHub remote..."
-    git checkout -b main
-    git remote add github https://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@github.com/ArunasJok/Dish-Discover.git
+    # Check if main branch exists and use it without creating
+    git branch -a | grep -q "main" && git checkout main || git checkout -b main
+    
+    # Use the variable for authentication
+    git remote remove github 2>/dev/null || true
+    git remote add github "https://$GITHUB_PAT@github.com/ArunasJok/Dish-Discover.git"
 
     echo "Pushing changes to GitHub..."
-    git push github --all
+    # Force push to override potential conflicts
+    git push -u github main --force
 
     echo "Pushing all tags to GitHub..."
     git push github --tags
   displayName: 'Push changes to GitHub'
+  env:    
+    GITHUB_TOKEN: $(GITHUB_TOKEN)
