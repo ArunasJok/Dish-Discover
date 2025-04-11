@@ -361,17 +361,7 @@ const Profile = () => {
               </Grid2>
 
               {/* Right side - Profile Information */}
-              <Grid2 item xs={12} md={8}>
-                  {message && !showSuccess && (
-                      <Typography 
-                          variant="body1" 
-                          color="error" 
-                          gutterBottom
-                          sx={{ mb: 2 }}
-                      >
-                          {message}
-                      </Typography>
-                  )}
+              <Grid2 item xs={12} md={8}>                  
                   <Paper sx={{ p: 3, mb: 3 }}>
                       <Box component="form" onSubmit={handleUpdate} noValidate>
                           <Grid2 container spacing={3}>
@@ -512,7 +502,7 @@ const Profile = () => {
               open={showSuccess} 
               autoHideDuration={3000} 
               onClose={() => setShowSuccess(false)}
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
           >
               <Alert severity="success" onClose={() => setShowSuccess(false)}>
                   {message}

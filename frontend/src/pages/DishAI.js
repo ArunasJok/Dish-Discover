@@ -10,7 +10,9 @@ import {
     List,
     ListItem,
     ListItemText,
-    Divider 
+    Divider,
+    FormControlLabel,
+    Checkbox 
 } from '@mui/material';
 import { AuthContext } from '../context/AuthContext';
 import { sendChatMessage } from '../services/aiService';
@@ -23,19 +25,24 @@ const DishAI = () => {
     const [recentIngredients] = useState(() => {
         return sessionStorage.getItem('lastIngredients') || '';
     });
+    const [includeIngredients, setIncludeIngredients] = useState(false);
     const { authToken } = useContext(AuthContext);
     const chatEndRef = useRef(null);
 
-    useEffect(() => {
-        // Initial greeting
+    useEffect(() => {       
         setConversation([{
             role: 'assistant',
-            content: `Hello! I'm your cooking assistant. ${recentIngredients ? 
-                `I see you have ${recentIngredients}. Would you like recipe suggestions using these ingredients?` : 
-                'What would you like to cook today?'}`
+            content: `Hello! I'm your cooking assistant. What would you like to cook today?`
         }]);
+                
+        if (recentIngredients) {
+            setConversation(prev => [...prev, {
+                role: 'assistant',
+                content: `I see you recently searched for recipes with: ${recentIngredients}. Would you like me to suggest recipes using these ingredients? You can toggle the option below.`
+            }]);
+        }
     }, [recentIngredients]);
-
+    
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [conversation]);
@@ -130,6 +137,21 @@ const DishAI = () => {
                     </Box>
                 )}
             </Paper>
+
+            {recentIngredients && (
+                <Box sx={{ mb: 2 }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox 
+                                checked={includeIngredients}
+                                onChange={(e) => setIncludeIngredients(e.target.checked)}
+                                color="primary"
+                            />
+                        }
+                        label={`Include my recent ingredients: ${recentIngredients}`}
+                    />
+                </Box>
+            )}
 
             <Box sx={{ display: 'flex', gap: 1 }}>
                 <TextField
