@@ -1,4 +1,5 @@
-// About page component
+// This file defines the About page of the Dish Discover application.
+// It provides information about the application, its features, and its mission to reduce food waste and promote healthy eating.
 import React from 'react';
 import { Box, Typography, Card, CardContent, CardMedia} from '@mui/material';
 import LandingNavButtons from '../components/LandingNavButtons';

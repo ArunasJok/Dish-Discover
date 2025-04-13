@@ -1,3 +1,4 @@
+// This file defines the RecipeCard component, which is used to display a recipe's details in a card format. It includes features like adding ingredients to a shopping list, rating recipes, and deleting recipes. The component uses Material-UI for styling and layout.
 import React, { useState} from 'react';
 import {
     Typography,
@@ -28,22 +29,24 @@ const RecipeCard = ({
     hideTitle = false,
     onRatingUpdated,
 }) => {
+    // Check if recipe has extendedIngredients
     const initialCheckedState = recipe.extendedIngredients
         ? recipe.extendedIngredients.map(() => false)
         : [];
     const [checkedState, setCheckedState] = useState(initialCheckedState);
     const [showSuccessToast, setShowSuccessToast] = useState(false);
 
+    // Function to handle checkbox state change
     const handleCheck = (index) => {
         const updatedChecked = [...checkedState];
         updatedChecked[index] = !updatedChecked[index];
         setCheckedState(updatedChecked);
     };
-
+    // Function to get selected ingredients based on checked state
     const getSelectedIngredients = () => {
         return recipe.extendedIngredients?.filter((_, index) => checkedState[index]) || [];
     };
-
+    // Function to add selected ingredients to shopping list
     const addToShoppingList = () => {
        
         const selectedIngredients = getSelectedIngredients();
@@ -75,7 +78,7 @@ const RecipeCard = ({
         
         setCheckedState(initialCheckedState);
     };
-
+    // Function to handle rating update
     const selectedCount = checkedState.filter(Boolean).length;
 
     return (

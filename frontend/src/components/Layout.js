@@ -1,4 +1,5 @@
-// Layout page component
+// This file defines the Layout component for the Dish Discover application.
+// It sets up the main structure of the application, including the header, footer, and main content area.
 import React from 'react';
 import { Box } from '@mui/material';
 import { useLocation } from 'react-router-dom';
@@ -18,8 +19,7 @@ const Layout = ({ children, bgColor }) => {
       flexDirection: 'column',
       }}
     >
-      <Header />
-      {/* Full-width container with background, then center content */}
+      <Header />      
       <Box sx={{ 
           py: 2,
           px: { xs: 2, md: 0 },  

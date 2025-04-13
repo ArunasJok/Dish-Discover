@@ -1,3 +1,5 @@
+// This file is part of the Dish Discover application, a recipe discovery and management tool.
+// It provides a detailed view of a specific recipe, including options to save or delete it from the user's collection.
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -21,8 +23,7 @@ const RecipeDetail = () => {
   const [message, setMessage] = useState('');
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  //const location = useLocation();
-  //const isSavedRecipe = location.pathname.startsWith('/my-recipes');
+  
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -118,21 +119,6 @@ const RecipeDetail = () => {
       setOpen(true);
     }
   };
-
-  // const handleDelete = async () => {
-  //   try {
-  //     await axios.delete(`${API_URL}/api/recipes/${spoonacularId}`, {
-  //       headers: { 'Authorization': `Bearer ${authToken}` }
-  //     });
-  //     setMessage('Recipe deleted successfully');
-  //     setOpen(true);
-  //     navigate('/my-recipes');
-  //   } catch (err) {
-  //     console.error('Error deleting recipe:', err);
-  //     setMessage(err.response?.data?.error || 'Failed to delete recipe');
-  //     setOpen(true);
-  //   }
-  // };
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {

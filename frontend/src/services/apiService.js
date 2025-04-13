@@ -1,4 +1,4 @@
-// This file contains the API calls to the backend server.
+// This file contains the API service functions for user registration, login, and fetching recipes from Spoonacular API.
 import axios from 'axios';
 import { API_URL } from '../config';
 

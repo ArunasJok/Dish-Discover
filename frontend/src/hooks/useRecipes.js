@@ -1,3 +1,5 @@
+// This custom hook fetches random recipes and handles caching and error states.
+// It uses the useState and useEffect hooks to manage state and side effects.
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { API_URL } from '../config';
@@ -8,9 +10,9 @@ export const useRecipes = (authToken) => {
   const [recommendations, setRecommendations] = useState([]);
   const [error, setError] = useState(null);
 
+  // Function to fetch random recipes
   const fetchRandomRecipes = useCallback(async () => {
-    try {
-      // First try to get from cache
+    try {      
       const cached = localStorage.getItem('randomRecipes');
       if (cached) {
         const { data, timestamp } = JSON.parse(cached);

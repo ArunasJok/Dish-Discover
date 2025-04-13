@@ -1,4 +1,5 @@
-// Desc: Main App component that contains all the routes for the application
+// Frontend code for the Dish Discover application
+// This file is responsible for setting up the main application structure, including routing and layout.
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';

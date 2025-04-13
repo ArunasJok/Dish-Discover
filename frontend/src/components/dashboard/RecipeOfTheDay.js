@@ -1,3 +1,5 @@
+// This file defines the RecipeOfTheDay component for the Dish Discover application.
+// It displays the recipe of the day with an image, title, and a button to view the recipe details.
 import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
 

@@ -1,3 +1,5 @@
+// This file defines the routes for the recipe-related endpoints in the application.
+// It includes routes for getting all recipes using the Spoonacular API.
 const axios = require('axios');
 const SPOONACULAR_API_KEY = process.env.SPOONACULAR_API_KEY;
 const BASE_URL = process.env.BASE_URL || 'https://api.spoonacular.com';
@@ -6,7 +8,7 @@ const getRecipesByIngredients = async (ingredientsArray) => {
     try {
       const params = {
         ingredients: ingredientsArray.join(','),
-        number: 6, // Change this value to get more recipes
+        number: 6, 
         apiKey: SPOONACULAR_API_KEY,
       };
 

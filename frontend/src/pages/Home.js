@@ -1,11 +1,11 @@
-//Home page component
+// This file defines the Home component for the Dish Discover application.
+// It serves as the landing page, providing an introduction to the application and a login form for users.
 import React from 'react';
 import {
   Box,
   Typography,
   Grid2  
 } from '@mui/material';
-//import { NavLink } from 'react-router-dom';
 import homeImage from '../images/homepage.png';
 import Login from './Login';
 import LandingNavButtons from '../components/LandingNavButtons';
@@ -18,8 +18,7 @@ const Home = () => {
       
       <LandingNavButtons />
       <div style={{ paddingTop: '44px' }}></div>
-
-      {/* Centered white container */}
+      
       <Box
         sx={{
           maxWidth: 1200,

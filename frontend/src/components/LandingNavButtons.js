@@ -1,4 +1,5 @@
-// Navigation for landing pages
+// This is a simple navigation bar component for a React application using Material-UI.
+// It includes a logo, navigation links, and a register button. The layout is responsive for mobile and desktop views.
 import React from 'react';
 import { AppBar, Toolbar, Button, Box, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';

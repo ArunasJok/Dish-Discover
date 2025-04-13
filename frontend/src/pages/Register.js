@@ -1,6 +1,6 @@
-// Register page component
+// This file defines the Register component for the Dish Discover application.
+// It handles user registration, including form submission and validation, and provides feedback to the user.
 import React, { useState } from 'react';
-//import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../services/apiService';
 import { Box, TextField, Button, Typography, Alert} from '@mui/material';
@@ -15,7 +15,6 @@ const Register = () => {
 
 });
 const [message, setMessage] = useState('');
-//const [snackbarOpen, setSnackbarOpen] = useState(false);
 const navigate = useNavigate();
 
 // Handle form changes
@@ -30,9 +29,8 @@ const handleSubmit = async (e) => {
     const data = await registerUser(formData);
     // Set a success message and open the snackbar
     setMessage(data.message);
-    setMessage('Registration successful! Redirecting to Home page...');
-    //setSnackbarOpen(true);
-    // Redirect after 2 seconds
+    setMessage('Registration successful! Redirecting to Home page...');    
+    
     setTimeout(() => {
       navigate('/');
     }, 3000);

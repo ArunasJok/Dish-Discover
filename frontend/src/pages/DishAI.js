@@ -1,3 +1,5 @@
+// This file is part of the Dish Discover application, which provides a cooking assistant feature using AI.
+// The DishAI component allows users to interact with an AI assistant for recipe suggestions and meal planning.
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { 
     Container, 
@@ -28,7 +30,8 @@ const DishAI = () => {
     const [includeIngredients, setIncludeIngredients] = useState(false);
     const { authToken } = useContext(AuthContext);
     const chatEndRef = useRef(null);
-
+    
+    // Initialize conversation with a welcome message
     useEffect(() => {       
         setConversation([{
             role: 'assistant',
@@ -47,6 +50,7 @@ const DishAI = () => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [conversation]);
 
+    // Function to handle sending messages
     const handleSendMessage = async () => {
       if (!userInput.trim()) return;
       setLoading(true);

@@ -1,6 +1,6 @@
-// Login page
+// This is a simple login page for a React application using Material-UI components.
+// It includes a form for user login with email and password fields, a submit button, and a message area for feedback.
 import React, { useState, useContext } from 'react';
-//import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../services/apiService';
 import { AuthContext } from '../context/AuthContext';

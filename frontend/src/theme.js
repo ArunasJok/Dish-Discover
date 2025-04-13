@@ -1,4 +1,5 @@
-// src/theme.js
+// This file defines the theme for the Material-UI components used in the application.
+// It customizes the color palette, typography, and other styles to create a consistent look and feel across the app.
 import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({

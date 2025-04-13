@@ -1,4 +1,4 @@
-// Main entry point for the backend server. 
+// Backend code for the Dish Discover application.
 // This file is responsible for setting up the server, connecting to the database, and defining the routes for the API.
 require('dotenv').config();
 const express = require('express');

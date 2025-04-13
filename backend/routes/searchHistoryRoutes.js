@@ -1,3 +1,5 @@
+// This file defines the routes for managing search history in the application.
+// It includes routes for fetching, deleting, and creating search history entries.
 const express = require('express');
 const router = express.Router();
 const verifyToken = require('../middlewares/authenticationMiddleware');

@@ -1,3 +1,5 @@
+// This file defines the RecommendedRecipes component, which displays a list of recommended recipes to the user. It includes loading states and handles cases where no recommendations are available.
+// It uses Material-UI components for styling and layout, and PropTypes for type checking.
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Card, CardMedia, CardContent, Button, Grid2, CircularProgress, Box } from '@mui/material';

@@ -1,3 +1,5 @@
+// This file is part of the Recipe Finder application.
+// It defines the routes for fetching recipes, ingredient telemetry, and random recipes from the Spoonacular API.
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
@@ -38,7 +40,7 @@ router.get('/recipes', verifyToken, async (req, res) => {
           recipeId: recipes[0].id, // Store first recipe ID
           title: `Search for ${searchedIngredients.join(', ')}`,
           searchIngredients: searchedIngredients,
-          ingredients: [], // No need to store recipe ingredients here
+          ingredients: [], 
           searchDate: new Date()
         });
 
@@ -145,8 +147,7 @@ router.get('/recipes/random', verifyToken, async (req, res) => {
 // Endpoint to fetch full recipe details using the recipe id
 router.get('/recipes/:spoonacularId', verifyToken, async (req, res) => {
   try {
-    const { spoonacularId } = req.params;
-    // Checking if this recipe is already saved locally for this user
+    const { spoonacularId } = req.params;    
     let recipe = await Recipe.findOne({
       spoonacularId: Number(spoonacularId),
       user: req.user.userId

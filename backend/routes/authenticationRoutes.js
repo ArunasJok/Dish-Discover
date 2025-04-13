@@ -1,3 +1,4 @@
+// This file defines the routes for user authentication, including registration and login.
 const express = require('express');
 const router = express.Router();
 const authenticationController = require('../controllers/authenticationController');

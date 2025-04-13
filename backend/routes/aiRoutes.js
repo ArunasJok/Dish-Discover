@@ -1,3 +1,4 @@
+// This file is responsible for handling AI-related routes, including chat interactions with OpenAI's API.
 const express = require('express');
 const router = express.Router();
 const OpenAI = require('openai');

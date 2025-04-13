@@ -1,3 +1,5 @@
+// This file defines the SearchHistory component, which displays the user's search history for recipes. It includes functionality to filter the history and clear it.
+// It uses Material-UI components for styling and layout, and Axios for API requests.
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -20,6 +22,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { API_URL } from '../../config';
 import { AuthContext } from '../../context/AuthContext';
 
+// This component displays the user's search history for recipes, allowing them to filter and clear their history.
 const SearchHistory = () => {
   const [searchHistory, setSearchHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -53,6 +56,7 @@ const SearchHistory = () => {
     index === self.findIndex(e => e.title === entry.title)
   );
 
+  // Clear search history
   const handleClearHistory = async () => {
     try {
       await axios.delete(`${API_URL}/api/searchhistory`, {
@@ -65,6 +69,7 @@ const SearchHistory = () => {
     }
   };
 
+  // Filter search history based on user input
   const filteredHistory = uniqueHistory.filter(entry => {
     if (!entry || !entry.title) return false;
     const searchTerm = (filter || '').toLowerCase();
@@ -74,6 +79,7 @@ const SearchHistory = () => {
     return titleMatch || ingredientsMatch;
   });
 
+  // Display error message if any
   useEffect(() => {
     console.log('Search History:', searchHistory);
   }, [searchHistory]);

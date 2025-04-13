@@ -7,7 +7,7 @@ const verifyToken = (req, res, next) => {
     }
     // Retrieve the token from the header (Bearer token)
     const authHeader = req.header('Authorization');
-    console.log("Authorization header:", authHeader); // Temporary debugging only
+    //console.log("Authorization header:", authHeader); // Temporary debugging only
     if (!authHeader) {
         return res.status(401).json({ error: 'No token provided' });
     }
@@ -19,7 +19,7 @@ const verifyToken = (req, res, next) => {
     
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log("Decoded token:", decoded); // Temporary debugging only
+        //console.log("Decoded token:", decoded); // Temporary debugging only
         req.user = decoded;
         next();
     } catch (error) {

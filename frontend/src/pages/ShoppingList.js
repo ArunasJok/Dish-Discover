@@ -1,3 +1,5 @@
+// This is a React component for a shopping list application.
+// It allows users to add, delete, and mark items as completed. The items are grouped by recipe and stored in localStorage.
 import React, { useState, useEffect } from 'react';
 import {
   Container, Typography, List, ListItem, ListItemText,
@@ -40,7 +42,7 @@ const ShoppingList = () => {
   const handleAddItem = () => {
     if (newItem.trim()) {
       const newItemObj = {
-        id: `custom-${Date.now()}`, // use timestamp as unique id
+        id: `custom-${Date.now()}`,
         original: newItem,
         name: newItem,
         recipeTitle: 'Custom Item',

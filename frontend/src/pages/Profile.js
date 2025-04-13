@@ -1,3 +1,5 @@
+// This file defines the Profile page for the Dish Discover application.
+// It allows users to view and edit their profile information, including dietary preferences and allergies.
 import React, { useState, useEffect, useContext } from 'react';
 import { 
     Container, Typography, Box, TextField, Button, Grid2, 
@@ -9,7 +11,7 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
 
-// Constants remain the same
+
 const DIETARY_OPTIONS = [
     'Vegetarian', 'Vegan', 'Gluten-Free', 'Dairy-Free', 
     'Kosher', 'Halal', 'Keto', 'Paleo'
@@ -84,10 +86,10 @@ const Profile = () => {
               }
               
               // For debugging only
-              console.log('Server preferences received:', response.data.dietaryPreferences);
-              console.log('Processed preferences:', serverPreferences);
-              console.log('Server allergies received:', response.data.allergies);
-              console.log('Processed allergies:', serverAllergies);
+            //   console.log('Server preferences received:', response.data.dietaryPreferences);
+            //   console.log('Processed preferences:', serverPreferences);
+            //   console.log('Server allergies received:', response.data.allergies);
+            //   console.log('Processed allergies:', serverAllergies);
               
               setProfile({ 
                   ...response.data, 
@@ -111,13 +113,12 @@ const Profile = () => {
     const handleDietaryChange = async (event) => {
         const newPreferences = Array.isArray(event.target.value) ? event.target.value : [];
         
-        // Update local state first for responsive UI
+        
         setProfile(prev => ({
             ...prev,
             dietaryPreferences: newPreferences
-        }));
+        }));        
         
-        // Then update on server
         try {
             console.log('Sending dietary preferences to server:', newPreferences);
             const response = await axios.put(`${API_URL}/api/profile`, 

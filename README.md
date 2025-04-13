@@ -3,6 +3,11 @@ AI Powered Web App for Sustainable Cooking and Food Discovery
 ## Overview
 Dish Discover helps users plan meals using ingredients they already have at home, reducing food waste and saving money. With AI-powered recipe recommendations and integration with the Spoonacular API, it provides personalized suggestions tailored to user preferences.
 
+
+## Video DEMO
+[![Watch the video](https://img.youtube.com/vi/mHlA-N75hg8/hqdefault.jpg)](https://www.youtube.com/watch?v=mHlA-N75hg8)
+
+
 ## Features
 - Input ingredients to get recipe suggestions.
 - AI-based personalized recommendations.

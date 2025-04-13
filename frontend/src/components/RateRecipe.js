@@ -1,10 +1,12 @@
-// src/components/RateRecipe.js
+// This file defines a React component for rating recipes in the Dish Discover application.
+// It allows users to submit a rating for a recipe and displays a message indicating the success or failure of the operation.
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
 import { Box, TextField, Button, Typography } from '@mui/material';
 
+// Rating recipe component
 const RateRecipe = ({ recipeId, spoonacularId, onRatingUpdated }) => {
   const [rating, setRating] = useState('');
   const [message, setMessage] = useState('');

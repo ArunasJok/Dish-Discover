@@ -1,3 +1,4 @@
+// In this test file, we use the supertest library to make HTTP requests to our Express app and test the authentication endpoints.
 const request = require('supertest');
 const app = require('../app');
 const mongoose = require('mongoose');
@@ -47,4 +48,4 @@ describe('Authentication API', () => {
         await mongoose.connection.close();
     });
 });
-// In this test file, we use the supertest library to make HTTP requests to our Express app and test the authentication endpoints.
+

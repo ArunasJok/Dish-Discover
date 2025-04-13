@@ -1,3 +1,5 @@
+// This file defines the Recipe model for the application.
+// It specifies the structure of the Recipe documents in the MongoDB database using Mongoose.
 const mongoose = require('mongoose');
 
 const RecipeSchema = new mongoose.Schema({

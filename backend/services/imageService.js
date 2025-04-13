@@ -1,4 +1,4 @@
-// services/imageService.js
+// This file is responsible for downloading images from a given URL and saving them locally.
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');

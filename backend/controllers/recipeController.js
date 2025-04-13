@@ -1,8 +1,7 @@
 // Controller function to get a list of recipes
 exports.getRecipes = async (req, res) => {
     try {
-      // For now, I return a dummy array of recipes.
-      // Later, I will fetch recipes from my database or external API.
+      // Dummy array of recipes used in developing.      
       const recipes = [
         { id: 1, name: 'Pasta Primavera', ingredients: ['pasta', 'tomato', 'basil'] },
         { id: 2, name: 'Caesar Salad', ingredients: ['lettuce', 'croutons', 'parmesan'] },
@@ -17,8 +16,7 @@ exports.getRecipes = async (req, res) => {
   // Controller function to create a new recipe
   exports.createRecipe = async (req, res) => {
     try {
-      // For now, just echo back the received data.
-      // Later, I will save this to the database.
+      // Just echo back the received data for development purposes.      
       const newRecipe = req.body;
       res.status(201).json({ message: 'Recipe created successfully', recipe: newRecipe });
     } catch (error) {

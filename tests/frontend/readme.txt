@@ -1,1 +1,0 @@
-JavaScript/React tests for the UI.

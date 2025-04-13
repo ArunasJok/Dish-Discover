@@ -1,4 +1,4 @@
-
+// This is a simple footer component for a React application.
 import React from 'react';
 //import './Footer.css'; 
 import { Box, Typography } from '@mui/material';

@@ -1,3 +1,5 @@
+// This file is part of the Dish Discover application, a web-based recipe discovery platform.
+// It provides a dashboard for users to view their personalized recipe recommendations, search history, and more.
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Typography, Box } from '@mui/material';
@@ -21,6 +23,7 @@ const formatError = (error) => {
   if (error?.message) return error.message;
   return 'An unexpected error occurred';
 };
+
 
 const Dashboard = () => {
   const { authToken } = useContext(AuthContext);

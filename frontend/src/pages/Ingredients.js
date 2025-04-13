@@ -1,3 +1,5 @@
+// This file defines the Ingredients page of the Dish Discover application.
+// It allows users to search for recipes based on ingredients they provide.
 import React, { useState, useContext, useEffect } from 'react';
 import { getSpoonacularRecipes } from '../services/apiService';
 import {  useNavigate, useLocation } from 'react-router-dom';
@@ -31,10 +33,10 @@ const Ingredients = () => {
       const ingString = location.state.ingredients;
       setIngredients(ingString);
       autoSearch(ingString);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }    
   }, [location.state]);
 
+  // Auto-search for recipes if ingredients are already in session storage
   const autoSearch = async (ingString) => {
     try {
       const data = await getSpoonacularRecipes(ingString, authToken);
@@ -48,14 +50,17 @@ const Ingredients = () => {
     }
   };
 
+  // Handle input change
   const handleChange = (e) => {
     setIngredients(e.target.value);
   };
 
+  // Handle recipe card click
   const handleViewRecipe = (recipeId) => {
     navigate(`/recipe/${recipeId}`);
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!ingredients) {

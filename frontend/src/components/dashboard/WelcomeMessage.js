@@ -1,3 +1,5 @@
+// This file defines a React component that displays a welcome message to the user when they log in. It uses Material-UI for styling and animations.
+// It includes a fade-in effect for the message and displays the user's username and last visited time if available.
 import React from 'react';
 import { Box, Typography, Fade } from '@mui/material';
 

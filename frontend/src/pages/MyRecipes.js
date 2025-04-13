@@ -1,8 +1,7 @@
-// src/pages/MyRecipes.js
+// This component displays the user's saved recipes, allows filtering, and provides delete functionality.
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
-//import { Link } from 'react-router-dom';
 import {
   Container,
   Typography,
@@ -28,6 +27,8 @@ const MyRecipes = () => {
   const [message, setMessage] = useState('');
   const [open, setOpen] = useState(false); 
 
+  // Function to fetch saved recipes
+  // Using useCallback to memoize the function and prevent unnecessary re-renders
   const fetchMyRecipes = useCallback(async () => {
     try {
       const res = await axios.get(`${API_URL}/api/recipes/my`, {
@@ -56,6 +57,7 @@ const MyRecipes = () => {
     }
   };
 
+  // Fetch recipes when the component mounts or when authToken changes
   useEffect(() => {
     if (authToken) {
       fetchMyRecipes();

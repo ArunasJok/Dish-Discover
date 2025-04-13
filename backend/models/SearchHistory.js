@@ -1,3 +1,5 @@
+// This file defines the SearchHistory model for storing user search history in MongoDB using Mongoose.
+// It includes fields for user ID, search term, and timestamp of the search.
 const mongoose = require('mongoose');
 
 const searchHistorySchema = new mongoose.Schema({

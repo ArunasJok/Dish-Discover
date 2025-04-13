@@ -1,3 +1,5 @@
+// This file defines the IngredientTiles component, which displays a grid of ingredient images and their details.
+// It fetches images from the Pixabay API and handles image loading errors gracefully.
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Card, CardMedia, Box, CircularProgress, Grid2 } from '@mui/material';
@@ -12,10 +14,9 @@ const getIngredientEmoji = (ingredient) => {
   return found !== `:${key}:` ? found : '🥘';
 };
 
-const MAX_RETRIES = 3; // Number of different images to try
+const MAX_RETRIES = 3;
 
-const IngredientTiles = ({ telemetry}) => {
-    // Initialize state
+const IngredientTiles = ({ telemetry}) => {    
     const [state, setState] = useState({
       loading: true,
       error: null,
@@ -24,7 +25,7 @@ const IngredientTiles = ({ telemetry}) => {
       imageRetries: {}
     });
   
-    
+    // Function to load images for ingredients
     const loadImageForIngredient = useCallback(async (ingredient, retryCount = 0) => {
       try {
         console.log(`Loading image for ${ingredient}, attempt ${retryCount + 1}`);
@@ -51,7 +52,7 @@ const IngredientTiles = ({ telemetry}) => {
     try {
       e.preventDefault();
       
-      // Use object instead of Map for retries
+      
       const currentRetries = state.imageRetries[ingredient] || 0;
       
       if (currentRetries >= MAX_RETRIES) {
@@ -66,7 +67,7 @@ const IngredientTiles = ({ telemetry}) => {
         return;
       }
 
-      // Update state with new image and retry count
+      
       setState(prev => ({
         ...prev,
         ingredientImages: {

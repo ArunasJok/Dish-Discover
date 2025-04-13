@@ -97,7 +97,7 @@ router.put('/rate/:spoonacularId', verifyToken, validateRating, async (req, res)
       });
     }
 
-    // Update rating using a simple average formula
+    // Update rating using average formula
     const totalRating = (recipe.rating || 0) * (recipe.ratingCount || 0) + rating;
     recipe.ratingCount = (recipe.ratingCount || 0) + 1;
     recipe.rating = parseFloat((totalRating / recipe.ratingCount).toFixed(1));

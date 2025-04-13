@@ -1,3 +1,5 @@
+// This file defines the User model for the application using Mongoose.
+// It specifies the structure of the User documents in the MongoDB database, including fields for username, password, email, avatar URL, dietary preferences, allergies, and favorites.
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 //Define the user schema

@@ -1,4 +1,6 @@
 
+// This file contains the routes for user profile management, including avatar upload and profile updates.
+// It uses Express.js for routing and Multer for handling file uploads.
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');

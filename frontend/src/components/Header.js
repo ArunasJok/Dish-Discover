@@ -1,3 +1,5 @@
+// This is a simple header component for a React application using Material-UI.
+// It includes a logo, navigation links, and a logout button. The layout is responsive for mobile and desktop views.
 import React, { useContext } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';

@@ -1,3 +1,4 @@
+// This custom hook fetches user data and search history from the API, processes it, and returns the results.
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { API_URL } from '../config';
@@ -16,9 +17,9 @@ export const useUserData = (authToken) => {
     });
 
     const ingredientCounts = {};
-    
-    history.forEach(entry => {
-      // Process search query ingredients instead of recipe ingredients
+
+    // Process search query ingredients instead of recipe ingredients
+    history.forEach(entry => {      
       if (entry.searchIngredients && Array.isArray(entry.searchIngredients)) {
         entry.searchIngredients.forEach(ingredient => {
           if (typeof ingredient === 'string' && ingredient.trim()) {
@@ -35,7 +36,7 @@ export const useUserData = (authToken) => {
     // Sort ingredients by count and get top ones
     const sortedIngredients = Object.entries(ingredientCounts)
       .sort(([, a], [, b]) => b - a)
-      .slice(0, 10); // Limit to top 10 ingredients
+      .slice(0, 10);
 
     const result = {
       ingredientCounts,
@@ -68,8 +69,7 @@ export const useUserData = (authToken) => {
 
         const searchHistoryData = historyRes.data;
         console.log(`Received ${searchHistoryData.length} search history entries`);
-
-        // Always process history locally for consistent results
+        
         const processedTelemetry = processSearchHistory(searchHistoryData);
 
         setUser(profileRes.data);
